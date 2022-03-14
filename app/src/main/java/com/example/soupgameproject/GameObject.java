@@ -2,7 +2,6 @@ package com.example.soupgameproject;
 
 import android.content.Context;
 import android.graphics.PointF;
-import android.util.Log;
 
 import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -34,10 +33,10 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
     private boolean canCollide;
 
     // The current hit box for the GameObject
-    private Hitbox hitbox;
+    private HitBox hitBox;
     
     // The previous hit box is stored for use when visualizing hit boxes
-    private Hitbox previousHitbox;
+    private HitBox previousHitBox;
 
     // The direction the GameObject is facing
     private boolean isFacingRight;
@@ -56,7 +55,7 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
     
     // Creates a GameObject with a specified visibility and defined hit box
     public GameObject(Context context, String objectName, int objectWidth, int objectHeight,
-                      int objectResource, float xPosition, float yPosition, boolean canCollide, boolean objectVisibility, Hitbox hitbox){
+                      int objectResource, float xPosition, float yPosition, boolean canCollide, boolean objectVisibility, HitBox hitBox){
         super(context);
 
         this.xPosition = xPosition;
@@ -67,7 +66,7 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
         this.objectResource = objectResource;
         this.objectVisibility = objectVisibility;
         this.canCollide = canCollide;
-        this.hitbox = hitbox;
+        this.hitBox = hitBox;
         this.isFacingRight = true;
 
         setBackgroundResource(objectResource);
@@ -90,12 +89,12 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
             setVisibility(GONE);
         }
 
-        this.hitbox.setObject(this);
+        this.hitBox.setObject(this);
     }
 
     // Creates a GameObject that is visible and has a defined hit box
     public GameObject(Context context, String objectName, int objectWidth, int objectHeight,
-                      int objectResource, float xPosition, float yPosition, boolean canCollide, Hitbox hitbox){
+                      int objectResource, float xPosition, float yPosition, boolean canCollide, HitBox hitBox){
         super(context);
 
         this.xPosition = xPosition;
@@ -106,7 +105,7 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
         this.objectResource = objectResource;
         this.canCollide = canCollide;
         this.objectVisibility = true;
-        this.hitbox = hitbox;
+        this.hitBox = hitBox;
         this.isFacingRight = true;
 
 
@@ -126,7 +125,7 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
         setTranslationX(xPosition * TitleActivity.DENSITY);
         setTranslationY(-yPosition * TitleActivity.DENSITY);
 
-        this.hitbox.setObject(this);
+        this.hitBox.setObject(this);
     }
 
     // Creates a GameObject with a specified visibility and predefined hit box equal to the GameObject's dimensions
@@ -142,7 +141,7 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
         this.objectResource = objectResource;
         this.objectVisibility = objectVisibility;
         this.canCollide = canCollide;
-        this.hitbox = new Hitbox(context, canCollide, objectWidth, objectHeight, xPosition, yPosition, 0, 0);
+        this.hitBox = new HitBox(context, canCollide, objectWidth, objectHeight, xPosition, yPosition, 0, 0);
         this.isFacingRight = true;
 
         setBackgroundResource(objectResource);
@@ -165,7 +164,7 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
             setVisibility(GONE);
         }
 
-        this.hitbox.setObject(this);
+        this.hitBox.setObject(this);
     }
 
     // Creates a GameObject that is visible and has a predefined hit box equal to the GameObject's dimensions
@@ -181,7 +180,7 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
         this.objectResource = objectResource;
         this.canCollide = canCollide;
         this.objectVisibility = true;
-        this.hitbox = new Hitbox(context, canCollide, objectWidth, objectHeight, xPosition, yPosition, 0, 0);
+        this.hitBox = new HitBox(context, canCollide, objectWidth, objectHeight, xPosition, yPosition, 0, 0);
         this.isFacingRight = true;
 
 
@@ -201,7 +200,7 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
         setTranslationX(xPosition * TitleActivity.DENSITY);
         setTranslationY(-yPosition * TitleActivity.DENSITY);
 
-        this.hitbox.setObject(this);
+        this.hitBox.setObject(this);
     }
 
     // Methods to populate the allActiveGameObjects ArrayList
@@ -265,10 +264,10 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
 
         if(canCollide){
             for(GameObject object: nearByGameObjects()){
-                if(doOverlap(this.getHitbox().topLeft(),
-                        this.getHitbox().bottomRight(),
-                        object.getHitbox().topLeft(),
-                        object.getHitbox().bottomRight())){
+                if(doOverlap(this.getHitBox().topLeft(),
+                        this.getHitBox().bottomRight(),
+                        object.getHitBox().topLeft(),
+                        object.getHitBox().bottomRight())){
                     collisions.add(object);
                 }
             }
@@ -289,16 +288,16 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
     public static String getCollisionType(GameObject object1, GameObject object2){
         String collisionType = "";
 
-        PointF l1 = object1.getHitbox().topLeft();
-        PointF r1 = object1.getHitbox().bottomRight();
+        PointF l1 = object1.getHitBox().topLeft();
+        PointF r1 = object1.getHitBox().bottomRight();
 
-        PointF l2 = object2.getHitbox().topLeft();
-        PointF r2 = object2.getHitbox().bottomRight();
+        PointF l2 = object2.getHitBox().topLeft();
+        PointF r2 = object2.getHitBox().bottomRight();
 
-        if((l2.y >= r1.y && l1.y - object1.getHitbox().getHitHeight()/2 >= l2.y) && (l1.x < r2.x && r1.x > l2.x)){
+        if((l2.y >= r1.y && l1.y - object1.getHitBox().getHitHeight()/2 >= l2.y) && (l1.x < r2.x && r1.x > l2.x)){
             collisionType += "top";
         }
-        else if((l1.y >= r2.y && r1.y + object1.getHitbox().getHitHeight()/2 <= r2.y) && (l1.x < r2.x && r1.x > l2.x)){
+        else if((l1.y >= r2.y && r1.y + object1.getHitBox().getHitHeight()/2 <= r2.y) && (l1.x < r2.x && r1.x > l2.x)){
             collisionType += "bottom";
         }
 
@@ -315,11 +314,11 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
     // Displays a this GameObject's hit box when called. Use this method whenever a hit box is changing/the GameObject is moving
     // To stop displaying hit boxes, as showing hit boxes slows down the game tremendously, comment out the body of the method
     // but LEAVE THE METHOD HEADER
-    public void showHitbox(){
-//        if(previousHitbox != null){
-//            previousHitbox.removeHitBox();
+    public void showHitBox(){
+//        if(previousHitBox != null){
+//            previousHitBox.removeHitBox();
 //        }
-//        hitbox.visualizeHitBox();
+//        hitBox.visualizeHitBox();
     }
 
     // GENERAL GETTERS AND SETTERS
@@ -330,18 +329,18 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
 
     public void setCanCollide(boolean canCollide) {
         this.canCollide = canCollide;
-        hitbox.setActive(canCollide);
+        hitBox.setActive(canCollide);
     }
 
-    public Hitbox getHitbox() {
-        return this.hitbox;
+    public HitBox getHitBox() {
+        return this.hitBox;
     }
 
     // May comment out the first line of the method if hit boxes aren't being visualized.
-    public void setHitbox(Hitbox hitbox) {
-        this.previousHitbox = this.hitbox;
-        this.hitbox = hitbox;
-        this.hitbox.setObject(this);
+    public void setHitBox(HitBox hitBox) {
+        this.previousHitBox = this.hitBox;
+        this.hitBox = hitBox;
+        this.hitBox.setObject(this);
     }
 
     public String getObjectName() {

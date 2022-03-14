@@ -7,21 +7,32 @@ import android.widget.ImageView;
 import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams;
 import androidx.constraintlayout.widget.ConstraintSet;
 
-public class Hitbox{
+public class HitBox {
+
+    // Units are in DP
 
     private boolean isActive;
     private int hitWidth, hitHeight;
-    private float xPosition, yPosition;
-    private float xLeft, yBottom;
-    private Context context;
 
-    private ImageView box;
-
-    private boolean isDisplayed;
-
+    // The associated GameObject to this hit box
     private GameObject object;
 
-    public Hitbox(Context context, boolean isActive, int hitWidth, int hitHeight, float xPosition, float yPosition,
+    // The BOTTOM LEFT corner of the GameObject that this hit box is associated with
+    private float xPosition, yPosition;
+
+    // The distance away from the position of the GameObject this hit box is associated with
+    // xLeft = distance from the left of the GameObject
+    // yBottom = distance from the bottom of the GameObject
+    private float xLeft, yBottom;
+
+    // Variables for visualizing the hit box.
+    private Context context;
+    private ImageView box;
+    private boolean isDisplayed;
+
+    // Creates a hit box with the position of the GameObject, (xPosition,yPosition), and the distances
+    // the hit box is away from the bottom left hand corner of the GameObject
+    public HitBox(Context context, boolean isActive, int hitWidth, int hitHeight, float xPosition, float yPosition,
                   float xLeft, float yBottom){
         this.context = context;
         this.isActive = isActive;
@@ -78,6 +89,7 @@ public class Hitbox{
 //        }
 //    }
 
+    // These methods aid in detecting collisions by getting the top left and bottom right points of the hit box
     public PointF topLeft(){
         PointF point = new PointF();
         if(object.isFacingRight()) {
@@ -100,6 +112,7 @@ public class Hitbox{
         return point;
     }
 
+    // Getters and Setters:
     public boolean isActive() {
         return isActive;
     }
@@ -140,6 +153,7 @@ public class Hitbox{
         this.yPosition = yPosition;
     }
 
+    // Sets the GameObject associated with the hit box. Is called whenever a GameObject sets its hit box
     public void setObject(GameObject object){
         this.object = object;
     }
