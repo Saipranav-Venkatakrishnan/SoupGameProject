@@ -60,34 +60,34 @@ public class HitBox {
 
     // Uncomment once the collisionGameLayout has been created and change TitleActivity to whatever the main game activity is
 //    These methods are for visualizing hit boxes for debugging purposes
-//    public void visualizeHitBox(){
-//        if(!isDisplayed) {
-//            isDisplayed = true;
-//
-//            if(object.isFacingRight()) {
-//                box.setTranslationX((xPosition + xLeft) * TitleActivity.DENSITY);
-//            }
-//            else{
-//                box.setTranslationX((xPosition + object.getObjectWidth() - xLeft - hitWidth) * TitleActivity.DENSITY);
-//            }
-//            box.setTranslationY(-(yPosition + yBottom) * TitleActivity.DENSITY);
-//
-//            if (isActive) {
-//                box.setBackgroundColor(context.getResources().getColor(R.color.activeBox));
-//            } else {
-//                box.setBackgroundColor(context.getResources().getColor(R.color.nonActiveBox));
-//            }
-//
-//            TitleActivity.collisionGameLayout.getLayout().addView(box);
-//        }
-//    }
-//
-//    public void removeHitBox(){
-//        if(isDisplayed){
-//            isDisplayed = false;
-//            TitleActivity.collisionGameLayout.getLayout().removeView(box);
-//        }
-//    }
+    public void visualizeHitBox(){
+        if(!isDisplayed) {
+            isDisplayed = true;
+
+            if(object.isFacingRight()) {
+                box.setTranslationX((xPosition + xLeft) * TitleActivity.DENSITY);
+            }
+            else{
+                box.setTranslationX((xPosition + object.getObjectWidth() - xLeft - hitWidth) * TitleActivity.DENSITY);
+            }
+            box.setTranslationY(-(yPosition + yBottom) * TitleActivity.DENSITY);
+
+            if (isActive) {
+                box.setBackgroundColor(context.getResources().getColor(R.color.activeBox));
+            } else {
+                box.setBackgroundColor(context.getResources().getColor(R.color.nonActiveBox));
+            }
+
+            InGameActivity.collisionGameLayout.getLayout().addView(box);
+        }
+    }
+
+    public void removeHitBox(){
+        if(isDisplayed){
+            isDisplayed = false;
+            InGameActivity.collisionGameLayout.getLayout().removeView(box);
+        }
+    }
 
     // These methods aid in detecting collisions by getting the top left and bottom right points of the hit box
     public PointF topLeft(){

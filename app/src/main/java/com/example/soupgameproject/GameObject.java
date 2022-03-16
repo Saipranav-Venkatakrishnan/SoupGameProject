@@ -351,6 +351,14 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
         this.objectName = objectName;
     }
 
+    public float getCenterXPosition(){
+        return xPosition + objectWidth/2F;
+    }
+
+    public float getCenterYPosition(){
+        return yPosition + objectHeight/2F;
+    }
+
     public float getXPosition() {
         return xPosition;
     }
