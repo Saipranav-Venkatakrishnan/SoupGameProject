@@ -12,6 +12,9 @@ import android.widget.FrameLayout;
 
 public class InGameActivity extends AppCompatActivity {
 
+    // Saving data variables
+    private boolean hasSaveData;
+
     // Game layout set up variables
 
     // Layouts
@@ -41,8 +44,9 @@ public class InGameActivity extends AppCompatActivity {
     // Character variables
     private Character character;
 
+
     // Environment variables
-    private GameObject ground;
+
 
     // User Interface variables
     private Button leftButton, rightButton, jumpButton;
@@ -51,6 +55,40 @@ public class InGameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_in_game);
+        // Get all layouts/buttons/etc
+        scalingFrameLayout = findViewById(R.id.ScalingFrameLayout);
+        gameContainerLayout = findViewById(R.id.GameContainerLayout);
+        backgroundLayout = findViewById(R.id.BackgroundLayout);
+        collisionLayout = findViewById(R.id.CollisionLayout);
+        foregroundLayout = findViewById(R.id.ForegroundLayout);
+        leftButton = findViewById(R.id.leftButton);
+        rightButton = findViewById(R.id.rightButton);
+        jumpButton = findViewById(R.id.jumpButton);
+
+
+    }
+
+    // Sets up a chosen in-game environment
+    private void environmentSetUp(String environment){
+        backgroundGameLayout = new GameLayout(this, backgroundLayout);
+        backgroundGameLayout.setBackgroundImageView(findViewById(R.id.backgroundImage));
+        collisionGameLayout = new GameLayout(this, collisionLayout);
+        foregroundGameLayout = new GameLayout(this, foregroundLayout);
+
+        if(environment.toLowerCase().equals("test")){
+
+        }
+    }
+
+    // Sets up the character for the first time the app is used
+    private void characterSetUp(){
+
+    }
+
+    // Sets up character controls/interactions
+    // Majority of game logic resides here
+    private void controllerSetUp(){
+
     }
 
     // The following code was from https://developer.android.com/training/system-ui/immersive to create a fullscreen (has changed)

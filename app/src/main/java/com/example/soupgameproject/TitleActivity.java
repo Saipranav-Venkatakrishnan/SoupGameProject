@@ -2,6 +2,7 @@ package com.example.soupgameproject;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -20,6 +21,11 @@ public class TitleActivity extends AppCompatActivity {
         WIDTH = getResources().getDisplayMetrics().widthPixels;
         HEIGHT = getResources().getDisplayMetrics().heightPixels;
 
+    }
+
+    public void startGame(View view){
+        Intent intent = new Intent(TitleActivity.this, InGameActivity.class);
+        startActivity(intent);
     }
 
     // The following code was from https://developer.android.com/training/system-ui/immersive to create a fullscreen (has changed)
