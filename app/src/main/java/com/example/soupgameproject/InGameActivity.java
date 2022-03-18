@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
+import java.util.ArrayList;
+
 public class InGameActivity extends AppCompatActivity {
 
     // Saving data variables
@@ -46,7 +48,8 @@ public class InGameActivity extends AppCompatActivity {
 
 
     // Environment variables
-
+    // Test Environment GameObjects
+    private ArrayList<GameObject> testEnvironmentGameObjects;
 
     // User Interface variables
     private Button leftButton, rightButton, jumpButton;
@@ -66,6 +69,9 @@ public class InGameActivity extends AppCompatActivity {
         jumpButton = findViewById(R.id.jumpButton);
 
 
+        testEnvironmentGameObjects.add(new GameObject(this, "Ground", (int)(TitleActivity.WIDTH/TitleActivity.DENSITY),30,
+                R.drawable.testground, 0, 0, true));
+
     }
 
     // Sets up a chosen in-game environment
@@ -76,13 +82,15 @@ public class InGameActivity extends AppCompatActivity {
         foregroundGameLayout = new GameLayout(this, foregroundLayout);
 
         if(environment.toLowerCase().equals("test")){
-
+            backgroundGameLayout.setBackgroundImage(R.drawable.cloudsbackgroundextended);
+            collisionGameLayout.setLayoutObjects(testEnvironmentGameObjects);
         }
     }
 
     // Sets up the character for the first time the app is used
     private void characterSetUp(){
-
+       // HitBox idleHitBox = new HitBox();
+        // Character kirby = new Character();
     }
 
     // Sets up character controls/interactions
