@@ -1,12 +1,15 @@
 package com.example.soupgameproject;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -48,7 +51,7 @@ public class InGameActivity extends AppCompatActivity {
     // Character variables
     // (SAVE)
     private Character kirby;
-    private ArrayList<HitBox> walkHitBoxes, runHitBoxes, fallHitBoxes, flipFallHitBoxes, floatHitBoxes;
+    private ArrayList<HitBox> walkHitBoxes, runHitBoxes, fallHitBoxes, flipFallHitBoxes, floatHitBoxes, jumpHitBox;
 
 
     // Environment variables (SAVE)
@@ -87,13 +90,15 @@ public class InGameActivity extends AppCompatActivity {
         cameraSetUp("test");
         testEnvironmentGameObjects = new ArrayList<GameObject>();
         testEnvironmentGameObjects.add(new GameObject(this, "Ground", (int)(TitleActivity.WIDTH/TitleActivity.DENSITY),10,
-                R.drawable.testground, 0, gameCamera.getBottomYPosition(), true));
+                R.drawable.testground, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
+                (int)(TitleActivity.WIDTH/TitleActivity.DENSITY), 5, 0, gameCamera.getBottomYPosition(),0,0)));
         kirby.setYPosition(gameCamera.getBottomYPosition() + 9);
         testEnvironmentGameObjects.add(kirby);
 
         // Call to show the chosen environment.
         environmentSetUp("test");
 
+        controllerSetUp(1/3F,1/2F, 1,20,1);
     }
 
     // Sets up the camera for a chosen environment
@@ -122,9 +127,9 @@ public class InGameActivity extends AppCompatActivity {
     // Sets up the character for the first time the app is used
     private void characterSetUp(){
         HitBox idleHitBox = new HitBox(this, true, (int) (30 * 20/59F),(int)(20 * 18/39F),
-                0, 0, 30 * 19/59F,20 * 1/39F);
+                50, 0, 30 * 19/59F,0);
 
-        kirby = new Character(this, "Kirby", 30, 20, 0, 0,
+        kirby = new Character(this, "Kirby", 30, 20, 50, 0,
                 idleHitBox, true, R.drawable.kirbyidle);
         kirby.setObjectResource(R.drawable.kirbyidle);
 
@@ -133,136 +138,561 @@ public class InGameActivity extends AppCompatActivity {
         fallHitBoxes = new ArrayList<HitBox>();
         flipFallHitBoxes = new ArrayList<HitBox>();
         floatHitBoxes = new ArrayList<HitBox>();
+        jumpHitBox = new ArrayList<HitBox>();
 
         // Walking Hit Boxes
         walkHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 20/59F),
                 (int)(kirby.getObjectHeight() * 18/39F), 0, 0, kirby.getObjectWidth() * 19/59F,
-                kirby.getObjectHeight() * 1/39F));
+                0));
         walkHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 21/59F),
                 (int)(kirby.getObjectHeight() * 19/39F), 0, 0, kirby.getObjectWidth() * 19/59F,
-                kirby.getObjectHeight() * 1/39F));
+                0));
         walkHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 20/59F),
                 (int)(kirby.getObjectHeight() * 18/39F), 0, 0, kirby.getObjectWidth() * 19/59F,
-                kirby.getObjectHeight() * 1/39F));
+                0));
         walkHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 19/59F),
                 (int)(kirby.getObjectHeight() * 16/39F), 0, 0, kirby.getObjectWidth() * 20/59F,
-                kirby.getObjectHeight() * 1/39F));
+                0));
         walkHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 17/59F),
                 (int)(kirby.getObjectHeight() * 17/39F), 0, 0, kirby.getObjectWidth() * 21/59F,
-                kirby.getObjectHeight() * 1/39F));
+                0));
         walkHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 17/59F),
                 (int)(kirby.getObjectHeight() * 18/39F), 0, 0, kirby.getObjectWidth() * 21/59F,
-                kirby.getObjectHeight() * 1/39F));
+                0));
         walkHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 21/59F),
                 (int)(kirby.getObjectHeight() * 19/39F), 0, 0, kirby.getObjectWidth() * 19/59F,
-                kirby.getObjectHeight() * 1/39F));
+                0));
         walkHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 20/59F),
                 (int)(kirby.getObjectHeight() * 18/39F), 0, 0, kirby.getObjectWidth() * 19/59F,
-                kirby.getObjectHeight() * 1/39F));
+                0));
         walkHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 19/59F),
                 (int)(kirby.getObjectHeight() * 16/39F), 0, 0, kirby.getObjectWidth() * 20/59F,
-                kirby.getObjectHeight() * 1/39F));
+                0));
         walkHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 19/59F),
                 (int)(kirby.getObjectHeight() * 17/39F), 0, 0, kirby.getObjectWidth() * 20/59F,
-                kirby.getObjectHeight() * 1/39F));
+                0));
 
         // Running Hit Boxes
         runHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 24/59F),
                 (int)(kirby.getObjectHeight() * 19/39F), 0, 0, kirby.getObjectWidth() * 17/59F,
-                kirby.getObjectHeight() * 0/39F));
+                0));
         runHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 19/59F),
                 (int)(kirby.getObjectHeight() * 19/39F), 0, 0, kirby.getObjectWidth() * 20/59F,
-                kirby.getObjectHeight() * 0/39F));
+                0));
         runHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 17/59F),
                 (int)(kirby.getObjectHeight() * 18/39F), 0, 0, kirby.getObjectWidth() * 21/59F,
-                kirby.getObjectHeight() * 0/39F));
+                0));
         runHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 18/59F),
                 (int)(kirby.getObjectHeight() * 19/39F), 0, 0, kirby.getObjectWidth() * 20/59F,
-                kirby.getObjectHeight() * 0/39F));
+                0));
         runHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 19/59F),
                 (int)(kirby.getObjectHeight() * 19/39F), 0, 0, kirby.getObjectWidth() * 20/59F,
-                kirby.getObjectHeight() * 0/39F));
+                0));
         runHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 18/59F),
                 (int)(kirby.getObjectHeight() * 19/39F), 0, 0, kirby.getObjectWidth() * 20/59F,
-                kirby.getObjectHeight() * 0/39F));
+                0));
         runHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 17/59F),
                 (int)(kirby.getObjectHeight() * 18/39F), 0, 0, kirby.getObjectWidth() * 21/59F,
-                kirby.getObjectHeight() * 0/39F));
+                0));
         runHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 19/59F),
                 (int)(kirby.getObjectHeight() * 19/39F), 0, 0, kirby.getObjectWidth() * 20/59F,
-                kirby.getObjectHeight() * 0/39F));
+                0));
 
         // Fall Hit Boxes
         fallHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 20/59F),
                 (int)(kirby.getObjectHeight() * 19/39F), 0, 0, kirby.getObjectWidth() * 19/59F,
-                kirby.getObjectHeight() * 0/39F));
+                0));
         fallHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 21/59F),
                 (int)(kirby.getObjectHeight() * 19/39F), 0, 0, kirby.getObjectWidth() * 19/59F,
-                kirby.getObjectHeight() * 0/39F));
+                0));
 
         // Flip Fall Hit Boxes
         flipFallHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 21/59F),
                 (int)(kirby.getObjectHeight() * 19/39F), 0, 0, kirby.getObjectWidth() * 19/59F,
-                kirby.getObjectHeight() * 0/39F));
+                0));
         flipFallHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 20/59F),
                 (int)(kirby.getObjectHeight() * 18/39F), 0, 0, kirby.getObjectWidth() * 19/59F,
-                kirby.getObjectHeight() * 0/39F));
+                0));
         flipFallHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 21/59F),
                 (int)(kirby.getObjectHeight() * 19/39F), 0, 0, kirby.getObjectWidth() * 19/59F,
-                kirby.getObjectHeight() * 0/39F));
+                0));
         flipFallHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 20/59F),
                 (int)(kirby.getObjectHeight() * 20/39F), 0, 0, kirby.getObjectWidth() * 19/59F,
-                kirby.getObjectHeight() * 0/39F));
+                0));
         flipFallHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 21/59F),
                 (int)(kirby.getObjectHeight() * 17/39F), 0, 0, kirby.getObjectWidth() * 19/59F,
-                kirby.getObjectHeight() * 0/39F));
+                0));
         flipFallHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 22/59F),
                 (int)(kirby.getObjectHeight() * 18/39F), 0, 0, kirby.getObjectWidth() * 18/59F,
-                kirby.getObjectHeight() * 0/39F));
+                0));
 
         for(int i = 0; i < 10; i ++) {
             flipFallHitBoxes.add(new HitBox(this, true, (int) (kirby.getObjectWidth() * 20 / 59F),
                     (int) (kirby.getObjectHeight() * 19 / 39F), 0, 0, kirby.getObjectWidth() * 19 / 59F,
-                    kirby.getObjectHeight() * 0 / 39F));
+                    0));
             flipFallHitBoxes.add(new HitBox(this, true, (int) (kirby.getObjectWidth() * 21 / 59F),
                     (int) (kirby.getObjectHeight() * 19 / 39F), 0, 0, kirby.getObjectWidth() * 19 / 59F,
-                    kirby.getObjectHeight() * 0 / 39F));
+                    0));
         }
 
         // Float Hit Boxes
         floatHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 24/59F),
                 (int)(kirby.getObjectHeight() * 25/39F), 0, 0, kirby.getObjectWidth() * 17/59F,
-                kirby.getObjectHeight() * 0/39F));
+                0));
         floatHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 24/59F),
                 (int)(kirby.getObjectHeight() * 24/39F), 0, 0, kirby.getObjectWidth() * 17/59F,
-                kirby.getObjectHeight() * 0/39F));
+                0));
         floatHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 24/59F),
                 (int)(kirby.getObjectHeight() * 24/39F), 0, 0, kirby.getObjectWidth() * 17/59F,
-                kirby.getObjectHeight() * 0/39F));
+                0));
         floatHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 25/59F),
                 (int)(kirby.getObjectHeight() * 24/39F), 0, 0, kirby.getObjectWidth() * 17/59F,
-                kirby.getObjectHeight() * 0/39F));
+                0));
         floatHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 26/59F),
                 (int)(kirby.getObjectHeight() * 24/39F), 0, 0, kirby.getObjectWidth() * 16/59F,
-                kirby.getObjectHeight() * 0/39F));
+                0));
         floatHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 25/59F),
                 (int)(kirby.getObjectHeight() * 24/39F), 0, 0, kirby.getObjectWidth() * 17/59F,
-                kirby.getObjectHeight() * 0/39F));
+                0));
         floatHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 24/59F),
                 (int)(kirby.getObjectHeight() * 24/39F), 0, 0, kirby.getObjectWidth() * 17/59F,
-                kirby.getObjectHeight() * 0/39F));
+                0));
         floatHitBoxes.add(new HitBox(this, true, (int)(kirby.getObjectWidth() * 24/59F),
                 (int)(kirby.getObjectHeight() * 24/39F), 0, 0, kirby.getObjectWidth() * 17/59F,
-                kirby.getObjectHeight() * 0/39F));
+                0));
 
-
+        // Jump Hit Box
+        jumpHitBox.add(new HitBox(InGameActivity.this, true, (int)(kirby.getObjectWidth() * 22/59F),
+                (int)(kirby.getObjectHeight() * 20/39F), 0, 0, kirby.getObjectWidth() * 18/59F,
+                0));
 
     }
 
     // Sets up character controls/interactions
     // Majority of game logic resides here
-    private void controllerSetUp(){
-        
+    @SuppressLint("ClickableViewAccessibility")
+    private void controllerSetUp(float walkSpeed, float runSpeed, float jumpHeight, float highJumpHeight, float floatJumpHeight){
+        lrHandler = new Handler();
+        udHandler = new Handler();
+        aHandler = new Handler();
+        cHandler = new Handler();
+
+        leftButton.setOnTouchListener(new View.OnTouchListener() {
+            
+            private boolean isDown = false;
+
+            private Handler dcHandler = new Handler();
+
+            private boolean isDoubleClick = false;
+
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch(motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (isDown) return true;
+                        lrHandler.removeCallbacksAndMessages(null);
+                        cHandler.removeCallbacksAndMessages(null);
+                        aHandler.removeCallbacksAndMessages(null);
+                        
+                        if(isDoubleClick){
+                            cHandler.postDelayed(leftRunCamera,0);
+                            lrHandler.postDelayed(leftRun,0);
+                        }
+                        else{
+                            cHandler.postDelayed(leftWalkCamera,0);
+                            lrHandler.postDelayed(leftWalk,0);
+                        }
+                        
+                        isDown = true;
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        view.performClick();
+                        if (!isDown) return true;
+
+                        lrHandler.removeCallbacks(leftWalk);
+                        cHandler.removeCallbacks(leftWalkCamera);
+
+                        lrHandler.removeCallbacks(leftRun);
+                        cHandler.removeCallbacks(leftRunCamera);
+                        
+                        if(kirby.isGrounded()) {
+                            kirby.setObjectResource(kirby.getIdleResource());
+                            kirby.setHitBox(kirby.getIdleHitBox());
+                            kirby.showHitBox();
+                        }
+                        
+                        isDown = false;
+
+                        isDoubleClick = true;
+                        
+                        dcHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                isDoubleClick = false;
+                            }
+                        }, 100);
+
+                        break;
+                }
+                return false;
+            }
+
+            Runnable leftWalk = kirby.walk(lrHandler, R.drawable.kirbywalk,"left", walkSpeed, walkHitBoxes, new GameObject.CollisionListener() {
+                        @Override
+                        public void onCollision(GameObject object1, GameObject object2) {
+                            if (GameObject.getCollisionType(object1, object2).contains("right")) {
+                                if(gameCamera.getRightXPosition() < (TitleActivity.WIDTH/TitleActivity.DENSITY)) {
+                                    gameCamera.setXPosition(gameCamera.getXPosition() + walkSpeed);
+                                }
+                                kirby.setXPosition(kirby.getXPosition() + walkSpeed);
+                                Log.i("Collision", object1.getObjectName() + " collided with the right of " + object2.getObjectName());
+                            }
+                        }
+                    },
+                    new Character.NotGroundedListener() {
+                        @Override
+                        public void notGrounded() {
+                            udHandler.postDelayed(fall, 0);
+                        }
+                    },
+                    new Character.PositionListener() {
+                        @Override
+                        public void atPosition(float xPosition, float yPosition) {
+                            if((xPosition + kirby.getObjectWidth()/2F <= TitleActivity.WIDTH/TitleActivity.DENSITY - (gameCamera.getRightXPosition()-gameCamera.getLeftXPosition())/2
+                                    + walkSpeed && xPosition + kirby.getObjectWidth()/2F >= TitleActivity.WIDTH/TitleActivity.DENSITY -
+                                    (gameCamera.getRightXPosition()-gameCamera.getLeftXPosition())/2-walkSpeed)){
+                                if(gameCamera.isFixedPosition()) {
+                                    gameCamera.setFixedPosition(false);
+                                    cHandler.removeCallbacksAndMessages(null);
+                                    cHandler.postDelayed(leftWalkCamera, 0);
+                                    kirby.setCenterXPosition(gameCamera.getXPosition());
+                                }
+                            }
+                        }
+                    });
+            
+            Runnable leftWalkCamera = gameCamera.moveLeft(cHandler, walkSpeed * TitleActivity.DENSITY);
+
+            Runnable leftRun = kirby.walk(lrHandler, R.drawable.kirbyrun,"left", runSpeed, runHitBoxes, new GameObject.CollisionListener() {
+                        @Override
+                        public void onCollision(GameObject object1, GameObject object2) {
+                            if (GameObject.getCollisionType(object1, object2).contains("right")) {
+                                if(gameCamera.getRightXPosition() < (TitleActivity.WIDTH/TitleActivity.DENSITY)) {
+                                    gameCamera.setXPosition(gameCamera.getXPosition() + runSpeed);
+                                }
+                                kirby.setXPosition(kirby.getXPosition() + runSpeed);
+                                Log.i("Collision", object1.getObjectName() + " collided with the right of " + object2.getObjectName());
+                            }
+                        }
+                    },
+                    new Character.NotGroundedListener() {
+                        @Override
+                        public void notGrounded() {
+                            udHandler.postDelayed(fall, 0);
+                        }
+                    },
+                    new Character.PositionListener() {
+                        @Override
+                        public void atPosition(float xPosition, float yPosition) {
+                            if((xPosition + kirby.getObjectWidth()/2F <= TitleActivity.WIDTH/TitleActivity.DENSITY - (gameCamera.getRightXPosition()-gameCamera.getLeftXPosition())/2
+                                    + runSpeed && xPosition + kirby.getObjectWidth()/2F >= TitleActivity.WIDTH/TitleActivity.DENSITY -
+                                    (gameCamera.getRightXPosition()-gameCamera.getLeftXPosition())/2-runSpeed)){
+                                if(gameCamera.isFixedPosition()) {
+                                    gameCamera.setFixedPosition(false);
+                                    cHandler.removeCallbacksAndMessages(null);
+                                    cHandler.postDelayed(leftRunCamera, 0);
+                                    kirby.setCenterXPosition(gameCamera.getXPosition());
+                                }
+                            }
+                        }
+                    });
+
+            Runnable leftRunCamera = gameCamera.moveLeft(cHandler, runSpeed * TitleActivity.DENSITY);
+            
+            
+            Runnable fall = kirby.fall(udHandler, R.drawable.kirbyfall, true, fallHitBoxes, new GameObject.CollisionListener() {
+                @Override
+                public void onCollision(GameObject object1, GameObject object2) {
+                    if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                        udHandler.removeCallbacksAndMessages(null);
+                        kirby.stopFall();
+                        kirby.setGrounded(true);
+                        kirby.setObjectResource(kirby.getIdleResource());
+
+                        kirby.setYPosition(object2.getHitBox().topLeft().y - kirby.getHitBox().getYBottom());
+
+                        kirby.setHitBox(kirby.getIdleHitBox());
+                        kirby.showHitBox();
+
+                        Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                    }
+                }
+            }, 
+                    new Character.PositionListener() {
+                @Override
+                public void atPosition(float xPosition, float yPosition) {
+                    
+                }
+            });
+        });
+
+        rightButton.setOnTouchListener(new View.OnTouchListener() {
+            private boolean isDown = false;
+
+            private Handler dcHandler = new Handler();
+
+            private boolean isDoubleClick = false;
+
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch(motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (isDown) return true;
+                        lrHandler.removeCallbacksAndMessages(null);
+                        cHandler.removeCallbacksAndMessages(null);
+                        aHandler.removeCallbacksAndMessages(null);
+
+                        if(isDoubleClick){
+                            cHandler.postDelayed(rightRunCamera,0);
+                            lrHandler.postDelayed(rightRun,0);
+                        }
+                        else{
+                            cHandler.postDelayed(rightWalkCamera,0);
+                            lrHandler.postDelayed(rightWalk,0);
+                        }
+
+                        isDown = true;
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        view.performClick();
+                        if (!isDown) return true;
+
+                        lrHandler.removeCallbacks(rightWalk);
+                        cHandler.removeCallbacks(rightWalkCamera);
+
+                        lrHandler.removeCallbacks(rightRun);
+                        cHandler.removeCallbacks(rightRunCamera);
+
+                        if(kirby.isGrounded()) {
+                            kirby.setObjectResource(kirby.getIdleResource());
+                            kirby.setHitBox(kirby.getIdleHitBox());
+                            kirby.showHitBox();
+                        }
+
+                        isDown = false;
+
+                        isDoubleClick = true;
+
+                        dcHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                isDoubleClick = false;
+                            }
+                        }, 100);
+
+                        break;
+                }
+                return false;
+            }
+
+            Runnable rightWalk = kirby.walk(lrHandler, R.drawable.kirbywalk,"right", walkSpeed, walkHitBoxes, new GameObject.CollisionListener() {
+                        @Override
+                        public void onCollision(GameObject object1, GameObject object2) {
+                            if (GameObject.getCollisionType(object1, object2).contains("right")) {
+                                if(gameCamera.getRightXPosition() < (TitleActivity.WIDTH/TitleActivity.DENSITY)) {
+                                    gameCamera.setXPosition(gameCamera.getXPosition() + walkSpeed);
+                                }
+                                kirby.setXPosition(kirby.getXPosition() + walkSpeed);
+                                Log.i("Collision", object1.getObjectName() + " collided with the right of " + object2.getObjectName());
+                            }
+                        }
+                    },
+                    new Character.NotGroundedListener() {
+                        @Override
+                        public void notGrounded() {
+                            udHandler.postDelayed(fall, 0);
+                        }
+                    },
+                    new Character.PositionListener() {
+                        @Override
+                        public void atPosition(float xPosition, float yPosition) {
+                            if((xPosition + kirby.getObjectWidth()/2F<= (gameCamera.getRightXPosition()-gameCamera.getLeftXPosition())/2 + walkSpeed
+                                    && xPosition + kirby.getObjectWidth()/2F>= (gameCamera.getRightXPosition()-gameCamera.getLeftXPosition())/2 - walkSpeed)){
+                                if(gameCamera.isFixedPosition()) {
+                                    gameCamera.setFixedPosition(false);
+                                    cHandler.removeCallbacksAndMessages(null);
+                                    cHandler.postDelayed(rightWalkCamera, 0);
+                                    kirby.setCenterXPosition(gameCamera.getXPosition());
+                                }
+                            }
+                        }
+                    });
+
+            Runnable rightWalkCamera = gameCamera.moveRight(cHandler, walkSpeed * TitleActivity.DENSITY);
+
+            Runnable rightRun = kirby.walk(lrHandler, R.drawable.kirbyrun,"right", runSpeed, runHitBoxes, new GameObject.CollisionListener() {
+                        @Override
+                        public void onCollision(GameObject object1, GameObject object2) {
+                            if (GameObject.getCollisionType(object1, object2).contains("right")) {
+                                if(gameCamera.getRightXPosition() < (TitleActivity.WIDTH/TitleActivity.DENSITY)) {
+                                    gameCamera.setXPosition(gameCamera.getXPosition() + runSpeed);
+                                }
+                                kirby.setXPosition(kirby.getXPosition() + runSpeed);
+                                Log.i("Collision", object1.getObjectName() + " collided with the right of " + object2.getObjectName());
+                            }
+                        }
+                    },
+                    new Character.NotGroundedListener() {
+                        @Override
+                        public void notGrounded() {
+                            udHandler.postDelayed(fall, 0);
+                        }
+                    },
+                    new Character.PositionListener() {
+                        @Override
+                        public void atPosition(float xPosition, float yPosition) {
+                            if((xPosition + kirby.getObjectWidth()/2F <= (gameCamera.getRightXPosition()-gameCamera.getLeftXPosition())/2 + runSpeed
+                                    && xPosition + kirby.getObjectWidth()/2F >= (gameCamera.getRightXPosition()-gameCamera.getLeftXPosition())/2 - runSpeed)){
+                                if(gameCamera.isFixedPosition()) {
+                                    gameCamera.setFixedPosition(false);
+                                    cHandler.removeCallbacksAndMessages(null);
+                                    cHandler.postDelayed(rightRunCamera, 0);
+                                    kirby.setCenterXPosition(gameCamera.getXPosition());
+                                }
+                            }
+                        }
+                    });
+
+            Runnable rightRunCamera = gameCamera.moveRight(cHandler, runSpeed * TitleActivity.DENSITY);
+
+
+            Runnable fall = kirby.fall(udHandler, R.drawable.kirbyfall, true, fallHitBoxes, new GameObject.CollisionListener() {
+                        @Override
+                        public void onCollision(GameObject object1, GameObject object2) {
+                            if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                                udHandler.removeCallbacksAndMessages(null);
+                                kirby.stopFall();
+                                kirby.setGrounded(true);
+                                kirby.setObjectResource(kirby.getIdleResource());
+
+                                kirby.setYPosition(object2.getHitBox().topLeft().y - kirby.getHitBox().getYBottom());
+
+                                kirby.setHitBox(kirby.getIdleHitBox());
+                                kirby.showHitBox();
+
+                                Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                            }
+                        }
+                    },
+                    new Character.PositionListener() {
+                        @Override
+                        public void atPosition(float xPosition, float yPosition) {
+
+                        }
+                    });
+        });
+
+        jumpButton.setOnTouchListener(new View.OnTouchListener() {
+
+            private boolean isDown = false;
+
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch(motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (isDown) return true;
+                        udHandler.removeCallbacksAndMessages(null);
+                        aHandler.removeCallbacksAndMessages(null);
+
+
+                        isDown = true;
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        view.performClick();
+                        if (!isDown) return true;
+
+                        isDown = false;
+
+                        break;
+                }
+                return false;
+            }
+        });
+
+        jumpButton.setOnLongClickListener(new View.OnLongClickListener() {
+
+            private boolean isLongClick = false;
+
+            @Override
+            public boolean onLongClick(View view) {
+                if(isLongClick) {
+                    isLongClick = false;
+                    return true;
+                }
+
+                udHandler.removeCallbacksAndMessages(null);
+                aHandler.removeCallbacksAndMessages(null);
+                udHandler.postDelayed(highJump,0);
+
+                isLongClick = true;
+                return false;
+            }
+
+            Runnable highJump = kirby.jump(udHandler, R.drawable.kirby672, false, highJumpHeight, jumpHitBox,
+                    new GameObject.CollisionListener() {
+                @Override
+                public void onCollision(GameObject object1, GameObject object2) {
+                    if(GameObject.getCollisionType(object1, object2).contains("bottom")){
+                        udHandler.removeCallbacksAndMessages(null);
+                        kirby.stopJump();
+                        kirby.setYPosition(object2.getHitBox().bottomRight().y -
+                                kirby.getHitBox().getHitHeight() - kirby.getHitBox().getYBottom());
+                        udHandler.postDelayed(flipFall,0);
+                        Log.i("Collision", object1.getObjectName() + " collided with bottom of " + object2.getObjectName());
+                    }
+                }
+            },
+                    new Character.CharacterListener() {
+                @Override
+                public void onActionComplete() {
+                    udHandler.removeCallbacksAndMessages(null);
+                    aHandler.removeCallbacksAndMessages(null);
+                    udHandler.postDelayed(flipFall,0);
+                }
+            },
+                    new Character.PositionListener() {
+                @Override
+                public void atPosition(float xPosition, float yPosition) {
+
+                }
+            });
+
+            Runnable flipFall = kirby.fall(udHandler, R.drawable.kirbyflipfall, true, flipFallHitBoxes, new GameObject.CollisionListener() {
+                        @Override
+                        public void onCollision(GameObject object1, GameObject object2) {
+                            if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                                udHandler.removeCallbacksAndMessages(null);
+                                kirby.stopFall();
+                                kirby.setGrounded(true);
+                                kirby.setObjectResource(kirby.getIdleResource());
+
+                                kirby.setYPosition(object2.getHitBox().topLeft().y - kirby.getHitBox().getYBottom());
+
+                                kirby.setHitBox(kirby.getIdleHitBox());
+                                kirby.showHitBox();
+
+                                Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                            }
+                        }
+                    },
+                    new Character.PositionListener() {
+                        @Override
+                        public void atPosition(float xPosition, float yPosition) {
+
+                        }
+                    });
+
+        });
     }
 
     // This method helps to find the scale for the game camera to zoom to
@@ -274,7 +704,9 @@ public class InGameActivity extends AppCompatActivity {
     // Debugging method
     public void viewInfoDebug(View view){
         GameObject.displayHitBoxes = true;
-        kirby.showHitBox();
+        for(GameObject object : testEnvironmentGameObjects){
+            object.showHitBox();
+        }
         try {
             Log.i("CharacterDebug", "Character: Position: xPosition = " + String.valueOf(kirby.getXPosition()) +
                     " yPosition = " + String.valueOf(kirby.getYPosition()) + " | Width = " + String.valueOf(kirby.getObjectWidth()) +

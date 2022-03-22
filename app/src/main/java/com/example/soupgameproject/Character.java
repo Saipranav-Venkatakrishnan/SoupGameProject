@@ -58,6 +58,7 @@ public class Character extends GameObject{
 
     // The walk method contains an additional listener called the NotGroundedListener. This is to listen for when the Character is
     // no longer grounded but is moving horizontally to apply appropriate animations/image resources when this occurs.
+    // speed in  dp
     public Runnable walk(Handler handler, int walkResource, String direction, float speed, ArrayList<HitBox> hitBoxes, CollisionListener collisionListener,
                          NotGroundedListener notGroundedListener, PositionListener positionListener){
 

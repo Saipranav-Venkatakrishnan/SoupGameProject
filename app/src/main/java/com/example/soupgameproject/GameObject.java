@@ -360,9 +360,22 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
         return xPosition + objectWidth/2F;
     }
 
+    public void setCenterXPosition(float centerXPosition){
+        this.xPosition = centerXPosition-objectWidth/2F;
+        this.hitBox.setXPosition(this.xPosition);
+        setTranslationX(this.xPosition * TitleActivity.DENSITY);
+    }
+
     public float getCenterYPosition(){
         return yPosition + objectHeight/2F;
     }
+
+    public void setCenterYPosition(float centerYPosition){
+        this.yPosition = centerYPosition-objectHeight/2F;
+        this.hitBox.setXPosition(this.yPosition);
+        setTranslationY(this.yPosition * TitleActivity.DENSITY);
+    }
+
 
     public float getXPosition() {
         return xPosition;

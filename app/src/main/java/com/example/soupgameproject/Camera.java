@@ -144,7 +144,7 @@ public class Camera {
 
     // The movementSpeed parameter behaves as expected: the larger the movement speed, the faster the camera moves
     // the smaller the movement speed, the slower the camera moves.
-    // Movement speed = movementSpeed/1 millisecond
+    // Movement speed = movementSpeed (pixels)/1 millisecond
     // Like the zoomIn and zoomOut functions, define the action variable, then use it like so:
     // Runnable action = yourCamera.move[direction](handler, movementSpeed);
     // handler.postDelayed(action, delay time for action to start);

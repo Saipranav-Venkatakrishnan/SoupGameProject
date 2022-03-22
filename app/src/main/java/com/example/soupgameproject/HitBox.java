@@ -153,6 +153,14 @@ public class HitBox {
         this.yPosition = yPosition;
     }
 
+    public float getXLeft() {
+        return xLeft;
+    }
+
+    public float getYBottom() {
+        return yBottom;
+    }
+
     // Sets the GameObject associated with the hit box. Is called whenever a GameObject sets its hit box
     public void setObject(GameObject object){
         this.object = object;
