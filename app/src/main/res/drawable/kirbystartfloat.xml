@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/kirby917" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby918" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby919" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby958" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby959" android:duration="@integer/shortFrameTime"/>
+</animation-list>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <integer name="fastFrameTime">50</integer>
     <integer name="shortFrameTime">100</integer>
     <integer name="defaultFrameTime">150</integer>
     <integer name="longFrameTime">300</integer>

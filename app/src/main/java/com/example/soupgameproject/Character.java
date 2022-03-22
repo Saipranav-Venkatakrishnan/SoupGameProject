@@ -241,7 +241,8 @@ public class Character extends GameObject{
     // use the CollisionListener to detect when the Character collides with the top of a GameObject to stop the fall.
     // To stop a fall, remove callbacks to this runnable and call the stopFall() method. If the Character stopped falling because it collided with the top
     // of another GameObject, set isGrounded to true.
-    public Runnable fall(Handler handler, int fallResource, boolean isFallAnimated, ArrayList<HitBox> hitBoxes, CollisionListener collisionListener, PositionListener positionListener){
+    public Runnable fall(Handler handler, int fallResource, boolean isFallAnimated, ArrayList<HitBox> hitBoxes,
+                         CollisionListener collisionListener, PositionListener positionListener){
 
         Runnable action = new Runnable() {
 
@@ -266,6 +267,92 @@ public class Character extends GameObject{
 
                     // Movement
                     setYPosition((float) (initialYPosition - (.5 * GameObject.GRAVITY * Math.pow(changeInTime, 2))));
+                    positionListener.atPosition(getXPosition(),getYPosition());
+
+                    // Animation
+                    if (isFallAnimated) {
+                        if (getObjectResource() != fallResource) {
+                            setObjectResource(fallResource);
+                            animation = (AnimationDrawable) getBackground();
+                            animation.setOneShot(false);
+                            animation.start();
+                            isGrounded = false;
+                            i = 0;
+                        }
+
+                        if (i < animation.getNumberOfFrames() - 1) {
+                            long currentAnimationTime = System.currentTimeMillis();
+                            if((int)(currentAnimationTime-initialAnimationTime) >= animation.getDuration(i)) {
+                                i++;
+                                initialAnimationTime = currentAnimationTime;
+                            }
+                        } else {
+                            i = 0;
+                        }
+
+                        // HitBoxes
+                        hitBoxes.get(i).setXPosition(getXPosition());
+                        hitBoxes.get(i).setYPosition(getYPosition());
+                        setHitBox(hitBoxes.get(i));
+                        showHitBox();
+                    }
+                    // No Animation
+                    else {
+                        if (getObjectResource() != fallResource) {
+                            setObjectResource(fallResource);
+                            isGrounded = false;
+                        }
+
+                        // HitBox
+                        hitBoxes.get(0).setXPosition(getXPosition());
+                        hitBoxes.get(0).setYPosition(getYPosition());
+                        setHitBox(hitBoxes.get(0));
+                        showHitBox();
+
+                    }
+
+                    // Collision Handling
+                    for (GameObject object : detectCollisions()) {
+                        collisionListener.onCollision(Character.this, object);
+                    }
+
+                    if(!stopFall) {
+                        handler.postDelayed(this, 1);
+                    }
+                }
+            }
+        };
+
+        return action;
+    }
+
+    // Overloaded fall method for varying fall speeds
+    public Runnable fall(Handler handler, int fallResource, boolean isFallAnimated, float fallRate, ArrayList<HitBox> hitBoxes,
+                         CollisionListener collisionListener, PositionListener positionListener){
+
+        Runnable action = new Runnable() {
+
+            long initialTime = 0;
+            long initialAnimationTime = 0;
+            float initialYPosition = 0;
+            int i = 0;
+
+            @Override public void run() {
+                if (!fallStarted) {
+                    // time the fall was initiated
+                    initialTime = System.currentTimeMillis();
+                    initialAnimationTime = System.currentTimeMillis();
+                    initialYPosition = getYPosition();
+                    fallStarted = true;
+                    stopFall = false;
+                }
+
+                if (fallStarted) {
+                    long currentTime = System.currentTimeMillis();
+                    float changeInTime = (currentTime - initialTime) / 1000F;
+
+                    // Movement
+                    setYPosition((float) (initialYPosition - (.5 * fallRate * Math.pow(changeInTime, 2))));
                     positionListener.atPosition(getXPosition(),getYPosition());
 
                     // Animation
