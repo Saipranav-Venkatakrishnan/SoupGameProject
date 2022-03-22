@@ -14,6 +14,9 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
     // px = dp * Title.DENSITY
     // Most pre-existing methods in Android Studio move views by PIXEL
 
+    // Determines whether or not hit boxes show
+    public static boolean displayHitBoxes;
+
     // Proximity defines how close another GameObject must be in order for this GameObject to consider it for collisions 
     // The distance away from this GameObjects xPosition and yPosition in all four directions.
     // (Value is subject to change for game efficiency)
@@ -312,13 +315,15 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
     }
 
     // Displays a this GameObject's hit box when called. Use this method whenever a hit box is changing/the GameObject is moving
-    // To stop displaying hit boxes, as showing hit boxes slows down the game tremendously, comment out the body of the method
-    // but LEAVE THE METHOD HEADER
+    // To stop displaying hit boxes, as showing hit boxes slows down the game tremendously, set displayHitBoxes to false.
+    // When no longer needed, comment the body of the method out but leave the header.
     public void showHitBox(){
-//        if(previousHitBox != null){
-//            previousHitBox.removeHitBox();
-//        }
-//        hitBox.visualizeHitBox();
+        if(displayHitBoxes) {
+            if (previousHitBox != null) {
+                previousHitBox.removeHitBox();
+            }
+            hitBox.visualizeHitBox();
+        }
     }
 
     // GENERAL GETTERS AND SETTERS
@@ -365,6 +370,7 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
 
     public void setXPosition(float xPosition) {
         this.xPosition = xPosition;
+        this.hitBox.setXPosition(xPosition);
         setTranslationX(xPosition * TitleActivity.DENSITY);
     }
 
@@ -374,6 +380,7 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
 
     public void setYPosition(float yPosition) {
         this.yPosition = yPosition;
+        this.hitBox.setYPosition(yPosition);
         setTranslationY(-yPosition * TitleActivity.DENSITY);
     }
 

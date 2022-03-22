@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Flip -->
+    <item android:drawable="@drawable/kirby680" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby681" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby682" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby683" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby684" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby685" android:duration="@integer/shortFrameTime"/>
+
+    <!-- Fall -->
+    <item android:drawable="@drawable/kirby710" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby711" android:duration="@integer/defaultFrameTime"/>
+
+    <item android:drawable="@drawable/kirby710" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby711" android:duration="@integer/defaultFrameTime"/>
+
+    <item android:drawable="@drawable/kirby710" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby711" android:duration="@integer/defaultFrameTime"/>
+
+    <item android:drawable="@drawable/kirby710" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby711" android:duration="@integer/defaultFrameTime"/>
+
+    <item android:drawable="@drawable/kirby710" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby711" android:duration="@integer/defaultFrameTime"/>
+
+    <item android:drawable="@drawable/kirby710" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby711" android:duration="@integer/defaultFrameTime"/>
+
+    <item android:drawable="@drawable/kirby710" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby711" android:duration="@integer/defaultFrameTime"/>
+
+    <item android:drawable="@drawable/kirby710" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby711" android:duration="@integer/defaultFrameTime"/>
+
+    <item android:drawable="@drawable/kirby710" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby711" android:duration="@integer/defaultFrameTime"/>
+
+    <item android:drawable="@drawable/kirby710" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby711" android:duration="@integer/defaultFrameTime"/>
+
+
+</animation-list>

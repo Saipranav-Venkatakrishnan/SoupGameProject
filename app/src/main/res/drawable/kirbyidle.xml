@@ -1,8 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
 <animation-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/kirby272" android:duration="500"/>
-    <item android:drawable="@drawable/kirby273" android:duration="@integer/frametime"/>
-    <item android:drawable="@drawable/kirby272" android:duration="@integer/frametime"/>
-    <item android:drawable="@drawable/kirby273" android:duration="@integer/frametime"/>
+    <!-- Kirby Blink -->
+    <item android:drawable="@drawable/kirby272" android:duration="2000"/>
+    <item android:drawable="@drawable/kirby273" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby272" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby273" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby272" android:duration="2000"/>
+    <item android:drawable="@drawable/kirby273" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby272" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby273" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby272" android:duration="2000"/>
+
+    <!-- Kirby Look-->
+    <item android:drawable="@drawable/kirby413" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby414" android:duration="@integer/extraLongFrameTime"/>
+    <item android:drawable="@drawable/kirby413" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby272" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby425" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby426" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby427" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby428" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby429" android:duration="@integer/extraLongFrameTime"/>
+    <item android:drawable="@drawable/kirby428" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby427" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby426" android:duration="@integer/defaultFrameTime"/>
+
+    <!-- Kirby Blink -->
+    <item android:drawable="@drawable/kirby272" android:duration="2000"/>
+    <item android:drawable="@drawable/kirby273" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby272" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby273" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby272" android:duration="2000"/>
+    <item android:drawable="@drawable/kirby273" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby272" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby273" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby272" android:duration="2000"/>
+
+    <!-- Kirby Sit-->
+    <item android:drawable="@drawable/kirby395" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby396" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby397" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby396" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby395" android:duration="@integer/extraLongFrameTime"/>
+    <item android:drawable="@drawable/kirby395" android:duration="@integer/extraLongFrameTime"/>
+    <item android:drawable="@drawable/kirby395" android:duration="@integer/extraLongFrameTime"/>
+    <item android:drawable="@drawable/kirby396" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby397" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby396" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby395" android:duration="@integer/shortFrameTime"/>
+
+
+
+
+    <!-- Kirby Blink -->
+    <item android:drawable="@drawable/kirby272" android:duration="2000"/>
+    <item android:drawable="@drawable/kirby273" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby272" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby273" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby272" android:duration="2000"/>
+    <item android:drawable="@drawable/kirby273" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby272" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby273" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby272" android:duration="2000"/>
+
+    <!-- Kirby Sleep -->
+    <item android:drawable="@drawable/kirby1109" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby1110" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby1111" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby1112" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby1113" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby1114" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby1115" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby1116" android:duration="@integer/defaultFrameTime"/>
+
+    <item android:drawable="@drawable/kirby1117" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1118" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1119" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1120" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1121" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1122" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1117" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1118" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1119" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1120" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1121" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1122" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1117" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1118" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1119" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1120" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1121" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1122" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1117" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1118" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1119" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1120" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1121" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1122" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1117" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1118" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1119" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1120" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1121" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1122" android:duration="@integer/longFrameTime"/>
+
+    <item android:drawable="@drawable/kirby1116" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby1115" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby1114" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby1113" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby1112" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby1111" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby1110" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby1109" android:duration="@integer/defaultFrameTime"/>
 
 </animation-list>

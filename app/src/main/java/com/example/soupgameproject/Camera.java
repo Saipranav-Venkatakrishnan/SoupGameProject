@@ -312,6 +312,22 @@ public class Camera {
         }
     }
 
+    public void setLeftXPosition(float leftXPosition){
+        if(!fixedPosition){
+            containerLayout.setTranslationX(-(((leftXPosition - ((-TitleActivity.WIDTH/ (2 * TitleActivity.DENSITY))
+                    + ((scale-1)/(2 * scale)) * (TitleActivity.WIDTH/TitleActivity.DENSITY)))
+                    * TitleActivity.DENSITY) - TitleActivity.WIDTH / 2F));
+        }
+    }
+
+    public void setRightXPosition(float rightXPosition){
+        if(!fixedPosition){
+            containerLayout.setTranslationX(-(((rightXPosition - ((TitleActivity.WIDTH/ (2 * TitleActivity.DENSITY))
+                    - ((scale-1)/(2 * scale)) * (TitleActivity.WIDTH/TitleActivity.DENSITY)))
+                    * TitleActivity.DENSITY) - TitleActivity.WIDTH / 2F));
+        }
+    }
+
     // get the y coordinate, using our defined game coordinate system, of where the camera is centered at in DP.
     public float getYPosition(){
         y = containerLayout.getTranslationY();

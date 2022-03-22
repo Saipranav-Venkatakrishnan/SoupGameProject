@@ -13,14 +13,14 @@ public class Character extends GameObject{
     private AnimationDrawable animation;
 
     // These decide whether or not an action is animated
-    private boolean isIdleAnimated, isJumpAnimated, isFallAnimated;
+    private boolean isIdleAnimated;
 
     // The following help to control jump, fall, and action logic
     private boolean jumpStarted, fallStarted, stopJump, stopFall;
     private boolean actionStarted, stopAction;
 
-    // Resources for the character (animation or static)
-    private int walkResource, jumpResource, fallResource, idleResource;
+    // Resource for the character (animation or static)
+    private int idleResource;
 
     // Character attributes
     // This boolean indicates whether or not the character is colliding with the top of another GameObject
@@ -30,21 +30,14 @@ public class Character extends GameObject{
 
     // Creates a visible Character and assigns all instance variables appropriately
     public Character(Context context, String objectName, int objectWidth, int objectHeight,
-                     float xPosition, float yPosition, HitBox idleHitBox,
-                     boolean isIdleAnimated,boolean isJumpAnimated, boolean isFallAnimated,
-                     int walkResource, int idleResource, int jumpResource, int fallResource) {
+                     float xPosition, float yPosition, HitBox idleHitBox, boolean isIdleAnimated, int idleResource) {
         super(context, objectName, objectWidth, objectHeight, idleResource, xPosition, yPosition,
                 true, idleHitBox);
-        // Set resources
-        this.walkResource = walkResource;
-        this.jumpResource = jumpResource;
-        this.fallResource = fallResource;
+        // Set resource
         this.idleResource = idleResource;
 
         // Assign booleans to distinguish animation from static images
         this.isIdleAnimated = isIdleAnimated;
-        this.isJumpAnimated = isJumpAnimated;
-        this.isFallAnimated = isFallAnimated;
 
         // Set character attributes
         this.isGrounded = true;
@@ -65,7 +58,7 @@ public class Character extends GameObject{
 
     // The walk method contains an additional listener called the NotGroundedListener. This is to listen for when the Character is
     // no longer grounded but is moving horizontally to apply appropriate animations/image resources when this occurs.
-    public Runnable walk(Handler handler, String direction, float speed, ArrayList<HitBox> hitBoxes, CollisionListener collisionListener,
+    public Runnable walk(Handler handler, int walkResource, String direction, float speed, ArrayList<HitBox> hitBoxes, CollisionListener collisionListener,
                          NotGroundedListener notGroundedListener, PositionListener positionListener){
 
         Runnable action = new Runnable() {
@@ -149,7 +142,7 @@ public class Character extends GameObject{
     // This method has an additional listener called CharacterListener. This is to listen for when actions are complete, such as
     // when the jumpHeight has been reached. Once reached, you can fill in the appropriate method after creating the CharacterListener
     // to deal with such an event.
-    public Runnable jump(Handler handler, float jumpHeight, ArrayList<HitBox> hitBoxes, CollisionListener collisionListener,
+    public Runnable jump(Handler handler, int jumpResource, boolean isJumpAnimated, float jumpHeight, ArrayList<HitBox> hitBoxes, CollisionListener collisionListener,
                          CharacterListener characterListener, PositionListener positionListener){
 
 
@@ -247,7 +240,7 @@ public class Character extends GameObject{
     // use the CollisionListener to detect when the Character collides with the top of a GameObject to stop the fall.
     // To stop a fall, remove callbacks to this runnable and call the stopFall() method. If the Character stopped falling because it collided with the top
     // of another GameObject, set isGrounded to true.
-    public Runnable fall(Handler handler, ArrayList<HitBox> hitBoxes, CollisionListener collisionListener, PositionListener positionListener){
+    public Runnable fall(Handler handler, int fallResource, boolean isFallAnimated, ArrayList<HitBox> hitBoxes, CollisionListener collisionListener, PositionListener positionListener){
 
         Runnable action = new Runnable() {
 
