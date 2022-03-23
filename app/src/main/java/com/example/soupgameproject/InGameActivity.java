@@ -94,11 +94,11 @@ public class InGameActivity extends AppCompatActivity {
         // Set up the camera to the appropriate environment and then instantiate all environment objects. Repeat for each environment.
         cameraSetUp("test");
         testEnvironmentGameObjects = new ArrayList<GameObject>();
-        testEnvironmentGameObjects.add(new GameObject(this, "Ground", (int)(TitleActivity.WIDTH/TitleActivity.DENSITY),10,
-                R.drawable.testground, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
-                (int)(TitleActivity.WIDTH/TitleActivity.DENSITY), 5, 0, gameCamera.getBottomYPosition(),0,0)));
         kirby.setYPosition(gameCamera.getBottomYPosition() + 9);
         testEnvironmentGameObjects.add(kirby);
+        testEnvironmentGameObjects.add(new GameObject(this, "Ground", (int)(TitleActivity.WIDTH/TitleActivity.DENSITY),10,
+                R.drawable.testground, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
+                (int)(TitleActivity.WIDTH/TitleActivity.DENSITY), 6, 0, gameCamera.getBottomYPosition(),0,0)));
 
         // Call to show the chosen environment.
         environmentSetUp("test");
