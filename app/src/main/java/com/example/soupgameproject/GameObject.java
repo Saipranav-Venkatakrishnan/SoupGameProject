@@ -2,6 +2,7 @@ package com.example.soupgameproject;
 
 import android.content.Context;
 import android.graphics.PointF;
+import android.os.Handler;
 
 import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -44,8 +45,11 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
     // The direction the GameObject is facing
     private boolean isFacingRight;
 
-    // Whether or not the GameObject is an ingredient
+    // Whether or not the GameObject is an Ingredient
     private boolean isIngredient;
+
+    // Whether or not the GameObject is a Character
+    private boolean isCharacter;
 
     // GameObject static image resource (R.drawable...)
     // Is set to the backgroundResource of the ImageView
@@ -53,6 +57,9 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
 
     // ArrayList of all GameObjects that have been added to any GameLayout
     public static ArrayList<GameObject> allActiveGameObjects = new ArrayList<GameObject>();
+
+    // Falling variables
+    private boolean fallStarted, stopFall;
 
     // Game gravity (Subject to change)
     public static final float GRAVITY = 100;
@@ -74,6 +81,9 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
         this.canCollide = canCollide;
         this.hitBox = hitBox;
         this.isFacingRight = true;
+
+        this.fallStarted = false;
+        this.stopFall = true;
 
         setBackgroundResource(objectResource);
         setScaleType(ScaleType.CENTER);
@@ -114,6 +124,9 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
         this.hitBox = hitBox;
         this.isFacingRight = true;
 
+        this.fallStarted = false;
+        this.stopFall = true;
+
 
         setBackgroundResource(objectResource);
         setScaleType(ScaleType.CENTER);
@@ -149,6 +162,9 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
         this.canCollide = canCollide;
         this.hitBox = new HitBox(context, canCollide, objectWidth, objectHeight, xPosition, yPosition, 0, 0);
         this.isFacingRight = true;
+
+        this.fallStarted = false;
+        this.stopFall = true;
 
         setBackgroundResource(objectResource);
         setScaleType(ScaleType.CENTER);
@@ -188,6 +204,9 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
         this.objectVisibility = true;
         this.hitBox = new HitBox(context, canCollide, objectWidth, objectHeight, xPosition, yPosition, 0, 0);
         this.isFacingRight = true;
+
+        this.fallStarted = false;
+        this.stopFall = true;
 
 
         setBackgroundResource(objectResource);
@@ -329,6 +348,58 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
         }
     }
 
+    // Basic falling method
+    public Runnable fall(Handler handler, float fallRate, CollisionListener collisionListener){
+        Runnable action = new Runnable() {
+            long initialTime = 0;
+            long initialAnimationTime = 0;
+            float initialYPosition = 0;
+            int i = 0;
+
+            @Override
+            public void run() {
+                if (!fallStarted) {
+                    // time the fall was initiated
+                    initialTime = System.currentTimeMillis();
+                    initialAnimationTime = System.currentTimeMillis();
+                    initialYPosition = getYPosition();
+                    fallStarted = true;
+                    stopFall = false;
+                }
+
+                if (fallStarted) {
+                    long currentTime = System.currentTimeMillis();
+                    float changeInTime = (currentTime - initialTime) / 1000F;
+
+                    // Movement
+                    setYPosition((float) (initialYPosition - (.5 * fallRate * Math.pow(changeInTime, 2))));
+
+                    // HitBox
+                    getHitBox().setXPosition(getXPosition());
+                    getHitBox().setYPosition(getYPosition());
+                    setHitBox(getHitBox());
+                    showHitBox();
+                }
+
+                // Collision Handling
+                for (GameObject object : detectCollisions()) {
+                    collisionListener.onCollision(GameObject.this, object);
+                }
+                if(!stopFall) {
+                    handler.postDelayed(this, 1);
+                }
+            }
+        };
+
+        return action;
+    }
+
+    // Stops the falling
+    public void stopFall(){
+        stopFall = true;
+        fallStarted = false;
+    }
+
     // GENERAL GETTERS AND SETTERS
 
     public boolean getCanCollide() {
@@ -376,7 +447,7 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
     public void setCenterYPosition(float centerYPosition){
         this.yPosition = centerYPosition-objectHeight/2F;
         this.hitBox.setXPosition(this.yPosition);
-        setTranslationY(this.yPosition * TitleActivity.DENSITY);
+        setTranslationY(-this.yPosition * TitleActivity.DENSITY);
     }
 
 
@@ -477,5 +548,29 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
 
     public void setIsIngredient(boolean ingredient) {
         isIngredient = ingredient;
+    }
+
+    public boolean isCharacter() {
+        return isCharacter;
+    }
+
+    public void setIsCharacter(boolean character) {
+        isCharacter = character;
+    }
+
+    public boolean isFallStarted() {
+        return fallStarted;
+    }
+
+    public void setFallStarted(boolean fallStarted) {
+        this.fallStarted = fallStarted;
+    }
+
+    public boolean isStopFall() {
+        return stopFall;
+    }
+
+    public void setStopFall(boolean stopFall) {
+        this.stopFall = stopFall;
     }
 }

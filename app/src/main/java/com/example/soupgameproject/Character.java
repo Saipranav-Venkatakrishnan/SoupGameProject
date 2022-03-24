@@ -16,7 +16,7 @@ public class Character extends GameObject{
     private boolean isIdleAnimated;
 
     // The following help to control jump, fall, and action logic
-    private boolean jumpStarted, fallStarted, stopJump, stopFall;
+    private boolean jumpStarted, stopJump;
     private boolean actionStarted, stopAction;
 
     // Resource for the character (animation or static)
@@ -43,12 +43,12 @@ public class Character extends GameObject{
         this.isGrounded = true;
         this.idleHitBox = idleHitBox;
         this.jumpStarted = false;
-        this.fallStarted = false;
         this.stopJump = true;
-        this.stopFall = true;
 
         this.actionStarted = false;
         this.stopAction = true;
+
+        setIsCharacter(true);
     }
 
     // The following 3 movement methods follow a general pattern: Movement, Animation, HitBoxes, and Collision detection
@@ -252,16 +252,16 @@ public class Character extends GameObject{
             int i = 0;
 
             @Override public void run() {
-                if (!fallStarted) {
+                if (!isFallStarted()) {
                     // time the fall was initiated
                     initialTime = System.currentTimeMillis();
                     initialAnimationTime = System.currentTimeMillis();
                     initialYPosition = getYPosition();
-                    fallStarted = true;
-                    stopFall = false;
+                    setFallStarted(true);
+                    setStopFall(false);
                 }
 
-                if (fallStarted) {
+                if (isFallStarted()) {
                     long currentTime = System.currentTimeMillis();
                     float changeInTime = (currentTime - initialTime) / 1000F;
 
@@ -316,7 +316,7 @@ public class Character extends GameObject{
                         collisionListener.onCollision(Character.this, object);
                     }
 
-                    if(!stopFall) {
+                    if(!isStopFall()) {
                         handler.postDelayed(this, 1);
                     }
                 }
@@ -338,16 +338,16 @@ public class Character extends GameObject{
             int i = 0;
 
             @Override public void run() {
-                if (!fallStarted) {
+                if (!isFallStarted()) {
                     // time the fall was initiated
                     initialTime = System.currentTimeMillis();
                     initialAnimationTime = System.currentTimeMillis();
                     initialYPosition = getYPosition();
-                    fallStarted = true;
-                    stopFall = false;
+                    setFallStarted(true);
+                    setStopFall(false);
                 }
 
-                if (fallStarted) {
+                if (isFallStarted()) {
                     long currentTime = System.currentTimeMillis();
                     float changeInTime = (currentTime - initialTime) / 1000F;
 
@@ -402,7 +402,7 @@ public class Character extends GameObject{
                         collisionListener.onCollision(Character.this, object);
                     }
 
-                    if(!stopFall) {
+                    if(!isStopFall()) {
                         handler.postDelayed(this, 1);
                     }
                 }
@@ -478,11 +478,6 @@ public class Character extends GameObject{
         stopJump = true;
     }
 
-    public void stopFall(){
-        stopFall = true;
-        fallStarted = false;
-    }
-
     public void stopAction(){
         actionStarted = false;
         stopAction = true;
@@ -527,14 +522,6 @@ public class Character extends GameObject{
         this.jumpStarted = jumpStarted;
     }
 
-    public boolean isFallStarted() {
-        return fallStarted;
-    }
-
-    public void setFallStarted(boolean fallStarted) {
-        this.fallStarted = fallStarted;
-    }
-
     public boolean isStopJump() {
         return stopJump;
     }
@@ -543,13 +530,6 @@ public class Character extends GameObject{
         this.stopJump = stopJump;
     }
 
-    public boolean isStopFall() {
-        return stopFall;
-    }
-
-    public void setStopFall(boolean stopFall) {
-        this.stopFall = stopFall;
-    }
 
     public HitBox getIdleHitBox(){
         this.idleHitBox.setXPosition(getXPosition());

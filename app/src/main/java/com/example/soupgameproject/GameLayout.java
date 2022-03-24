@@ -40,14 +40,17 @@ public class GameLayout {
     // The image resource for the background image of the layout
     private int backgroundImage;
 
+    private String name;
+
     // The context where the GameLayout is being used.
     private Context context;
 
     // Multiple constructors for various uses
 
     // Create a GameLayout with a background image and predefined GameObjects
-    public GameLayout(Context context, ConstraintLayout layout, int backgroundImage, ImageView backgroundImageView, ArrayList<GameObject> layoutObjects){
+    public GameLayout(Context context, String name, ConstraintLayout layout, int backgroundImage, ImageView backgroundImageView, ArrayList<GameObject> layoutObjects){
         this.context = context;
+        this.name = name;
         this.layout = layout;
         this.backgroundImage = backgroundImage;
         this.backgroundImageView = backgroundImageView;
@@ -64,8 +67,9 @@ public class GameLayout {
     }
 
     // Create a GameLayout with a background but without any GameObjects
-    public GameLayout(Context context, ConstraintLayout layout, int backgroundImage, ImageView backgroundImageView){
+    public GameLayout(Context context, String name, ConstraintLayout layout, int backgroundImage, ImageView backgroundImageView){
         this.context = context;
+        this.name = name;
         this.layout = layout;
         this.backgroundImage = backgroundImage;
         this.backgroundImageView = backgroundImageView;
@@ -77,8 +81,9 @@ public class GameLayout {
     }
 
     // Create a GameLayout without a background but with predefined GameObjects
-    public GameLayout(Context context, ConstraintLayout layout, ArrayList<GameObject> layoutObjects){
+    public GameLayout(Context context, String name, ConstraintLayout layout, ArrayList<GameObject> layoutObjects){
         this.context = context;
+        this.name = name;
         this.layout = layout;
         this.layoutObjects = layoutObjects;
         this.backgroundImage = -1;
@@ -92,8 +97,9 @@ public class GameLayout {
     }
 
     // Create a GameLayout without a background and without any GameObjects
-    public GameLayout(Context context, ConstraintLayout layout){
+    public GameLayout(Context context, String name, ConstraintLayout layout){
         this.context = context;
+        this.name = name;
         this.layout = layout;
         this.layoutObjects = new ArrayList<GameObject>();
         this.backgroundImage = -1;
@@ -161,6 +167,19 @@ public class GameLayout {
         }
     }
 
+    public void addLayoutObjects(ArrayList<GameObject> layoutObjects){
+        for(GameObject gameObject: layoutObjects){
+            try {
+                layout.addView(gameObject);
+                this.layoutObjects.add(gameObject);
+                GameObject.objectAddedToView(gameObject);
+            }
+            catch(Exception e){
+                Log.i("GameLayout", "Error adding game object");
+            }
+        }
+    }
+
     // Get/set the background image resource
     public int getBackgroundImage() {
         return backgroundImage;
@@ -185,20 +204,55 @@ public class GameLayout {
         return this.layout;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     // Lighting testing
-    public static void changeLighting(int color){
+    public static void darkenBackgroundLighting(int color){
         for(GameLayout gameLayout : allLayouts){
             if(gameLayout.getBackgroundImageView() != null){
                 // Apply tint
                 gameLayout.getBackgroundImageView().setImageTintMode(PorterDuff.Mode.MULTIPLY);
                 gameLayout.getBackgroundImageView().setImageTintList(ColorStateList.valueOf(color));
             }
+        }
+    }
 
+    public static void brightenBackgroundLighting(int color){
+        for(GameLayout gameLayout : allLayouts){
+            if(gameLayout.getBackgroundImageView() != null){
+                // Apply tint
+                gameLayout.getBackgroundImageView().setImageTintMode(PorterDuff.Mode.SRC_ATOP);
+                gameLayout.getBackgroundImageView().setImageTintList(ColorStateList.valueOf(color));
+            }
+        }
+    }
+
+    public static void darkenObjectLighting(int color){
+        for(GameLayout gameLayout : allLayouts){
             for(GameObject gameObject : gameLayout.getLayoutObjects()){
                 // Apply  tint
-                gameObject.setBackgroundTintMode(PorterDuff.Mode.MULTIPLY);
-                gameObject.setBackgroundTintList(ColorStateList.valueOf(color));
+                if(!gameObject.getObjectName().toLowerCase().equals("sun")) {
+                    gameObject.setBackgroundTintMode(PorterDuff.Mode.MULTIPLY);
+                    gameObject.setBackgroundTintList(ColorStateList.valueOf(color));
+                }
+            }
+        }
+    }
+
+    public static void brightenObjectLighting(int color){
+        for(GameLayout gameLayout : allLayouts){
+            for(GameObject gameObject : gameLayout.getLayoutObjects()){
+                // Apply  tint
+                if(!gameObject.getObjectName().toLowerCase().equals("sun")) {
+                    gameObject.setBackgroundTintMode(PorterDuff.Mode.SRC_ATOP);
+                    gameObject.setBackgroundTintList(ColorStateList.valueOf(color));
+                }
             }
         }
     }

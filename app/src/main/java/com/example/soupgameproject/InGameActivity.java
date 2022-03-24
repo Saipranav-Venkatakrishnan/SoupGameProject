@@ -66,11 +66,16 @@ public class InGameActivity extends AppCompatActivity {
     private boolean isFloating;
     private boolean startFloatFinished;
     private int jumpCount;
-
+    
+    // Day/Night cycle variables
+    // (SAVE)
+    private String timeOfDay;
 
     // Environment variables (SAVE)
     // Test Environment GameObjects
-    private ArrayList<GameObject> testEnvironmentGameObjects;
+    private ArrayList<GameObject> testEnvironmentBackgroundGameObjects;
+    private ArrayList<GameObject> testEnvironmentCollisionGameObjects;
+    private ArrayList<GameObject> testEnvironmentForegroundGameObjects;
 
     // User Interface variables
     private Button leftButton, rightButton, jumpButton, actionButton;
@@ -91,6 +96,13 @@ public class InGameActivity extends AppCompatActivity {
         jumpButton = findViewById(R.id.jumpButton);
         actionButton = findViewById(R.id.actionButton);
 
+        // Set up Handlers
+        lrHandler = new Handler();
+        udHandler = new Handler();
+        aHandler = new Handler();
+        cHandler = new Handler();
+        oHandler = new Handler();
+
 
         // Debugging variables
         gameCamera = new Camera(scalingFrameLayout,gameContainerLayout);
@@ -98,15 +110,44 @@ public class InGameActivity extends AppCompatActivity {
         centerY = gameCamera.getYPosition();
         zoomed = true;
 
+        // Set up time once
+        timeOfDay = "Morning";
+
         // Set up character once only.
         characterSetUp();
 
         // Set up the camera to the appropriate environment and then instantiate all environment objects. Repeat for each environment.
+        // Set up once only
         cameraSetUp("test");
-        testEnvironmentGameObjects = new ArrayList<GameObject>();
-        testEnvironmentGameObjects.add(new GameObject(this, "Ground", (int)(TitleActivity.WIDTH/TitleActivity.DENSITY),10,
+
+        testEnvironmentBackgroundGameObjects = new ArrayList<GameObject>();
+        testEnvironmentCollisionGameObjects = new ArrayList<GameObject>();
+        testEnvironmentForegroundGameObjects = new ArrayList<GameObject>();
+
+
+        testEnvironmentCollisionGameObjects.add(new GameObject(this, "Ground", (int)(TitleActivity.WIDTH/TitleActivity.DENSITY),10,
                 R.drawable.testground, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
                 (int)(TitleActivity.WIDTH/TitleActivity.DENSITY), 6, 0, gameCamera.getBottomYPosition(),0,0)));
+
+        for(int i = 0; i < 50; i++){
+            float ratio = (int) (Math.random() * 6 + 4)/10F;
+            int xPosition = (int) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY));
+            testEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio),(int)(43* ratio),
+                    R.drawable.testtree, xPosition, gameCamera.getBottomYPosition() + 6, true,
+                    new HitBox(InGameActivity.this, true, (int)(7* ratio),(int)(39* ratio),xPosition
+                            ,gameCamera.getBottomYPosition()+6,(float)(16* ratio),0)));
+        }
+
+        GameObject rightBoundary = new GameObject(this, "Boundary", 50, (int)(TitleActivity.HEIGHT/TitleActivity.DENSITY),
+                        R.drawable.boundary, -50,0,true);
+        GameObject leftBoundary = new GameObject(this, "Boundary", 50, (int)(TitleActivity.HEIGHT/TitleActivity.DENSITY),
+                R.drawable.boundary, (TitleActivity.WIDTH/TitleActivity.DENSITY),0,true);
+        GameObject topBoundary = new GameObject(this, "Boundary", (int)(TitleActivity.WIDTH/TitleActivity.DENSITY),
+                50, R.drawable.boundary, 0,gameCamera.getTopYPosition(),true);
+
+        testEnvironmentCollisionGameObjects.add(rightBoundary);
+        testEnvironmentCollisionGameObjects.add(leftBoundary);
+        testEnvironmentCollisionGameObjects.add(topBoundary);
 
         // Call to show the chosen environment.
         environmentSetUp("test");
@@ -128,19 +169,20 @@ public class InGameActivity extends AppCompatActivity {
 
     // Sets up a chosen in-game environment
     private void environmentSetUp(String environment){
-        backgroundGameLayout = new GameLayout(this, backgroundLayout);
+        backgroundGameLayout = new GameLayout(this,"Background", backgroundLayout);
         backgroundGameLayout.setBackgroundImageView(findViewById(R.id.backgroundImage));
-        collisionGameLayout = new GameLayout(this, collisionLayout);
-        foregroundGameLayout = new GameLayout(this, foregroundLayout);
+        collisionGameLayout = new GameLayout(this, "Collision", collisionLayout);
+        foregroundGameLayout = new GameLayout(this, "Foreground",foregroundLayout);
 
         if(environment.toLowerCase().equals("test")){
             backgroundGameLayout.setBackgroundImage(R.drawable.cloudsbackgroundextended);
+            backgroundGameLayout.setLayoutObjects(testEnvironmentBackgroundGameObjects);
+
             collisionGameLayout.removeLayoutObject(kirby);
             kirby.setYPosition(gameCamera.getBottomYPosition() + 6 - kirby.getHitBox().getYBottom());
-
-            collisionGameLayout.setLayoutObjects(testEnvironmentGameObjects);
             itemSetup(environment);
             collisionGameLayout.addLayoutObject(kirby);
+            collisionGameLayout.addLayoutObjects(testEnvironmentCollisionGameObjects);
 
             gameCamera.setFixedPosition(true);
         }
@@ -149,11 +191,34 @@ public class InGameActivity extends AppCompatActivity {
     private void itemSetup(String environment){
 
         if(environment.toLowerCase().equals("test")){
-            for(int i = 0; i < 30; i++){
-                collisionGameLayout.addLayoutObject(new Ingredient(this, "Heart",10,10,
+            for(int i = 0; i < 50; i++){
+                Ingredient ingredient = new Ingredient(this, "Heart",10,10,
                         R.drawable.testitem,
-                        (float) (Math.random() * TitleActivity.WIDTH/TitleActivity.DENSITY),
-                        (float)(Math.random() * (gameCamera.getTopYPosition()-gameCamera.getBottomYPosition() - 6 - 10) + gameCamera.getBottomYPosition() + 6)));
+                        (float) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY - 10)),
+                        (float)(gameCamera.getTopYPosition()));
+                
+                collisionGameLayout.addLayoutObject(ingredient);
+                
+                Runnable fall = ingredient.fall(oHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                            if(!specialCollisionHandler(object1, object2) && !object2.isCharacter() && !object2.isIngredient()) {
+                                object1.stopFall();
+
+                                object1.setYPosition(object2.getHitBox().topLeft().y);
+                                
+                                object1.getHitBox().setYPosition(object1.getYPosition());
+                                object1.setHitBox(object1.getHitBox());
+                                object1.showHitBox();
+                            }
+
+                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                        }
+                    }
+                });
+
+                oHandler.postDelayed(fall, 5000);
             }
         }
 
@@ -355,11 +420,6 @@ public class InGameActivity extends AppCompatActivity {
     // Majority of game logic resides here
     @SuppressLint("ClickableViewAccessibility")
     private void controllerSetUp(float walkSpeed, float runSpeed, float jumpHeight, float highJumpHeight, float floatJumpHeight){
-        lrHandler = new Handler();
-        udHandler = new Handler();
-        aHandler = new Handler();
-        cHandler = new Handler();
-        oHandler = new Handler();
 
         leftButton.setOnTouchListener(new View.OnTouchListener() {
             
@@ -421,12 +481,13 @@ public class InGameActivity extends AppCompatActivity {
                 return false;
             }
 
-            Runnable leftWalk = kirby.walk(lrHandler, R.drawable.kirbywalk,"left", walkSpeed, walkHitBoxes, new GameObject.CollisionListener() {
+            Runnable leftWalk = kirby.walk(lrHandler, R.drawable.kirbywalk,"left", walkSpeed, walkHitBoxes,
+                    new GameObject.CollisionListener() {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
                             if (GameObject.getCollisionType(object1, object2).contains("right")) {
-                                if(!specialCollisionHandler(object2)){
-                                    if (gameCamera.getRightXPosition() < (TitleActivity.WIDTH / TitleActivity.DENSITY)) {
+                                if(!specialCollisionHandler(object1, object2)){
+                                    if (!gameCamera.isFixedPosition()) {
                                         gameCamera.setXPosition(gameCamera.getXPosition() + walkSpeed);
                                     }
                                     kirby.setXPosition(kirby.getXPosition() + walkSpeed);
@@ -439,6 +500,7 @@ public class InGameActivity extends AppCompatActivity {
                     new Character.NotGroundedListener() {
                         @Override
                         public void notGrounded() {
+                            kirby.stopFall();
                             udHandler.postDelayed(fall, 0);
                         }
                     },
@@ -460,12 +522,13 @@ public class InGameActivity extends AppCompatActivity {
             
             Runnable leftWalkCamera = gameCamera.moveLeft(cHandler, walkSpeed * TitleActivity.DENSITY);
 
-            Runnable leftRun = kirby.walk(lrHandler, R.drawable.kirbyrun,"left", runSpeed, runHitBoxes, new GameObject.CollisionListener() {
+            Runnable leftRun = kirby.walk(lrHandler, R.drawable.kirbyrun,"left", runSpeed, runHitBoxes,
+                    new GameObject.CollisionListener() {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
                             if (GameObject.getCollisionType(object1, object2).contains("right")) {
-                                if(!specialCollisionHandler(object2)) {
-                                    if (gameCamera.getRightXPosition() < (TitleActivity.WIDTH / TitleActivity.DENSITY)) {
+                                if(!specialCollisionHandler(object1, object2)) {
+                                    if (!gameCamera.isFixedPosition()) {
                                         gameCamera.setXPosition(gameCamera.getXPosition() + runSpeed);
                                     }
                                     kirby.setXPosition(kirby.getXPosition() + runSpeed);
@@ -477,6 +540,7 @@ public class InGameActivity extends AppCompatActivity {
                     new Character.NotGroundedListener() {
                         @Override
                         public void notGrounded() {
+                            kirby.stopFall();
                             udHandler.postDelayed(fall, 0);
                         }
                     },
@@ -503,7 +567,7 @@ public class InGameActivity extends AppCompatActivity {
                 @Override
                 public void onCollision(GameObject object1, GameObject object2) {
                     if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                        if(!specialCollisionHandler(object2)) {
+                        if(!specialCollisionHandler(object1, object2)) {
                             udHandler.removeCallbacksAndMessages(null);
                             kirby.stopFall();
                             kirby.setGrounded(true);
@@ -586,12 +650,13 @@ public class InGameActivity extends AppCompatActivity {
                 return false;
             }
 
-            Runnable rightWalk = kirby.walk(lrHandler, R.drawable.kirbywalk,"right", walkSpeed, walkHitBoxes, new GameObject.CollisionListener() {
+            Runnable rightWalk = kirby.walk(lrHandler, R.drawable.kirbywalk,"right", walkSpeed, walkHitBoxes,
+                    new GameObject.CollisionListener() {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
                             if (GameObject.getCollisionType(object1, object2).contains("left")) {
-                                if(!specialCollisionHandler(object2)) {
-                                    if (gameCamera.getLeftXPosition() > 0) {
+                                if(!specialCollisionHandler(object1, object2)) {
+                                    if (!gameCamera.isFixedPosition()) {
                                         gameCamera.setXPosition(gameCamera.getXPosition() - walkSpeed);
                                     }
                                     kirby.setXPosition(kirby.getXPosition() - walkSpeed);
@@ -604,6 +669,7 @@ public class InGameActivity extends AppCompatActivity {
                     new Character.NotGroundedListener() {
                         @Override
                         public void notGrounded() {
+                            kirby.stopFall();
                             udHandler.postDelayed(fall, 0);
                         }
                     },
@@ -624,12 +690,13 @@ public class InGameActivity extends AppCompatActivity {
 
             Runnable rightWalkCamera = gameCamera.moveRight(cHandler, walkSpeed * TitleActivity.DENSITY);
 
-            Runnable rightRun = kirby.walk(lrHandler, R.drawable.kirbyrun,"right", runSpeed, runHitBoxes, new GameObject.CollisionListener() {
+            Runnable rightRun = kirby.walk(lrHandler, R.drawable.kirbyrun,"right", runSpeed, runHitBoxes,
+                    new GameObject.CollisionListener() {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
                             if (GameObject.getCollisionType(object1, object2).contains("left")) {
-                                if(!specialCollisionHandler(object2)) {
-                                    if (gameCamera.getLeftXPosition() > 0) {
+                                if(!specialCollisionHandler(object1, object2)) {
+                                    if (!gameCamera.isFixedPosition()) {
                                         gameCamera.setXPosition(gameCamera.getXPosition() - runSpeed);
                                     }
                                     kirby.setXPosition(kirby.getXPosition() - runSpeed);
@@ -641,6 +708,7 @@ public class InGameActivity extends AppCompatActivity {
                     new Character.NotGroundedListener() {
                         @Override
                         public void notGrounded() {
+                            kirby.stopFall();
                             udHandler.postDelayed(fall, 0);
                         }
                     },
@@ -666,7 +734,7 @@ public class InGameActivity extends AppCompatActivity {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
                             if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                                if(!specialCollisionHandler(object2)) {
+                                if(!specialCollisionHandler(object1, object2)) {
                                     udHandler.removeCallbacksAndMessages(null);
                                     kirby.stopFall();
                                     kirby.setGrounded(true);
@@ -773,11 +841,12 @@ public class InGameActivity extends AppCompatActivity {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
                             if(GameObject.getCollisionType(object1, object2).contains("bottom")){
-                                if(!specialCollisionHandler(object2)) {
+                                if(!specialCollisionHandler(object1, object2)) {
                                     udHandler.removeCallbacksAndMessages(null);
                                     kirby.stopJump();
                                     kirby.setYPosition(object2.getHitBox().bottomRight().y -
                                             kirby.getHitBox().getHitHeight() - kirby.getHitBox().getYBottom());
+                                    kirby.stopFall();
                                     udHandler.postDelayed(fall, 0);
                                 }
                                 Log.i("Collision", object1.getObjectName() + " collided with bottom of " + object2.getObjectName());
@@ -789,6 +858,7 @@ public class InGameActivity extends AppCompatActivity {
                         public void onActionComplete() {
                             udHandler.removeCallbacksAndMessages(null);
                             aHandler.removeCallbacksAndMessages(null);
+                            kirby.stopFall();
                             udHandler.postDelayed(fall,0);
                         }
                     },
@@ -803,7 +873,7 @@ public class InGameActivity extends AppCompatActivity {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
                             if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                                if(!specialCollisionHandler(object2)) {
+                                if(!specialCollisionHandler(object1, object2)) {
                                     isFloating = false;
                                     startFloatFinished = false;
                                     jumpCount = 0;
@@ -834,11 +904,12 @@ public class InGameActivity extends AppCompatActivity {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
                             if(GameObject.getCollisionType(object1, object2).contains("bottom")){
-                                if(!specialCollisionHandler(object2)) {
+                                if(!specialCollisionHandler(object1, object2)) {
                                     udHandler.removeCallbacksAndMessages(null);
                                     kirby.stopJump();
                                     kirby.setYPosition(object2.getHitBox().bottomRight().y -
                                             kirby.getHitBox().getHitHeight() - kirby.getHitBox().getYBottom());
+                                    kirby.stopFall();
                                     udHandler.postDelayed(flipFall, 0);
                                 }
                                 Log.i("Collision", object1.getObjectName() + " collided with bottom of " + object2.getObjectName());
@@ -850,6 +921,7 @@ public class InGameActivity extends AppCompatActivity {
                         public void onActionComplete() {
                             udHandler.removeCallbacksAndMessages(null);
                             aHandler.removeCallbacksAndMessages(null);
+                            kirby.stopFall();
                             udHandler.postDelayed(flipFall,0);
                         }
                     },
@@ -864,7 +936,7 @@ public class InGameActivity extends AppCompatActivity {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
                             if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                                if(!specialCollisionHandler(object2)) {
+                                if(!specialCollisionHandler(object1, object2)) {
                                     udHandler.removeCallbacksAndMessages(null);
                                     kirby.stopFall();
                                     kirby.setGrounded(true);
@@ -891,7 +963,7 @@ public class InGameActivity extends AppCompatActivity {
                     new GameObject.CollisionListener() {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
-                            specialCollisionHandler(object2);
+                            specialCollisionHandler(object1, object2);
                         }
                     },
                     new Character.CharacterListener() {
@@ -910,11 +982,12 @@ public class InGameActivity extends AppCompatActivity {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
                             if(GameObject.getCollisionType(object1, object2).contains("bottom")){
-                                if(!specialCollisionHandler(object2)) {
+                                if(!specialCollisionHandler(object1, object2)) {
                                     udHandler.removeCallbacksAndMessages(null);
                                     kirby.stopJump();
                                     kirby.setYPosition(object2.getHitBox().bottomRight().y -
                                             kirby.getHitBox().getHitHeight() - kirby.getHitBox().getYBottom());
+                                    kirby.stopFall();
                                     udHandler.postDelayed(floatFall, 0);
                                 }
                                 Log.i("Collision", object1.getObjectName() + " collided with bottom of " + object2.getObjectName());
@@ -926,6 +999,7 @@ public class InGameActivity extends AppCompatActivity {
                         public void onActionComplete() {
                             udHandler.removeCallbacksAndMessages(null);
                             aHandler.removeCallbacksAndMessages(null);
+                            kirby.stopFall();
                             udHandler.postDelayed(floatFall,0);
                         }
                     },
@@ -940,7 +1014,7 @@ public class InGameActivity extends AppCompatActivity {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
                             if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                                if(!specialCollisionHandler(object2)) {
+                                if(!specialCollisionHandler(object1, object2)) {
                                     isFloating = false;
                                     udHandler.removeCallbacksAndMessages(null);
                                     kirby.stopFall();
@@ -967,7 +1041,7 @@ public class InGameActivity extends AppCompatActivity {
                     new GameObject.CollisionListener() {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
-                            specialCollisionHandler(object2);
+                            specialCollisionHandler(object1, object2);
                         }
                     },
                     new Character.CharacterListener() {
@@ -1035,7 +1109,7 @@ public class InGameActivity extends AppCompatActivity {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
                             if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                                if(!specialCollisionHandler(object2)) {
+                                if(!specialCollisionHandler(object1, object2)) {
                                     isFloating = false;
                                     startFloatFinished = false;
                                     jumpCount = 0;
@@ -1065,7 +1139,7 @@ public class InGameActivity extends AppCompatActivity {
                     new GameObject.CollisionListener() {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
-                            specialCollisionHandler(object2);
+                            specialCollisionHandler(object1, object2);
                         }
                     },
                     new Character.CharacterListener() {
@@ -1084,12 +1158,20 @@ public class InGameActivity extends AppCompatActivity {
 
     }
 
-    private boolean specialCollisionHandler(GameObject object){
+    private boolean specialCollisionHandler(GameObject object1, GameObject object2){
 
-        if(object.isIngredient()){
-            if(!((Ingredient) object).isCollected()) {
-                ((Ingredient) object).setCollected(true);
-                Runnable collectAnimation = ((Ingredient) object).collected(oHandler);
+        if(object2.isIngredient() && object1.isCharacter()){
+            if(!((Ingredient) object2).isCollected()) {
+                ((Ingredient) object2).setCollected(true);
+                Runnable collectAnimation = ((Ingredient) object2).collected(oHandler);
+                oHandler.postDelayed(collectAnimation, 0);
+            }
+            return true;
+        }
+        else if(object1.isIngredient() && object2.isCharacter()){
+            if(!((Ingredient) object1).isCollected()) {
+                ((Ingredient) object1).setCollected(true);
+                Runnable collectAnimation = ((Ingredient) object1).collected(oHandler);
                 oHandler.postDelayed(collectAnimation, 0);
             }
             return true;
@@ -1153,34 +1235,144 @@ public class InGameActivity extends AppCompatActivity {
 
         Runnable lighting = new Runnable() {
 
-            private int c = 255;
-            private boolean night = false;
+            private int bA = 0;
+            private int bR = 255;
+            private int bG = 255;
+            private int bB = 190;
+
+            private int oA = 0;
+            private int oR = 255;
+            private int oG = 255;
+            private int oB = 190;
+
 
             @Override
             public void run() {
-                if(c==255){
-                    night = false;
+
+                if(timeOfDay.toLowerCase().equals("morning")) {
+
+                    if (bA < 45) {
+                        bA++;
+                        oA++;
+                        GameLayout.brightenBackgroundLighting(Color.argb(bA, bR, bG, bB));
+                        GameLayout.brightenObjectLighting(Color.argb(oA, oR, oG, oB));
+                    }
+                    else{
+                        timeOfDay = "Noon";
+                    }
+
+                    rHandler.postDelayed(this,3667);
                 }
-                else if(c==55){
-                    night = true;
+                else if(timeOfDay.toLowerCase().equals("noon")) {
+                    if (bA > 0) {
+                        bA--;
+                        oA--;
+                        GameLayout.brightenBackgroundLighting(Color.argb(bA, bR, bG, bB));
+                        GameLayout.brightenObjectLighting(Color.argb(oA, oR, oG, oB));
+                    }
+                    else{
+                        timeOfDay = "Sunset";
+                        bA = 255;
+                        bR = 255;
+                        bG = 255;
+                        bB = 255;
+
+                        oA = 255;
+                        oR = 255;
+                        oG = 255;
+                        oB = 255;
+                    }
+
+                    rHandler.postDelayed(this,3667);
                 }
-                if(!night) {
-                    c--;
+                else if(timeOfDay.toLowerCase().equals("sunset")){
+                    if(toColor(255,70,70,1,40,40,40,1)){
+                        timeOfDay = "Night";
+                    }
+                    rHandler.postDelayed(this,280);
                 }
-                else{
-                    c++;
+                else if(timeOfDay.toLowerCase().equals("night")){
+                    if(toColor(50,50,70,1,35,35,35,1)){
+                        timeOfDay = "Sunrise1";
+                    }
+                    rHandler.postDelayed(this,690);
+                }
+                else if(timeOfDay.toLowerCase().equals("sunrise1")){
+                    if(toColor(194,64,64,2,60,60,60,1)){
+                        timeOfDay = "Sunrise2";
+                    }
+                    rHandler.postDelayed(this,625);
+                }
+                else if(timeOfDay.toLowerCase().equals("sunrise2")){
+                    if(toColor(255,255,255,1,255,255,255,1)){
+                        bA = 0;
+                        oA = 0;
+                        bB = 190;
+                        oB = 190;
+                        timeOfDay = "Morning";
+                    }
+                    rHandler.postDelayed(this,231);
                 }
 
-                GameLayout.changeLighting(Color.argb(255,c,c,c));
+            }
 
-                rHandler.postDelayed(this,3000);
+            // rates must lead to color values being equal to the desired color.
+            private boolean toColor(int br, int bg, int bb, int bRate, int or, int og, int ob, int oRate){
+                if(br==bR && bg == bG && bb==bB && or==oR && og==oG && ob==oB){
+                    return true;
+                }
+
+                if(bR<br){
+                    bR+=bRate;
+                }
+                else if(bR>br){
+                    bR-=bRate;
+                }
+
+                if(bG<bg){
+                    bG+=bRate;
+                }
+                else if(bG>bg){
+                    bG-=bRate;
+                }
+
+                if(bB<bb){
+                    bB+=bRate;
+                }
+                else if(bB>bb){
+                    bB-=bRate;
+                }
+
+                if(oR<or){
+                    oR+=oRate;
+                }
+                else if(oR>or){
+                    oR-=oRate;
+                }
+
+                if(oG<og){
+                    oG+=oRate;
+                }
+                else if(oG>og){
+                    oG-=oRate;
+                }
+
+                if(oB<ob){
+                    oB+=oRate;
+                }
+                else if(oB>ob){
+                    oB-=oRate;
+                }
+
+
+                GameLayout.darkenBackgroundLighting(Color.argb(255, bR, bG, bB));
+                GameLayout.darkenObjectLighting(Color.argb(255, oR, oG, oB));
+                return false;
             }
         };
 
         rHandler.postDelayed(lighting,0);
     }
-
-
 
 
     // The following code was from https://developer.android.com/training/system-ui/immersive to create a fullscreen (has changed)
