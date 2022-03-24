@@ -11,11 +11,5 @@
     <color name="activeBox">#85FF0000</color>
     <color name="nonActiveBox">#809F9F9F</color>
 
-    <color name="flash1">#CFFFF4</color>
-    <color name="flash2">#CCCFFFF4</color>
-    <color name="flash3">#B3CFFFF4</color>
-    <color name="flash4">#66CFFFF4</color>
-    <color name="flash5">#33CFFFF4</color>
-
 
 </resources>

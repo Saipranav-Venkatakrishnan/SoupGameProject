@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class InGameActivity extends AppCompatActivity {
@@ -47,6 +51,9 @@ public class InGameActivity extends AppCompatActivity {
 
     // Deal with other animations unrelated to characters
     private Handler oHandler;
+
+    // Deal with other runnables unrelated to animations
+    private Handler rHandler;
 
     // Game Camera variables
     private Camera gameCamera;
@@ -105,6 +112,8 @@ public class InGameActivity extends AppCompatActivity {
         environmentSetUp("test");
 
         controllerSetUp(1/3F,1/2F, 10,20,5);
+
+        dayNightCycle();
     }
 
     // Sets up the camera for a chosen environment
@@ -1089,16 +1098,14 @@ public class InGameActivity extends AppCompatActivity {
         return false;
     }
 
-
-
     // This method helps to find the scale for the game camera to zoom to
     private float fitZoom(float backgroundWidth, float backgroundHeight){
         return ((float) TitleActivity.HEIGHT/TitleActivity.WIDTH) * (backgroundWidth/backgroundHeight);
     }
 
-
     // Debugging method
-    public void viewInfoDebug(View view){
+    public void viewInfoDebug(View view) throws XmlPullParserException, IOException {
+
         GameObject.displayHitBoxes = true;
         for(GameObject object : collisionGameLayout.getLayoutObjects()){
             object.showHitBox();
@@ -1140,6 +1147,41 @@ public class InGameActivity extends AppCompatActivity {
         }
 
     }
+
+    public void dayNightCycle(){
+        rHandler = new Handler();
+
+        Runnable lighting = new Runnable() {
+
+            private int c = 255;
+            private boolean night = false;
+
+            @Override
+            public void run() {
+                if(c==255){
+                    night = false;
+                }
+                else if(c==55){
+                    night = true;
+                }
+                if(!night) {
+                    c--;
+                }
+                else{
+                    c++;
+                }
+
+                GameLayout.changeLighting(Color.argb(255,c,c,c));
+
+                rHandler.postDelayed(this,3000);
+            }
+        };
+
+        rHandler.postDelayed(lighting,0);
+    }
+
+
+
 
     // The following code was from https://developer.android.com/training/system-ui/immersive to create a fullscreen (has changed)
     @Override

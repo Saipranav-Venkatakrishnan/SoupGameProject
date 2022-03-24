@@ -1,14 +1,27 @@
 package com.example.soupgameproject;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.content.res.Resources;
+import android.graphics.PorterDuff;
 import android.util.Log;
 import android.widget.ImageView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
 import java.util.ArrayList;
 
 public class GameLayout {
+
+    // All GameLayouts created
+    public static ArrayList<GameLayout> allLayouts = new ArrayList<GameLayout>();
 
     // GameLayouts refer to:
     //...BackgroundLayout (ConstraintLayout) -> CollisionLayout (ConstraintLayout) -> ForegroundLayout (ConstraintLayout)...
@@ -46,6 +59,8 @@ public class GameLayout {
             layout.addView(gameObject);
             GameObject.objectAddedToView(gameObject);
         }
+
+        allLayouts.add(this);
     }
 
     // Create a GameLayout with a background but without any GameObjects
@@ -57,6 +72,8 @@ public class GameLayout {
         this.layoutObjects = new ArrayList<GameObject>();
 
         this.backgroundImageView.setImageResource(backgroundImage);
+
+        allLayouts.add(this);
     }
 
     // Create a GameLayout without a background but with predefined GameObjects
@@ -70,6 +87,8 @@ public class GameLayout {
             layout.addView(gameObject);
             GameObject.objectAddedToView(gameObject);
         }
+
+        allLayouts.add(this);
     }
 
     // Create a GameLayout without a background and without any GameObjects
@@ -78,6 +97,8 @@ public class GameLayout {
         this.layout = layout;
         this.layoutObjects = new ArrayList<GameObject>();
         this.backgroundImage = -1;
+
+        allLayouts.add(this);
     }
 
     // Get/set layoutObjects
@@ -162,6 +183,24 @@ public class GameLayout {
     // Get the associated layout for this GameLayout
     public ConstraintLayout getLayout(){
         return this.layout;
+    }
+
+
+    // Lighting testing
+    public static void changeLighting(int color){
+        for(GameLayout gameLayout : allLayouts){
+            if(gameLayout.getBackgroundImageView() != null){
+                // Apply tint
+                gameLayout.getBackgroundImageView().setImageTintMode(PorterDuff.Mode.MULTIPLY);
+                gameLayout.getBackgroundImageView().setImageTintList(ColorStateList.valueOf(color));
+            }
+
+            for(GameObject gameObject : gameLayout.getLayoutObjects()){
+                // Apply  tint
+                gameObject.setBackgroundTintMode(PorterDuff.Mode.MULTIPLY);
+                gameObject.setBackgroundTintList(ColorStateList.valueOf(color));
+            }
+        }
     }
 }
 
