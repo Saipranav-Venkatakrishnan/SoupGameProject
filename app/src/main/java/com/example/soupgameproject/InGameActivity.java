@@ -45,6 +45,9 @@ public class InGameActivity extends AppCompatActivity {
     // Deal with camera movement
     private Handler cHandler;
 
+    // Deal with other animations unrelated to characters
+    private Handler oHandler;
+
     // Game Camera variables
     private Camera gameCamera;
 
@@ -94,8 +97,6 @@ public class InGameActivity extends AppCompatActivity {
         // Set up the camera to the appropriate environment and then instantiate all environment objects. Repeat for each environment.
         cameraSetUp("test");
         testEnvironmentGameObjects = new ArrayList<GameObject>();
-        kirby.setYPosition(gameCamera.getBottomYPosition() + 9);
-        testEnvironmentGameObjects.add(kirby);
         testEnvironmentGameObjects.add(new GameObject(this, "Ground", (int)(TitleActivity.WIDTH/TitleActivity.DENSITY),10,
                 R.drawable.testground, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
                 (int)(TitleActivity.WIDTH/TitleActivity.DENSITY), 6, 0, gameCamera.getBottomYPosition(),0,0)));
@@ -125,16 +126,36 @@ public class InGameActivity extends AppCompatActivity {
 
         if(environment.toLowerCase().equals("test")){
             backgroundGameLayout.setBackgroundImage(R.drawable.cloudsbackgroundextended);
+            collisionGameLayout.removeLayoutObject(kirby);
+            kirby.setYPosition(gameCamera.getBottomYPosition() + 6 - kirby.getHitBox().getYBottom());
+
             collisionGameLayout.setLayoutObjects(testEnvironmentGameObjects);
+            itemSetup(environment);
+            collisionGameLayout.addLayoutObject(kirby);
+
+            gameCamera.setFixedPosition(true);
         }
+    }
+
+    private void itemSetup(String environment){
+
+        if(environment.toLowerCase().equals("test")){
+            for(int i = 0; i < 30; i++){
+                collisionGameLayout.addLayoutObject(new Ingredient(this, "Heart",10,10,
+                        R.drawable.testitem,
+                        (float) (Math.random() * TitleActivity.WIDTH/TitleActivity.DENSITY),
+                        (float)(Math.random() * (gameCamera.getTopYPosition()-gameCamera.getBottomYPosition() - 6 - 10) + gameCamera.getBottomYPosition() + 6)));
+            }
+        }
+
     }
 
     // Sets up the character for the first time the app is used
     private void characterSetUp(){
         HitBox idleHitBox = new HitBox(this, true, (int) (30 * 20/59F),(int)(20 * 18/39F),
-                50, 0, 30 * 19/59F,0);
+                0, 0, 30 * 19/59F,0);
 
-        kirby = new Character(this, "Kirby", 30, 20, 50, 0,
+        kirby = new Character(this, "Kirby", 30, 20, 0, 0,
                 idleHitBox, true, R.drawable.kirbyidle);
         kirby.setObjectResource(R.drawable.kirbyidle);
 
@@ -329,6 +350,7 @@ public class InGameActivity extends AppCompatActivity {
         udHandler = new Handler();
         aHandler = new Handler();
         cHandler = new Handler();
+        oHandler = new Handler();
 
         leftButton.setOnTouchListener(new View.OnTouchListener() {
             
@@ -394,10 +416,13 @@ public class InGameActivity extends AppCompatActivity {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
                             if (GameObject.getCollisionType(object1, object2).contains("right")) {
-                                if(gameCamera.getRightXPosition() < (TitleActivity.WIDTH/TitleActivity.DENSITY)) {
-                                    gameCamera.setXPosition(gameCamera.getXPosition() + walkSpeed);
+                                if(!specialCollisionHandler(object2)){
+                                    if (gameCamera.getRightXPosition() < (TitleActivity.WIDTH / TitleActivity.DENSITY)) {
+                                        gameCamera.setXPosition(gameCamera.getXPosition() + walkSpeed);
+                                    }
+                                    kirby.setXPosition(kirby.getXPosition() + walkSpeed);
                                 }
-                                kirby.setXPosition(kirby.getXPosition() + walkSpeed);
+
                                 Log.i("Collision", object1.getObjectName() + " collided with the right of " + object2.getObjectName());
                             }
                         }
@@ -430,10 +455,12 @@ public class InGameActivity extends AppCompatActivity {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
                             if (GameObject.getCollisionType(object1, object2).contains("right")) {
-                                if(gameCamera.getRightXPosition() < (TitleActivity.WIDTH/TitleActivity.DENSITY)) {
-                                    gameCamera.setXPosition(gameCamera.getXPosition() + runSpeed);
+                                if(!specialCollisionHandler(object2)) {
+                                    if (gameCamera.getRightXPosition() < (TitleActivity.WIDTH / TitleActivity.DENSITY)) {
+                                        gameCamera.setXPosition(gameCamera.getXPosition() + runSpeed);
+                                    }
+                                    kirby.setXPosition(kirby.getXPosition() + runSpeed);
                                 }
-                                kirby.setXPosition(kirby.getXPosition() + runSpeed);
                                 Log.i("Collision", object1.getObjectName() + " collided with the right of " + object2.getObjectName());
                             }
                         }
@@ -467,15 +494,17 @@ public class InGameActivity extends AppCompatActivity {
                 @Override
                 public void onCollision(GameObject object1, GameObject object2) {
                     if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                        udHandler.removeCallbacksAndMessages(null);
-                        kirby.stopFall();
-                        kirby.setGrounded(true);
-                        kirby.setObjectResource(kirby.getIdleResource());
+                        if(!specialCollisionHandler(object2)) {
+                            udHandler.removeCallbacksAndMessages(null);
+                            kirby.stopFall();
+                            kirby.setGrounded(true);
+                            kirby.setObjectResource(kirby.getIdleResource());
 
-                        kirby.setYPosition(object2.getHitBox().topLeft().y - kirby.getHitBox().getYBottom());
+                            kirby.setYPosition(object2.getHitBox().topLeft().y - kirby.getHitBox().getYBottom());
 
-                        kirby.setHitBox(kirby.getIdleHitBox());
-                        kirby.showHitBox();
+                            kirby.setHitBox(kirby.getIdleHitBox());
+                            kirby.showHitBox();
+                        }
 
                         Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
                     }
@@ -551,12 +580,15 @@ public class InGameActivity extends AppCompatActivity {
             Runnable rightWalk = kirby.walk(lrHandler, R.drawable.kirbywalk,"right", walkSpeed, walkHitBoxes, new GameObject.CollisionListener() {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
-                            if (GameObject.getCollisionType(object1, object2).contains("right")) {
-                                if(gameCamera.getRightXPosition() < (TitleActivity.WIDTH/TitleActivity.DENSITY)) {
-                                    gameCamera.setXPosition(gameCamera.getXPosition() + walkSpeed);
+                            if (GameObject.getCollisionType(object1, object2).contains("left")) {
+                                if(!specialCollisionHandler(object2)) {
+                                    if (gameCamera.getLeftXPosition() > 0) {
+                                        gameCamera.setXPosition(gameCamera.getXPosition() - walkSpeed);
+                                    }
+                                    kirby.setXPosition(kirby.getXPosition() - walkSpeed);
                                 }
-                                kirby.setXPosition(kirby.getXPosition() + walkSpeed);
-                                Log.i("Collision", object1.getObjectName() + " collided with the right of " + object2.getObjectName());
+
+                                Log.i("Collision", object1.getObjectName() + " collided with the left of " + object2.getObjectName());
                             }
                         }
                     },
@@ -586,12 +618,14 @@ public class InGameActivity extends AppCompatActivity {
             Runnable rightRun = kirby.walk(lrHandler, R.drawable.kirbyrun,"right", runSpeed, runHitBoxes, new GameObject.CollisionListener() {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
-                            if (GameObject.getCollisionType(object1, object2).contains("right")) {
-                                if(gameCamera.getRightXPosition() < (TitleActivity.WIDTH/TitleActivity.DENSITY)) {
-                                    gameCamera.setXPosition(gameCamera.getXPosition() + runSpeed);
+                            if (GameObject.getCollisionType(object1, object2).contains("left")) {
+                                if(!specialCollisionHandler(object2)) {
+                                    if (gameCamera.getLeftXPosition() > 0) {
+                                        gameCamera.setXPosition(gameCamera.getXPosition() - runSpeed);
+                                    }
+                                    kirby.setXPosition(kirby.getXPosition() - runSpeed);
                                 }
-                                kirby.setXPosition(kirby.getXPosition() + runSpeed);
-                                Log.i("Collision", object1.getObjectName() + " collided with the right of " + object2.getObjectName());
+                                Log.i("Collision", object1.getObjectName() + " collided with the left of " + object2.getObjectName());
                             }
                         }
                     },
@@ -623,15 +657,17 @@ public class InGameActivity extends AppCompatActivity {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
                             if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                                udHandler.removeCallbacksAndMessages(null);
-                                kirby.stopFall();
-                                kirby.setGrounded(true);
-                                kirby.setObjectResource(kirby.getIdleResource());
+                                if(!specialCollisionHandler(object2)) {
+                                    udHandler.removeCallbacksAndMessages(null);
+                                    kirby.stopFall();
+                                    kirby.setGrounded(true);
+                                    kirby.setObjectResource(kirby.getIdleResource());
 
-                                kirby.setYPosition(object2.getHitBox().topLeft().y - kirby.getHitBox().getYBottom());
+                                    kirby.setYPosition(object2.getHitBox().topLeft().y - kirby.getHitBox().getYBottom());
 
-                                kirby.setHitBox(kirby.getIdleHitBox());
-                                kirby.showHitBox();
+                                    kirby.setHitBox(kirby.getIdleHitBox());
+                                    kirby.showHitBox();
+                                }
 
                                 Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
                             }
@@ -728,11 +764,13 @@ public class InGameActivity extends AppCompatActivity {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
                             if(GameObject.getCollisionType(object1, object2).contains("bottom")){
-                                udHandler.removeCallbacksAndMessages(null);
-                                kirby.stopJump();
-                                kirby.setYPosition(object2.getHitBox().bottomRight().y -
-                                        kirby.getHitBox().getHitHeight() - kirby.getHitBox().getYBottom());
-                                udHandler.postDelayed(fall,0);
+                                if(!specialCollisionHandler(object2)) {
+                                    udHandler.removeCallbacksAndMessages(null);
+                                    kirby.stopJump();
+                                    kirby.setYPosition(object2.getHitBox().bottomRight().y -
+                                            kirby.getHitBox().getHitHeight() - kirby.getHitBox().getYBottom());
+                                    udHandler.postDelayed(fall, 0);
+                                }
                                 Log.i("Collision", object1.getObjectName() + " collided with bottom of " + object2.getObjectName());
                             }
                         }
@@ -756,18 +794,20 @@ public class InGameActivity extends AppCompatActivity {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
                             if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                                isFloating = false;
-                                startFloatFinished = false;
-                                jumpCount = 0;
-                                udHandler.removeCallbacksAndMessages(null);
-                                kirby.stopFall();
-                                kirby.setGrounded(true);
-                                kirby.setObjectResource(kirby.getIdleResource());
+                                if(!specialCollisionHandler(object2)) {
+                                    isFloating = false;
+                                    startFloatFinished = false;
+                                    jumpCount = 0;
+                                    udHandler.removeCallbacksAndMessages(null);
+                                    kirby.stopFall();
+                                    kirby.setGrounded(true);
+                                    kirby.setObjectResource(kirby.getIdleResource());
 
-                                kirby.setYPosition(object2.getHitBox().topLeft().y - kirby.getHitBox().getYBottom());
+                                    kirby.setYPosition(object2.getHitBox().topLeft().y - kirby.getHitBox().getYBottom());
 
-                                kirby.setHitBox(kirby.getIdleHitBox());
-                                kirby.showHitBox();
+                                    kirby.setHitBox(kirby.getIdleHitBox());
+                                    kirby.showHitBox();
+                                }
 
                                 Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
                             }
@@ -785,11 +825,13 @@ public class InGameActivity extends AppCompatActivity {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
                             if(GameObject.getCollisionType(object1, object2).contains("bottom")){
-                                udHandler.removeCallbacksAndMessages(null);
-                                kirby.stopJump();
-                                kirby.setYPosition(object2.getHitBox().bottomRight().y -
-                                        kirby.getHitBox().getHitHeight() - kirby.getHitBox().getYBottom());
-                                udHandler.postDelayed(flipFall,0);
+                                if(!specialCollisionHandler(object2)) {
+                                    udHandler.removeCallbacksAndMessages(null);
+                                    kirby.stopJump();
+                                    kirby.setYPosition(object2.getHitBox().bottomRight().y -
+                                            kirby.getHitBox().getHitHeight() - kirby.getHitBox().getYBottom());
+                                    udHandler.postDelayed(flipFall, 0);
+                                }
                                 Log.i("Collision", object1.getObjectName() + " collided with bottom of " + object2.getObjectName());
                             }
                         }
@@ -813,15 +855,17 @@ public class InGameActivity extends AppCompatActivity {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
                             if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                                udHandler.removeCallbacksAndMessages(null);
-                                kirby.stopFall();
-                                kirby.setGrounded(true);
-                                kirby.setObjectResource(kirby.getIdleResource());
+                                if(!specialCollisionHandler(object2)) {
+                                    udHandler.removeCallbacksAndMessages(null);
+                                    kirby.stopFall();
+                                    kirby.setGrounded(true);
+                                    kirby.setObjectResource(kirby.getIdleResource());
 
-                                kirby.setYPosition(object2.getHitBox().topLeft().y - kirby.getHitBox().getYBottom());
+                                    kirby.setYPosition(object2.getHitBox().topLeft().y - kirby.getHitBox().getYBottom());
 
-                                kirby.setHitBox(kirby.getIdleHitBox());
-                                kirby.showHitBox();
+                                    kirby.setHitBox(kirby.getIdleHitBox());
+                                    kirby.showHitBox();
+                                }
 
                                 Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
                             }
@@ -838,6 +882,7 @@ public class InGameActivity extends AppCompatActivity {
                     new GameObject.CollisionListener() {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
+                            specialCollisionHandler(object2);
                         }
                     },
                     new Character.CharacterListener() {
@@ -856,11 +901,13 @@ public class InGameActivity extends AppCompatActivity {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
                             if(GameObject.getCollisionType(object1, object2).contains("bottom")){
-                                udHandler.removeCallbacksAndMessages(null);
-                                kirby.stopJump();
-                                kirby.setYPosition(object2.getHitBox().bottomRight().y -
-                                        kirby.getHitBox().getHitHeight() - kirby.getHitBox().getYBottom());
-                                udHandler.postDelayed(floatFall,0);
+                                if(!specialCollisionHandler(object2)) {
+                                    udHandler.removeCallbacksAndMessages(null);
+                                    kirby.stopJump();
+                                    kirby.setYPosition(object2.getHitBox().bottomRight().y -
+                                            kirby.getHitBox().getHitHeight() - kirby.getHitBox().getYBottom());
+                                    udHandler.postDelayed(floatFall, 0);
+                                }
                                 Log.i("Collision", object1.getObjectName() + " collided with bottom of " + object2.getObjectName());
                             }
                         }
@@ -879,19 +926,21 @@ public class InGameActivity extends AppCompatActivity {
                         }
                     });
 
-            Runnable floatFall = kirby.fall(udHandler, R.drawable.kirbyfloatfall, true, GameObject.GRAVITY/2F, floatFallHitBoxes,
+            Runnable floatFall = kirby.fall(udHandler, R.drawable.kirbyfloatfall, true, GameObject.GRAVITY/3F, floatFallHitBoxes,
                     new GameObject.CollisionListener() {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
                             if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                                isFloating = false;
-                                udHandler.removeCallbacksAndMessages(null);
-                                kirby.stopFall();
-                                kirby.setGrounded(false);
+                                if(!specialCollisionHandler(object2)) {
+                                    isFloating = false;
+                                    udHandler.removeCallbacksAndMessages(null);
+                                    kirby.stopFall();
+                                    kirby.setGrounded(false);
 
-                                kirby.setYPosition(object2.getHitBox().topLeft().y - kirby.getHitBox().getYBottom());
+                                    kirby.setYPosition(object2.getHitBox().topLeft().y - kirby.getHitBox().getYBottom());
 
-                                udHandler.postDelayed(stopFloat,0);
+                                    udHandler.postDelayed(stopFloat, 0);
+                                }
 
 
                                 Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
@@ -909,7 +958,7 @@ public class InGameActivity extends AppCompatActivity {
                     new GameObject.CollisionListener() {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
-
+                            specialCollisionHandler(object2);
                         }
                     },
                     new Character.CharacterListener() {
@@ -977,18 +1026,20 @@ public class InGameActivity extends AppCompatActivity {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
                             if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                                isFloating = false;
-                                startFloatFinished = false;
-                                jumpCount = 0;
-                                udHandler.removeCallbacksAndMessages(null);
-                                kirby.stopFall();
-                                kirby.setGrounded(true);
-                                kirby.setObjectResource(kirby.getIdleResource());
+                                if(!specialCollisionHandler(object2)) {
+                                    isFloating = false;
+                                    startFloatFinished = false;
+                                    jumpCount = 0;
+                                    udHandler.removeCallbacksAndMessages(null);
+                                    kirby.stopFall();
+                                    kirby.setGrounded(true);
+                                    kirby.setObjectResource(kirby.getIdleResource());
 
-                                kirby.setYPosition(object2.getHitBox().topLeft().y - kirby.getHitBox().getYBottom());
+                                    kirby.setYPosition(object2.getHitBox().topLeft().y - kirby.getHitBox().getYBottom());
 
-                                kirby.setHitBox(kirby.getIdleHitBox());
-                                kirby.showHitBox();
+                                    kirby.setHitBox(kirby.getIdleHitBox());
+                                    kirby.showHitBox();
+                                }
 
                                 Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
                             }
@@ -1005,7 +1056,7 @@ public class InGameActivity extends AppCompatActivity {
                     new GameObject.CollisionListener() {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
-
+                            specialCollisionHandler(object2);
                         }
                     },
                     new Character.CharacterListener() {
@@ -1024,6 +1075,22 @@ public class InGameActivity extends AppCompatActivity {
 
     }
 
+    private boolean specialCollisionHandler(GameObject object){
+
+        if(object.isIngredient()){
+            if(!((Ingredient) object).isCollected()) {
+                ((Ingredient) object).setCollected(true);
+                Runnable collectAnimation = ((Ingredient) object).collected(oHandler);
+                oHandler.postDelayed(collectAnimation, 0);
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+
+
     // This method helps to find the scale for the game camera to zoom to
     private float fitZoom(float backgroundWidth, float backgroundHeight){
         return ((float) TitleActivity.HEIGHT/TitleActivity.WIDTH) * (backgroundWidth/backgroundHeight);
@@ -1033,9 +1100,11 @@ public class InGameActivity extends AppCompatActivity {
     // Debugging method
     public void viewInfoDebug(View view){
         GameObject.displayHitBoxes = true;
-        for(GameObject object : testEnvironmentGameObjects){
+        for(GameObject object : collisionGameLayout.getLayoutObjects()){
             object.showHitBox();
         }
+
+
         try {
             Log.i("CharacterDebug", "Character: Position: xPosition = " + String.valueOf(kirby.getXPosition()) +
                     " yPosition = " + String.valueOf(kirby.getYPosition()) + " | Width = " + String.valueOf(kirby.getObjectWidth()) +
@@ -1060,7 +1129,7 @@ public class InGameActivity extends AppCompatActivity {
                 @Override
                 public void onActionComplete(Camera camera) {
                     try {
-                        gameCamera.moveTo(kirby.getXPosition(), centerY, 10);
+                        gameCamera.moveTo(kirby.getCenterXPosition(), centerY, 10);
                     }
                     catch (Exception e){
                         gameCamera.setLeftXPosition(0);

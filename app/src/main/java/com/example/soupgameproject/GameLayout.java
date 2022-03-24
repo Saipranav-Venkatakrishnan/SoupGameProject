@@ -82,7 +82,7 @@ public class GameLayout {
 
     // Get/set layoutObjects
     public ArrayList<GameObject> getLayoutObjects() {
-        return layoutObjects;
+        return this.layoutObjects;
     }
 
     // Setting layoutObjects removes all GameObjects within the layout before setting the new layoutObjects
@@ -107,17 +107,21 @@ public class GameLayout {
             try {
                 layout.removeView(gameObject);
                 GameObject.objectRemovedFromView(gameObject);
+                gameObject.getHitBox().stopShowingHitBox();
             }
             catch(Exception e){
                 Log.i("GameLayout", "Error removing game object");
             }
         }
+        this.layoutObjects = new ArrayList<GameObject>();
     }
 
     // Remove/add individual GameObjects to layout
     public void removeLayoutObject(GameObject gameObject){
         try {
+            this.layoutObjects.remove(gameObject);
             layout.removeView(gameObject);
+            gameObject.getHitBox().stopShowingHitBox();
             GameObject.objectRemovedFromView(gameObject);
         }
         catch (Exception e){

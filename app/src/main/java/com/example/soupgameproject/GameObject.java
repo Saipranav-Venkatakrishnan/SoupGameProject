@@ -44,6 +44,9 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
     // The direction the GameObject is facing
     private boolean isFacingRight;
 
+    // Whether or not the GameObject is an ingredient
+    private boolean isIngredient;
+
     // GameObject static image resource (R.drawable...)
     // Is set to the backgroundResource of the ImageView
     private int objectResource;
@@ -320,7 +323,7 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
     public void showHitBox(){
         if(displayHitBoxes) {
             if (previousHitBox != null) {
-                previousHitBox.removeHitBox();
+                previousHitBox.stopShowingHitBox();
             }
             hitBox.visualizeHitBox();
         }
@@ -466,5 +469,13 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
 
     public void setFacingRight(boolean facingLeft) {
         isFacingRight = facingLeft;
+    }
+
+    public boolean isIngredient() {
+        return isIngredient;
+    }
+
+    public void setIsIngredient(boolean ingredient) {
+        isIngredient = ingredient;
     }
 }

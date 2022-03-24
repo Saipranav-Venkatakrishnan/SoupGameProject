@@ -82,7 +82,7 @@ public class HitBox {
         }
     }
 
-    public void removeHitBox(){
+    public void stopShowingHitBox(){
         if(isDisplayed){
             isDisplayed = false;
             InGameActivity.collisionGameLayout.getLayout().removeView(box);
@@ -159,6 +159,10 @@ public class HitBox {
 
     public float getYBottom() {
         return yBottom;
+    }
+
+    public ImageView getBox() {
+        return box;
     }
 
     // Sets the GameObject associated with the hit box. Is called whenever a GameObject sets its hit box
