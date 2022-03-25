@@ -307,25 +307,19 @@ public class Camera {
     }
 
     public void setXPosition(float xPosition){
-        if(!fixedPosition) {
-            containerLayout.setTranslationX(-((xPosition * TitleActivity.DENSITY) - TitleActivity.WIDTH / 2F));
-        }
+        containerLayout.setTranslationX(-((xPosition * TitleActivity.DENSITY) - TitleActivity.WIDTH / 2F));
     }
 
     public void setLeftXPosition(float leftXPosition){
-        if(!fixedPosition){
-            containerLayout.setTranslationX(-(((leftXPosition - ((-TitleActivity.WIDTH/ (2 * TitleActivity.DENSITY))
-                    + ((scale-1)/(2 * scale)) * (TitleActivity.WIDTH/TitleActivity.DENSITY)))
-                    * TitleActivity.DENSITY) - TitleActivity.WIDTH / 2F));
-        }
+        containerLayout.setTranslationX(-(((leftXPosition - ((-TitleActivity.WIDTH/ (2 * TitleActivity.DENSITY))
+                + ((scale-1)/(2 * scale)) * (TitleActivity.WIDTH/TitleActivity.DENSITY)))
+                * TitleActivity.DENSITY) - TitleActivity.WIDTH / 2F));
     }
 
     public void setRightXPosition(float rightXPosition){
-        if(!fixedPosition){
-            containerLayout.setTranslationX(-(((rightXPosition - ((TitleActivity.WIDTH/ (2 * TitleActivity.DENSITY))
-                    - ((scale-1)/(2 * scale)) * (TitleActivity.WIDTH/TitleActivity.DENSITY)))
-                    * TitleActivity.DENSITY) - TitleActivity.WIDTH / 2F));
-        }
+        containerLayout.setTranslationX(-(((rightXPosition - ((TitleActivity.WIDTH/ (2 * TitleActivity.DENSITY))
+                - ((scale-1)/(2 * scale)) * (TitleActivity.WIDTH/TitleActivity.DENSITY)))
+                * TitleActivity.DENSITY) - TitleActivity.WIDTH / 2F));
     }
 
     // get the y coordinate, using our defined game coordinate system, of where the camera is centered at in DP.
@@ -335,9 +329,7 @@ public class Camera {
     }
 
     public void setYPosition(float yPosition){
-        if(!fixedPosition) {
-            containerLayout.setTranslationY((((yPosition * TitleActivity.DENSITY) - TitleActivity.HEIGHT / 2F)));
-        }
+        containerLayout.setTranslationY((((yPosition * TitleActivity.DENSITY) - TitleActivity.HEIGHT / 2F)));
     }
 
     // use the following four functions to acquire the camera range/domain in terms of the defined coordinate system in DP.
@@ -367,11 +359,9 @@ public class Camera {
     }
 
     public void setScale(float scale) {
-        if(!fixedPosition) {
-            this.scale = scale;
-            scalingLayout.setScaleX(scale);
-            scalingLayout.setScaleY(scale);
-        }
+        this.scale = scale;
+        scalingLayout.setScaleX(scale);
+        scalingLayout.setScaleY(scale);
     }
 
     // Get/set whether or not the camera is fixed

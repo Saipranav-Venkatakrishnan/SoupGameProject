@@ -159,20 +159,46 @@ public class InGameActivity extends AppCompatActivity {
 
     // Sets up the camera for a chosen environment
     private void cameraSetUp(String environment){
-        gameCamera = new Camera(scalingFrameLayout, gameContainerLayout);
 
         if(environment.toLowerCase().equals("test")){
             gameCamera.setScale(fitZoom(3832,359));
+            gameCamera.setLeftXPosition(0);
+        }
+        else if(environment.toLowerCase().equals("test2")){
+            gameCamera.setScale(fitZoom(3832,500));
             gameCamera.setLeftXPosition(0);
         }
     }
 
     // Sets up a chosen in-game environment
     private void environmentSetUp(String environment){
+        try{
+            backgroundGameLayout.removeAllLayoutObjects();
+            backgroundGameLayout.setBackgroundImage(android.R.color.transparent);
+            collisionGameLayout.removeAllLayoutObjects();
+            foregroundGameLayout.removeAllLayoutObjects();
+
+            backgroundGameLayout = null;
+            collisionGameLayout = null;
+            foregroundGameLayout = null;
+        }
+        catch(Exception e){
+            Log.i("EnvironmentSetup","GameLayouts not created yet");
+        }
+
+        try{
+            oHandler.removeCallbacksAndMessages(null);
+        }
+        catch(Exception e){
+            Log.i("EnvironmentSetup", "Some handlers not created yet");
+        }
+
         backgroundGameLayout = new GameLayout(this,"Background", backgroundLayout);
         backgroundGameLayout.setBackgroundImageView(findViewById(R.id.backgroundImage));
         collisionGameLayout = new GameLayout(this, "Collision", collisionLayout);
         foregroundGameLayout = new GameLayout(this, "Foreground",foregroundLayout);
+
+        cameraSetUp(environment);
 
         if(environment.toLowerCase().equals("test")){
             backgroundGameLayout.setBackgroundImage(R.drawable.cloudsbackgroundextended);
@@ -185,6 +211,14 @@ public class InGameActivity extends AppCompatActivity {
             collisionGameLayout.addLayoutObjects(testEnvironmentCollisionGameObjects);
 
             gameCamera.setFixedPosition(true);
+        }
+        else if(environment.toLowerCase().equals("test2")){
+            kirby.setYPosition(gameCamera.getBottomYPosition() + 6 - kirby.getHitBox().getYBottom());
+
+            collisionGameLayout.addLayoutObject(kirby);
+            collisionGameLayout.addLayoutObject(new GameObject(this, "Ground", (int)(TitleActivity.WIDTH/TitleActivity.DENSITY),10,
+                    R.drawable.testground, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
+                    (int)(TitleActivity.WIDTH/TitleActivity.DENSITY), 6, 0, gameCamera.getBottomYPosition(),0,0)));
         }
     }
 
@@ -1175,6 +1209,9 @@ public class InGameActivity extends AppCompatActivity {
                 oHandler.postDelayed(collectAnimation, 0);
             }
             return true;
+        }
+        else if(object1.isCharacter() && object2.getObjectName().toLowerCase().equals("boundary")){
+            //environmentSetUp("test2");
         }
 
         return false;

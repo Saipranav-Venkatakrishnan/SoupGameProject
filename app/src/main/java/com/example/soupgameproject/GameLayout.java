@@ -123,7 +123,7 @@ public class GameLayout {
                 GameObject.objectAddedToView(gameObject);
             }
             catch(Exception e){
-                Log.i("GameLayout", "Error adding game object");
+                Log.i("GameLayout", "Error adding game objects");
             }
         }
     }
@@ -135,9 +135,10 @@ public class GameLayout {
                 layout.removeView(gameObject);
                 GameObject.objectRemovedFromView(gameObject);
                 gameObject.getHitBox().stopShowingHitBox();
+                Log.i("GameLayout", "All layout objects removed.");
             }
             catch(Exception e){
-                Log.i("GameLayout", "Error removing game object");
+                Log.i("GameLayout", "Error removing game objects");
             }
         }
         this.layoutObjects = new ArrayList<GameObject>();
@@ -175,7 +176,7 @@ public class GameLayout {
                 GameObject.objectAddedToView(gameObject);
             }
             catch(Exception e){
-                Log.i("GameLayout", "Error adding game object");
+                Log.i("GameLayout", "Error adding game objects");
             }
         }
     }
