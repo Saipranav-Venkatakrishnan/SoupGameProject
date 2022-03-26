@@ -132,14 +132,14 @@ public class InGameActivity extends AppCompatActivity {
                 R.drawable.testground, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
                 (int)(TitleActivity.WIDTH/TitleActivity.DENSITY), 6, 0, gameCamera.getBottomYPosition(),0,0)));
 
-//        for(int i = 0; i < 50; i++){
-//            float ratio = (int) (Math.random() * 6 + 4)/10F;
-//            int xPosition = (int) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY));
-//            testEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio),(int)(43* ratio),
-//                    R.drawable.testtree, xPosition, gameCamera.getBottomYPosition() + 6, true,
-//                    new HitBox(InGameActivity.this, true, (int)(7* ratio),(int)(39* ratio),xPosition
-//                            ,gameCamera.getBottomYPosition()+6,(float)(16* ratio),0)));
-//        }
+        for(int i = 0; i < 50; i++){
+            float ratio = (int) (Math.random() * 6 + 4)/10F;
+            int xPosition = (int) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY));
+            testEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio),(int)(43* ratio),
+                    R.drawable.testtree, xPosition, gameCamera.getBottomYPosition() + 6, true,
+                    new HitBox(InGameActivity.this, true, (int)(7* ratio),(int)(39* ratio),xPosition
+                            ,gameCamera.getBottomYPosition()+6,(float)(16* ratio),0)));
+        }
 
         GameObject rightBoundary = new GameObject(this, "Boundary", 50, (int)(TitleActivity.HEIGHT/TitleActivity.DENSITY),
                         R.drawable.boundary, -50,0,true);
