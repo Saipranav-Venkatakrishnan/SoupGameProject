@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/waddledee28" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/waddledee29" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/waddledee30" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/waddledee31" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/waddledee32" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/waddledee33" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/waddledee34" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/waddledee35" android:duration="@integer/shortFrameTime"/>
+</animation-list>

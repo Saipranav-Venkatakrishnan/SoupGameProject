@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Character extends GameObject{
 
@@ -28,6 +29,18 @@ public class Character extends GameObject{
     // The idle hit box to be used for the character
     private HitBox idleHitBox;
 
+    // Handlers
+    // Deal with left and right movement
+    private Handler lrHandler;
+    // Deal with up and down movement
+    private Handler udHandler;
+    // Deal with non-movement actions
+    private Handler aHandler;
+
+    // HashMap of all actions the Character can do
+    private HashMap<String, Runnable> allActions;
+
+
     // Creates a visible Character and assigns all instance variables appropriately
     public Character(Context context, String objectName, int objectWidth, int objectHeight,
                      float xPosition, float yPosition, HitBox idleHitBox, boolean isIdleAnimated, int idleResource) {
@@ -47,6 +60,12 @@ public class Character extends GameObject{
 
         this.actionStarted = false;
         this.stopAction = true;
+
+        this.lrHandler = new Handler();
+        this.udHandler = new Handler();
+        this.aHandler = new Handler();
+
+        this.allActions = new HashMap<String, Runnable>();
 
         setIsCharacter(true);
     }
@@ -549,6 +568,22 @@ public class Character extends GameObject{
 
     public AnimationDrawable getCharacterAnimation() {
         return animation;
+    }
+
+    public Handler getLrHandler() {
+        return lrHandler;
+    }
+
+    public Handler getUdHandler() {
+        return udHandler;
+    }
+
+    public Handler getAHandler() {
+        return aHandler;
+    }
+
+    public HashMap<String, Runnable> getAllActions() {
+        return allActions;
     }
 
     // The three listeners of the Character Object

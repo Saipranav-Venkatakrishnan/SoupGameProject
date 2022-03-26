@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Flip -->
+    <item android:drawable="@drawable/waddledee42" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/waddledee43" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/waddledee44" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/waddledee45" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/waddledee46" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/waddledee47" android:duration="@integer/shortFrameTime"/>
+
+    <!-- Fall -->
+
+    <item android:drawable="@drawable/waddledee48" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/waddledee49" android:duration="@integer/defaultFrameTime"/>
+
+    <item android:drawable="@drawable/waddledee48" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/waddledee49" android:duration="@integer/defaultFrameTime"/>
+
+    <item android:drawable="@drawable/waddledee48" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/waddledee49" android:duration="@integer/defaultFrameTime"/>
+
+    <item android:drawable="@drawable/waddledee48" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/waddledee49" android:duration="@integer/defaultFrameTime"/>
+
+    <item android:drawable="@drawable/waddledee48" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/waddledee49" android:duration="@integer/defaultFrameTime"/>
+
+    <item android:drawable="@drawable/waddledee48" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/waddledee49" android:duration="@integer/defaultFrameTime"/>
+
+    <item android:drawable="@drawable/waddledee48" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/waddledee49" android:duration="@integer/defaultFrameTime"/>
+
+    <item android:drawable="@drawable/waddledee48" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/waddledee49" android:duration="@integer/defaultFrameTime"/>
+
+    <item android:drawable="@drawable/waddledee48" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/waddledee49" android:duration="@integer/defaultFrameTime"/>
+
+    <item android:drawable="@drawable/waddledee48" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/waddledee49" android:duration="@integer/defaultFrameTime"/>
+</animation-list>
