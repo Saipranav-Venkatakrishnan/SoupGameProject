@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/kirby1907" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby1908" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby1909" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby1910" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby1911" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby1912" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby1913" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby1914" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby1915" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby1916" android:duration="@integer/shortFrameTime"/>
+</animation-list>

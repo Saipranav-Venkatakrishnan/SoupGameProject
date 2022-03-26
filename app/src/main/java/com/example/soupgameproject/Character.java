@@ -414,7 +414,7 @@ public class Character extends GameObject{
 
     // This method is for any other animated action the Character can take that doesn't involve any movement.
     // The method requires a CharacterListener which will signify when the action has been completed.
-    public Runnable animatedAction(Handler handler, int actionResource, ArrayList<HitBox> hitBoxes, CollisionListener collisionListener,
+    public Runnable animatedAction(Handler handler, boolean isLooped, int actionResource, ArrayList<HitBox> hitBoxes, CollisionListener collisionListener,
                                    CharacterListener characterListener){
         Runnable action = new Runnable() {
 
@@ -433,7 +433,12 @@ public class Character extends GameObject{
                     if (getObjectResource() != actionResource) {
                         setObjectResource(actionResource);
                         animation = (AnimationDrawable) getBackground();
-                        animation.setOneShot(true);
+                        if(isLooped){
+                            animation.setOneShot(false);
+                        }
+                        else {
+                            animation.setOneShot(true);
+                        }
                         animation.start();
                         i = 0;
                     }
@@ -445,8 +450,13 @@ public class Character extends GameObject{
                             initialAnimationTime = currentAnimationTime;
                         }
                     } else {
-                        stopAction();
-                        characterListener.onActionComplete();
+                        if(isLooped){
+                            i = 0;
+                        }
+                        else {
+                            stopAction();
+                            characterListener.onActionComplete();
+                        }
                     }
 
                     // HitBoxes & Collision Handling

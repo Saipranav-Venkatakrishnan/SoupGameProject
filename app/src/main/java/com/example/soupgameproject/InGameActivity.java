@@ -79,7 +79,6 @@ public class InGameActivity extends AppCompatActivity {
 
     // User Interface variables
     private Button leftButton, rightButton, jumpButton, actionButton;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -993,7 +992,7 @@ public class InGameActivity extends AppCompatActivity {
                         }
                     });
 
-            Runnable startFloat = kirby.animatedAction(udHandler, R.drawable.kirbystartfloat, startFloatHitBoxes,
+            Runnable startFloat = kirby.animatedAction(udHandler, false, R.drawable.kirbystartfloat, startFloatHitBoxes,
                     new GameObject.CollisionListener() {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
@@ -1071,7 +1070,7 @@ public class InGameActivity extends AppCompatActivity {
                         }
                     });
 
-            Runnable stopFloat = kirby.animatedAction(udHandler, R.drawable.kirbystopfloat, stopFloatHitBoxes,
+            Runnable stopFloat = kirby.animatedAction(udHandler, false, R.drawable.kirbystopfloat, stopFloatHitBoxes,
                     new GameObject.CollisionListener() {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
@@ -1169,7 +1168,7 @@ public class InGameActivity extends AppCompatActivity {
                         }
                     });
 
-            Runnable stopFloat = kirby.animatedAction(udHandler, R.drawable.kirbystopfloat, stopFloatHitBoxes,
+            Runnable stopFloat = kirby.animatedAction(udHandler, false, R.drawable.kirbystopfloat, stopFloatHitBoxes,
                     new GameObject.CollisionListener() {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
@@ -1223,7 +1222,7 @@ public class InGameActivity extends AppCompatActivity {
     }
 
     // Debugging method
-    public void viewInfoDebug(View view) throws XmlPullParserException, IOException {
+    public void viewInfoDebug(View view){
 
         GameObject.displayHitBoxes = true;
         for(GameObject object : collisionGameLayout.getLayoutObjects()){

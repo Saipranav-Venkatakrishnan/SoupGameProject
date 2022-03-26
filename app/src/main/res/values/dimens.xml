@@ -3,6 +3,7 @@
     <integer name="fastFrameTime">50</integer>
     <integer name="shortFrameTime">100</integer>
     <integer name="defaultFrameTime">150</integer>
+    <integer name="mediumFrameTime">200</integer>
     <integer name="longFrameTime">300</integer>
     <integer name="extraLongFrameTime">1000</integer>
 </resources>

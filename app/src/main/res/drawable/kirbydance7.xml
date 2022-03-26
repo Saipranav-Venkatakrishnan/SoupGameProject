@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/kirby1948" android:duration="@integer/fastFrameTime"/>
+    <item android:drawable="@drawable/kirby1949" android:duration="@integer/fastFrameTime"/>
+    <item android:drawable="@drawable/kirby1950" android:duration="@integer/fastFrameTime"/>
+    <item android:drawable="@drawable/kirby1951" android:duration="@integer/fastFrameTime"/>
+    <item android:drawable="@drawable/kirby1952" android:duration="@integer/fastFrameTime"/>
+    <item android:drawable="@drawable/kirby1953" android:duration="@integer/fastFrameTime"/>
+    <item android:drawable="@drawable/kirby1954" android:duration="@integer/fastFrameTime"/>
+    <item android:drawable="@drawable/kirby1955" android:duration="@integer/fastFrameTime"/>
+    <item android:drawable="@drawable/kirby1956" android:duration="@integer/fastFrameTime"/>
+    <item android:drawable="@drawable/kirby1957" android:duration="@integer/fastFrameTime"/>
+    <item android:drawable="@drawable/kirby1958" android:duration="@integer/fastFrameTime"/>
+    <item android:drawable="@drawable/kirby1959" android:duration="@integer/fastFrameTime"/>
+    <item android:drawable="@drawable/kirby1948" android:duration="@integer/fastFrameTime"/>
+    <item android:drawable="@drawable/kirby1949" android:duration="@integer/fastFrameTime"/>
+    <item android:drawable="@drawable/kirby1950" android:duration="@integer/fastFrameTime"/>
+    <item android:drawable="@drawable/kirby1951" android:duration="@integer/fastFrameTime"/>
+    <item android:drawable="@drawable/kirby1952" android:duration="@integer/fastFrameTime"/>
+    <item android:drawable="@drawable/kirby1953" android:duration="@integer/fastFrameTime"/>
+    <item android:drawable="@drawable/kirby1954" android:duration="@integer/fastFrameTime"/>
+    <item android:drawable="@drawable/kirby1955" android:duration="@integer/fastFrameTime"/>
+    <item android:drawable="@drawable/kirby1956" android:duration="@integer/fastFrameTime"/>
+    <item android:drawable="@drawable/kirby1957" android:duration="@integer/fastFrameTime"/>
+    <item android:drawable="@drawable/kirby1958" android:duration="@integer/fastFrameTime"/>
+    <item android:drawable="@drawable/kirby1959" android:duration="@integer/fastFrameTime"/>
+    <item android:drawable="@drawable/kirby1960" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby1961" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby1962" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby1963" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby1964" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby1965" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby1966" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby1967" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby1968" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby1969" android:duration="@integer/defaultFrameTime"/>
+    <item android:drawable="@drawable/kirby1970" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby1971" android:duration="@integer/shortFrameTime"/>
+
+</animation-list>

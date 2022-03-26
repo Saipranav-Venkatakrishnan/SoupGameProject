@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/kirby1924" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby1925" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby1926" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby1927" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby1928" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby1929" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby1930" android:duration="@integer/shortFrameTime"/>
+    <item android:drawable="@drawable/kirby1931" android:duration="@integer/shortFrameTime"/>
+</animation-list>

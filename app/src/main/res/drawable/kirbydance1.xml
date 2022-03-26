@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/kirby1903" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1904" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1905" android:duration="@integer/longFrameTime"/>
+    <item android:drawable="@drawable/kirby1906" android:duration="@integer/longFrameTime"/>
+</animation-list>
