@@ -68,7 +68,7 @@ public class InGameActivity extends AppCompatActivity {
     private int jumpCount;
 
     private HashMap<String, Character> allNPCs = new HashMap<String, Character>();
-    private ArrayList<HitBox> waddleDeeWalkHitBoxes, waddleDeeRunHitBoxes, waddleDeeFlipFallHitBoxes, waddleDeeJumpHitBox;
+    private ArrayList<Character> npcCopyList;
     
     // Day/Night cycle variables
     // (SAVE)
@@ -124,15 +124,17 @@ public class InGameActivity extends AppCompatActivity {
         testEnvironmentCollisionGameObjects = new ArrayList<GameObject>();
         testEnvironmentForegroundGameObjects = new ArrayList<GameObject>();
 
-        allNPCs.get("Waddle Dee 1").setYPosition(gameCamera.getBottomYPosition() + 6);
-        allNPCs.get("Waddle Dee 1").setXPosition(100);
-        testEnvironmentCollisionGameObjects.add(allNPCs.get("Waddle Dee 1"));
+        for(int i = 0; i < npcCopyList.size(); i ++) {
+            allNPCs.get("Waddle Dee " + String.valueOf(i)).setYPosition((int) (Math.random() * 40) + gameCamera.getTopYPosition());
+            allNPCs.get("Waddle Dee " + String.valueOf(i)).setXPosition((int)(Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY)/14F) * 14);
+            testEnvironmentCollisionGameObjects.add(allNPCs.get("Waddle Dee " + String.valueOf(i)));
+        }
 
         testEnvironmentCollisionGameObjects.add(new GameObject(this, "Ground", (int)(TitleActivity.WIDTH/TitleActivity.DENSITY),10,
                 R.drawable.testground, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
-                (int)(TitleActivity.WIDTH/TitleActivity.DENSITY), 6, 0, gameCamera.getBottomYPosition(),0,0)));
+                (int)(TitleActivity.WIDTH/TitleActivity.DENSITY), 300, 0, gameCamera.getBottomYPosition(),0,-294)));
 
-        for(int i = 0; i < 50; i++){
+        for(int i = 0; i < 25; i++){
             float ratio = (int) (Math.random() * 6 + 4)/10F;
             int xPosition = (int) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY));
             testEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio),(int)(43* ratio),
@@ -146,7 +148,7 @@ public class InGameActivity extends AppCompatActivity {
         GameObject leftBoundary = new GameObject(this, "Boundary", 50, (int)(TitleActivity.HEIGHT/TitleActivity.DENSITY),
                 R.drawable.boundary, (TitleActivity.WIDTH/TitleActivity.DENSITY),0,true);
         GameObject topBoundary = new GameObject(this, "Boundary", (int)(TitleActivity.WIDTH/TitleActivity.DENSITY),
-                50, R.drawable.boundary, 0,gameCamera.getTopYPosition(),true);
+                300, R.drawable.boundary, 0,gameCamera.getTopYPosition(),true);
 
         testEnvironmentCollisionGameObjects.add(rightBoundary);
         testEnvironmentCollisionGameObjects.add(leftBoundary);
@@ -155,7 +157,7 @@ public class InGameActivity extends AppCompatActivity {
         // Call to show the chosen environment.
         environmentSetUp("test");
 
-        controllerSetUp(1/3F,1/2F, 10,20,5);
+        controllerSetUp();
 
         dayNightCycle();
     }
@@ -231,20 +233,26 @@ public class InGameActivity extends AppCompatActivity {
 
                 @Override
                 public void run() {
-                    if(allNPCs.get("Waddle Dee 1").isGrounded()) {
-                        allNPCs.get("Waddle Dee 1").getUdHandler().removeCallbacksAndMessages(null);
-                        allNPCs.get("Waddle Dee 1").stopJump();
-                        allNPCs.get("Waddle Dee 1").stopFall();
-                        allNPCs.get("Waddle Dee 1").getUdHandler().postDelayed(allNPCs.get("Waddle Dee 1").getAllActions().get("Jump"), 0);
+                    for(int i = 0; i < npcCopyList.size(); i++) {
+                        if (allNPCs.get("Waddle Dee " + String.valueOf(i)).isGrounded()) {
+                            allNPCs.get("Waddle Dee " + String.valueOf(i)).getUdHandler().removeCallbacksAndMessages(null);
+                            allNPCs.get("Waddle Dee " + String.valueOf(i)).stopJump();
+                            allNPCs.get("Waddle Dee " + String.valueOf(i)).getUdHandler()
+                                    .postDelayed(allNPCs.get("Waddle Dee " + String.valueOf(i)).getAllActions().get("Jump"), 0);
+                        }
+
+
+                        if (!isWalking) {
+                            allNPCs.get("Waddle Dee " + String.valueOf(i)).getLrHandler().postDelayed(allNPCs.get("Waddle Dee " + String.valueOf(i))
+                                    .getAllActions().get("Left Walk"), 0);
+                            if(i == npcCopyList.size()-1) {
+                                isWalking = true;
+                            }
+                        }
                     }
 
-                    if(!isWalking){
-                        allNPCs.get("Waddle Dee 1").getLrHandler().postDelayed(allNPCs.get("Waddle Dee 1").getAllActions().get("Left Walk"),0);
-                        isWalking = true;
-                    }
 
-
-                    npcHandler.postDelayed(this, 1500);
+                    npcHandler.postDelayed(this, 2000);
                 }
             },2000);
 
@@ -268,11 +276,11 @@ public class InGameActivity extends AppCompatActivity {
                 Ingredient ingredient = new Ingredient(this, "Heart",10,10,
                         R.drawable.testitem,
                         (float) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY - 10)),
-                        (float)(gameCamera.getTopYPosition()));
+                        (float)(gameCamera.getTopYPosition()) + 70);
                 
                 collisionGameLayout.addLayoutObject(ingredient);
                 
-                Runnable fall = ingredient.fall(oHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
+                Runnable fall = ingredient.fall(oHandler, GameObject.GRAVITY/10F, new GameObject.CollisionListener() {
                     @Override
                     public void onCollision(GameObject object1, GameObject object2) {
                         if (GameObject.getCollisionType(object1, object2).contains("top")) {
@@ -902,314 +910,328 @@ public class InGameActivity extends AppCompatActivity {
 
 
         // NPC Set Ups
-        // Waddle Dee
-        HitBox waddleDeeIdleHitBox = new HitBox(this, true, (int) (14 * 20/27F),(int)(12 * 18/23F),
-                0, 0, 14 * 3 /27F,0);
-        Character waddleDee = new Character(this, "Waddle Dee", 14, 12, 0, 0,
-                waddleDeeIdleHitBox, true, R.drawable.waddledeeidle);
-        waddleDee.setObjectResource(R.drawable.waddledeeidle);
 
-        waddleDeeWalkHitBoxes = new ArrayList<HitBox>();
-        waddleDeeRunHitBoxes = new ArrayList<HitBox>();
-        waddleDeeFlipFallHitBoxes = new ArrayList<HitBox>();
-        waddleDeeJumpHitBox = new ArrayList<HitBox>();
-
-        // Walk Hit Boxes
-        waddleDeeWalkHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 20/27F),
-                (int)(waddleDee.getObjectHeight() * 18/23F), 0, 0, waddleDee.getObjectWidth() * 3/27F,
-                0));
-        waddleDeeWalkHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 21/27F),
-                (int)(waddleDee.getObjectHeight() * 19/23F), 0, 0, waddleDee.getObjectWidth() * 3/27F,
-                0));
-        waddleDeeWalkHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 20/27F),
-                (int)(waddleDee.getObjectHeight() * 18/23F), 0, 0, waddleDee.getObjectWidth() * 3/27F,
-                0));
-        waddleDeeWalkHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 19/27F),
-                (int)(waddleDee.getObjectHeight() * 16/23F), 0, 0, waddleDee.getObjectWidth() * 4/27F,
-                0));
-        waddleDeeWalkHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 17/27F),
-                (int)(waddleDee.getObjectHeight() * 17/23F), 0, 0, waddleDee.getObjectWidth() * 5/27F,
-                0));
-        waddleDeeWalkHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 17/27F),
-                (int)(waddleDee.getObjectHeight() * 18/23F), 0, 0, waddleDee.getObjectWidth() * 5/27F,
-                0));
-        waddleDeeWalkHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 21/27F),
-                (int)(waddleDee.getObjectHeight() * 19/23F), 0, 0, waddleDee.getObjectWidth() * 3/27F,
-                0));
-        waddleDeeWalkHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 20/27F),
-                (int)(waddleDee.getObjectHeight() * 18/23F), 0, 0, waddleDee.getObjectWidth() * 3/27F,
-                0));
-        waddleDeeWalkHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 19/27F),
-                (int)(waddleDee.getObjectHeight() * 16/23F), 0, 0, waddleDee.getObjectWidth() * 4/27F,
-                0));
-        waddleDeeWalkHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 19/27F),
-                (int)(waddleDee.getObjectHeight() * 17/23F), 0, 0, waddleDee.getObjectWidth() * 4/27F,
-                0));
-
-        // Run Hit Boxes
-        waddleDeeRunHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 24/27F),
-                (int)(waddleDee.getObjectHeight() * 19/23F), 0, 0, waddleDee.getObjectWidth() * 1/27F,
-                0));
-        waddleDeeRunHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 19/27F),
-                (int)(waddleDee.getObjectHeight() * 19/23F), 0, 0, waddleDee.getObjectWidth() * 4/27F,
-                0));
-        waddleDeeRunHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 17/27F),
-                (int)(waddleDee.getObjectHeight() * 18/23F), 0, 0, waddleDee.getObjectWidth() * 5/27F,
-                0));
-        waddleDeeRunHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 18/27F),
-                (int)(waddleDee.getObjectHeight() * 19/23F), 0, 0, waddleDee.getObjectWidth() * 4/27F,
-                0));
-        waddleDeeRunHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 19/27F),
-                (int)(waddleDee.getObjectHeight() * 19/23F), 0, 0, waddleDee.getObjectWidth() * 4/27F,
-                0));
-        waddleDeeRunHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 18/27F),
-                (int)(waddleDee.getObjectHeight() * 19/23F), 0, 0, waddleDee.getObjectWidth() * 4/27F,
-                0));
-        waddleDeeRunHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 17/27F),
-                (int)(waddleDee.getObjectHeight() * 18/23F), 0, 0, waddleDee.getObjectWidth() * 5/27F,
-                0));
-        waddleDeeRunHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 19/27F),
-                (int)(waddleDee.getObjectHeight() * 19/23F), 0, 0, waddleDee.getObjectWidth() * 4/27F,
-                0));
-
-        // Flip Fall Hit Boxes
-        waddleDeeFlipFallHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 21/27F),
-                (int)(waddleDee.getObjectHeight() * 19/23F), 0, 0, waddleDee.getObjectWidth() * 3/27F,
-                0));
-        waddleDeeFlipFallHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 20/27F),
-                (int)(waddleDee.getObjectHeight() * 18/23F), 0, 0, waddleDee.getObjectWidth() * 3/27F,
-                0));
-        waddleDeeFlipFallHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 21/27F),
-                (int)(waddleDee.getObjectHeight() * 19/23F), 0, 0, waddleDee.getObjectWidth() * 3/27F,
-                0));
-        waddleDeeFlipFallHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 20/27F),
-                (int)(waddleDee.getObjectHeight() * 20/23F), 0, 0, waddleDee.getObjectWidth() * 3/27F,
-                0));
-        waddleDeeFlipFallHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 21/27F),
-                (int)(waddleDee.getObjectHeight() * 17/23F), 0, 0, waddleDee.getObjectWidth() * 3/27F,
-                0));
-        waddleDeeFlipFallHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 22/27F),
-                (int)(waddleDee.getObjectHeight() * 18/23F), 0, 0, waddleDee.getObjectWidth() * 2/27F,
-                0));
-
-        for(int i = 0; i < 10; i ++) {
-            waddleDeeFlipFallHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 21/27F),
-                    (int)(waddleDee.getObjectHeight() * 19/23F), 0, 0, waddleDee.getObjectWidth() * 3/27F,
-                    0));
-            waddleDeeFlipFallHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 20/27F),
-                    (int)(waddleDee.getObjectHeight() * 19/23F), 0, 0, waddleDee.getObjectWidth() * 3/27F,
-                    0));
-        }
-
-        // Jump Hit Box
-        waddleDeeJumpHitBox.add(new HitBox(InGameActivity.this, true, (int)(waddleDee.getObjectWidth() * 20/27F),
-                (int)(waddleDee.getObjectHeight() * 20/23F), 0, 0, waddleDee.getObjectWidth() * 3/27F,
-                0));
-
-        // Actions Set Up
+        // Create Waddle Dee + Action Set Up
         float walkSpeed = 1/3F;
         float runSpeed = 1/2F;
-        
 
-        Runnable wFall = waddleDee.fall(waddleDee.getUdHandler(), R.drawable.waddledeeflipfall, true, waddleDeeFlipFallHitBoxes,
-                new GameObject.CollisionListener() {
-                    @Override
-                    public void onCollision(GameObject object1, GameObject object2) {
-                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                            if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))) {
-                                waddleDee.getUdHandler().removeCallbacksAndMessages(null);
-                                waddleDee.stopFall();
-                                waddleDee.setGrounded(true);
-                                waddleDee.setObjectResource(waddleDee.getIdleResource());
+        // Create multiple Waddle Dee
+        npcCopyList = new ArrayList<Character>();
+        // ~30-40 limit on number of NPCs
+        for(int i = 0; i < 25; i++){
+            npcCopyList.add(null);
+        }
 
-                                waddleDee.setYPosition(object2.getHitBox().topLeft().y -
-                                        waddleDee.getHitBox().getYBottom());
+        int x = 0;
+        for(Character npc : npcCopyList){
+            HitBox waddleDeeIdleHitBox = new HitBox(this, true, (int) (14 * 20/27F),(int)(12 * 18/23F),
+                    0, 0, 14 * 3 /27F,0);
 
-                                waddleDee.setHitBox(waddleDee.getIdleHitBox());
-                                waddleDee.showHitBox();
+            npc = new Character(this, "Waddle Dee", 14, 12, 0, 0,
+                    waddleDeeIdleHitBox, true, R.drawable.waddledeeidle);
+            npc.setObjectResource(R.drawable.waddledeeidle);
+
+            ArrayList<HitBox> waddleDeeWalkHitBoxes = new ArrayList<HitBox>();
+            ArrayList<HitBox> waddleDeeRunHitBoxes = new ArrayList<HitBox>();
+            ArrayList<HitBox> waddleDeeFlipFallHitBoxes = new ArrayList<HitBox>();
+            ArrayList<HitBox> waddleDeeJumpHitBox = new ArrayList<HitBox>();
+
+            // Walk Hit Boxes
+            waddleDeeWalkHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 20/27F),
+                    (int)(npc.getObjectHeight() * 18/23F), 0, 0, npc.getObjectWidth() * 3/27F,
+                    0));
+            waddleDeeWalkHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 21/27F),
+                    (int)(npc.getObjectHeight() * 19/23F), 0, 0, npc.getObjectWidth() * 3/27F,
+                    0));
+            waddleDeeWalkHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 20/27F),
+                    (int)(npc.getObjectHeight() * 18/23F), 0, 0, npc.getObjectWidth() * 3/27F,
+                    0));
+            waddleDeeWalkHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 19/27F),
+                    (int)(npc.getObjectHeight() * 16/23F), 0, 0, npc.getObjectWidth() * 4/27F,
+                    0));
+            waddleDeeWalkHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 17/27F),
+                    (int)(npc.getObjectHeight() * 17/23F), 0, 0, npc.getObjectWidth() * 5/27F,
+                    0));
+            waddleDeeWalkHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 17/27F),
+                    (int)(npc.getObjectHeight() * 18/23F), 0, 0, npc.getObjectWidth() * 5/27F,
+                    0));
+            waddleDeeWalkHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 21/27F),
+                    (int)(npc.getObjectHeight() * 19/23F), 0, 0, npc.getObjectWidth() * 3/27F,
+                    0));
+            waddleDeeWalkHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 20/27F),
+                    (int)(npc.getObjectHeight() * 18/23F), 0, 0, npc.getObjectWidth() * 3/27F,
+                    0));
+            waddleDeeWalkHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 19/27F),
+                    (int)(npc.getObjectHeight() * 16/23F), 0, 0, npc.getObjectWidth() * 4/27F,
+                    0));
+            waddleDeeWalkHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 19/27F),
+                    (int)(npc.getObjectHeight() * 17/23F), 0, 0, npc.getObjectWidth() * 4/27F,
+                    0));
+
+            // Run Hit Boxes
+            waddleDeeRunHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 24/27F),
+                    (int)(npc.getObjectHeight() * 19/23F), 0, 0, npc.getObjectWidth() * 1/27F,
+                    0));
+            waddleDeeRunHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 19/27F),
+                    (int)(npc.getObjectHeight() * 19/23F), 0, 0, npc.getObjectWidth() * 4/27F,
+                    0));
+            waddleDeeRunHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 17/27F),
+                    (int)(npc.getObjectHeight() * 18/23F), 0, 0, npc.getObjectWidth() * 5/27F,
+                    0));
+            waddleDeeRunHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 18/27F),
+                    (int)(npc.getObjectHeight() * 19/23F), 0, 0, npc.getObjectWidth() * 4/27F,
+                    0));
+            waddleDeeRunHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 19/27F),
+                    (int)(npc.getObjectHeight() * 19/23F), 0, 0, npc.getObjectWidth() * 4/27F,
+                    0));
+            waddleDeeRunHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 18/27F),
+                    (int)(npc.getObjectHeight() * 19/23F), 0, 0, npc.getObjectWidth() * 4/27F,
+                    0));
+            waddleDeeRunHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 17/27F),
+                    (int)(npc.getObjectHeight() * 18/23F), 0, 0, npc.getObjectWidth() * 5/27F,
+                    0));
+            waddleDeeRunHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 19/27F),
+                    (int)(npc.getObjectHeight() * 19/23F), 0, 0, npc.getObjectWidth() * 4/27F,
+                    0));
+
+            // Flip Fall Hit Boxes
+            waddleDeeFlipFallHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 21/27F),
+                    (int)(npc.getObjectHeight() * 19/23F), 0, 0, npc.getObjectWidth() * 3/27F,
+                    0));
+            waddleDeeFlipFallHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 20/27F),
+                    (int)(npc.getObjectHeight() * 18/23F), 0, 0, npc.getObjectWidth() * 3/27F,
+                    0));
+            waddleDeeFlipFallHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 21/27F),
+                    (int)(npc.getObjectHeight() * 19/23F), 0, 0, npc.getObjectWidth() * 3/27F,
+                    0));
+            waddleDeeFlipFallHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 20/27F),
+                    (int)(npc.getObjectHeight() * 20/23F), 0, 0, npc.getObjectWidth() * 3/27F,
+                    0));
+            waddleDeeFlipFallHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 21/27F),
+                    (int)(npc.getObjectHeight() * 17/23F), 0, 0, npc.getObjectWidth() * 3/27F,
+                    0));
+            waddleDeeFlipFallHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 22/27F),
+                    (int)(npc.getObjectHeight() * 18/23F), 0, 0, npc.getObjectWidth() * 2/27F,
+                    0));
+
+            for(int i = 0; i < 10; i ++) {
+                waddleDeeFlipFallHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 21/27F),
+                        (int)(npc.getObjectHeight() * 19/23F), 0, 0, npc.getObjectWidth() * 3/27F,
+                        0));
+                waddleDeeFlipFallHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 20/27F),
+                        (int)(npc.getObjectHeight() * 19/23F), 0, 0, npc.getObjectWidth() * 3/27F,
+                        0));
+            }
+
+            // Jump Hit Box
+            waddleDeeJumpHitBox.add(new HitBox(InGameActivity.this, true, (int)(npc.getObjectWidth() * 20/27F),
+                    (int)(npc.getObjectHeight() * 20/23F), 0, 0, npc.getObjectWidth() * 3/27F,
+                    0));
+
+            Character tempNPC = npc;
+            Runnable wFall = tempNPC.fall(tempNPC.getUdHandler(), R.drawable.waddledeeflipfall, true, waddleDeeFlipFallHitBoxes,
+                    new GameObject.CollisionListener() {
+                        @Override
+                        public void onCollision(GameObject object1, GameObject object2) {
+                            if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                                if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))) {
+                                    tempNPC.getUdHandler().removeCallbacksAndMessages(null);
+                                    tempNPC.stopFall();
+                                    tempNPC.setGrounded(true);
+                                    tempNPC.setObjectResource(tempNPC.getIdleResource());
+
+                                    tempNPC.setYPosition(object2.getHitBox().topLeft().y -
+                                            tempNPC.getHitBox().getYBottom());
+
+                                    tempNPC.setHitBox(tempNPC.getIdleHitBox());
+                                    tempNPC.showHitBox();
+                                }
+
+                                Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
                             }
-
-                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
                         }
-                    }
-                },
-                new Character.PositionListener() {
-                    @Override
-                    public void atPosition(float xPosition, float yPosition) {
+                    },
+                    new Character.PositionListener() {
+                        @Override
+                        public void atPosition(float xPosition, float yPosition) {
 
-                    }
-                });
+                        }
+                    });
 
-        Runnable wJump = waddleDee.jump(waddleDee.getUdHandler(), R.drawable.waddledee41, false, 15, waddleDeeJumpHitBox,
-                new GameObject.CollisionListener() {
-                    @Override
-                    public void onCollision(GameObject object1, GameObject object2) {
-                        if(GameObject.getCollisionType(object1, object2).contains("bottom")){
-                            if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))) {
-                                waddleDee.getUdHandler().removeCallbacksAndMessages(null);
-                                waddleDee.stopJump();
-                                waddleDee.setYPosition(object2.getHitBox().bottomRight().y -
-                                        waddleDee.getHitBox().getHitHeight() -
-                                        waddleDee.getHitBox().getYBottom());
-                                waddleDee.stopFall();
-                                waddleDee.getUdHandler().postDelayed(waddleDee.getAllActions().get("Fall"), 0);
+            Runnable wJump = tempNPC.jump(tempNPC.getUdHandler(), R.drawable.waddledee41, false, 15, waddleDeeJumpHitBox,
+                    new GameObject.CollisionListener() {
+                        @Override
+                        public void onCollision(GameObject object1, GameObject object2) {
+                            if(GameObject.getCollisionType(object1, object2).contains("bottom")){
+                                if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))) {
+                                    tempNPC.getUdHandler().removeCallbacksAndMessages(null);
+                                    tempNPC.stopJump();
+                                    tempNPC.setYPosition(object2.getHitBox().bottomRight().y -
+                                            tempNPC.getHitBox().getHitHeight() -
+                                            tempNPC.getHitBox().getYBottom());
+                                    tempNPC.stopFall();
+                                    tempNPC.getUdHandler().postDelayed(tempNPC.getAllActions().get("Fall"), 0);
+                                }
+                                Log.i("Collision", object1.getObjectName() + " collided with bottom of " + object2.getObjectName());
                             }
-                            Log.i("Collision", object1.getObjectName() + " collided with bottom of " + object2.getObjectName());
                         }
-                    }
-                },
-                new Character.CharacterListener() {
-                    @Override
-                    public void onActionComplete() {
-                        waddleDee.getUdHandler().removeCallbacksAndMessages(null);
-                        waddleDee.getAHandler().removeCallbacksAndMessages(null);
-                        waddleDee.stopFall();
-                        waddleDee.getUdHandler().postDelayed(waddleDee.getAllActions().get("Fall"),0);
-                    }
-                },
-                new Character.PositionListener() {
-                    @Override
-                    public void atPosition(float xPosition, float yPosition) {
+                    },
+                    new Character.CharacterListener() {
+                        @Override
+                        public void onActionComplete() {
+                            tempNPC.getUdHandler().removeCallbacksAndMessages(null);
+                            tempNPC.getAHandler().removeCallbacksAndMessages(null);
+                            tempNPC.stopFall();
+                            tempNPC.getUdHandler().postDelayed(tempNPC.getAllActions().get("Fall"),0);
+                        }
+                    },
+                    new Character.PositionListener() {
+                        @Override
+                        public void atPosition(float xPosition, float yPosition) {
 
-                    }
-                });
+                        }
+                    });
 
-        Runnable wLeftWalk = waddleDee.walk(waddleDee.getLrHandler(), R.drawable.waddledeewalk, "left", walkSpeed, waddleDeeWalkHitBoxes,
-                new GameObject.CollisionListener() {
-                    @Override
-                    public void onCollision(GameObject object1, GameObject object2) {
-                        if (GameObject.getCollisionType(object1, object2).contains("right")) {
-                            if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))){
-                                waddleDee.getLrHandler().removeCallbacksAndMessages(null);
-                                waddleDee.setXPosition(waddleDee.getXPosition() + walkSpeed);
+            Runnable wLeftWalk = tempNPC.walk(tempNPC.getLrHandler(), R.drawable.waddledeewalk, "left", walkSpeed, waddleDeeWalkHitBoxes,
+                    new GameObject.CollisionListener() {
+                        @Override
+                        public void onCollision(GameObject object1, GameObject object2) {
+                            if (GameObject.getCollisionType(object1, object2).contains("right")) {
+                                if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))){
+                                    tempNPC.setXPosition(tempNPC.getXPosition() + walkSpeed);
+                                    tempNPC.setStopMoving(true);
+                                    tempNPC.getLrHandler().postDelayed(tempNPC.getAllActions().get("Right Walk"),0);
+                                }
+                                Log.i("Collision", object1.getObjectName() + " collided with the right of " + object2.getObjectName());
                             }
-
-                            Log.i("Collision", object1.getObjectName() + " collided with the right of " + object2.getObjectName());
                         }
-                    }
-                },
-                new Character.NotGroundedListener() {
-                    @Override
-                    public void notGrounded() {
-                        if(!waddleDee.isJumpStarted() && waddleDee.isStopJump() && !waddleDee.isFallStarted() && waddleDee.isStopFall()) {
-                            waddleDee.getUdHandler().removeCallbacksAndMessages(null);
-                            waddleDee.stopFall();
-                            waddleDee.getUdHandler().postDelayed(waddleDee.getAllActions().get("Fall"), 0);
-                        }
-                    }
-                },
-                new Character.PositionListener() {
-                    @Override
-                    public void atPosition(float xPosition, float yPosition) {
-
-                    }
-                });
-
-        Runnable wRightWalk = waddleDee.walk(waddleDee.getLrHandler(), R.drawable.waddledeewalk, "right", walkSpeed, waddleDeeWalkHitBoxes,
-                new GameObject.CollisionListener() {
-                    @Override
-                    public void onCollision(GameObject object1, GameObject object2) {
-                        if (GameObject.getCollisionType(object1, object2).contains("left")) {
-                            if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))) {
-                                waddleDee.setXPosition(waddleDee.getXPosition() - walkSpeed);
+                    },
+                    new Character.NotGroundedListener() {
+                        @Override
+                        public void notGrounded() {
+                            if(!tempNPC.isJumpStarted() && tempNPC.isStopJump() && !tempNPC.isFallStarted() && tempNPC.isStopFall()) {
+                                tempNPC.getUdHandler().removeCallbacksAndMessages(null);
+                                tempNPC.stopFall();
+                                tempNPC.getUdHandler().postDelayed(tempNPC.getAllActions().get("Fall"), 0);
                             }
-
-                            Log.i("Collision", object1.getObjectName() + " collided with the left of " + object2.getObjectName());
                         }
-                    }
-                },
-                new Character.NotGroundedListener() {
-                    @Override
-                    public void notGrounded() {
-                        if(!waddleDee.isJumpStarted() && waddleDee.isStopJump() && !waddleDee.isFallStarted() && waddleDee.isStopFall()) {
-                            waddleDee.getUdHandler().removeCallbacksAndMessages(null);
-                            waddleDee.stopFall();
-                            waddleDee.getUdHandler().postDelayed(waddleDee.getAllActions().get("Fall"), 0);
+                    },
+                    new Character.PositionListener() {
+                        @Override
+                        public void atPosition(float xPosition, float yPosition) {
+
                         }
-                    }
-                },
-                new Character.PositionListener() {
-                    @Override
-                    public void atPosition(float xPosition, float yPosition) {
+                    });
 
-                    }
-                });
+            Runnable wRightWalk = tempNPC.walk(tempNPC.getLrHandler(), R.drawable.waddledeewalk, "right", walkSpeed, waddleDeeWalkHitBoxes,
+                    new GameObject.CollisionListener() {
+                        @Override
+                        public void onCollision(GameObject object1, GameObject object2) {
+                            if (GameObject.getCollisionType(object1, object2).contains("left")) {
+                                if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))) {
+                                    tempNPC.setXPosition(tempNPC.getXPosition() - walkSpeed);
+                                    tempNPC.setStopMoving(true);
+                                    tempNPC.getLrHandler().postDelayed(tempNPC.getAllActions().get("Left Walk"),0);
+                                }
 
-        Runnable wLeftRun = waddleDee.walk(waddleDee.getLrHandler(), R.drawable.waddledeewalk, "left", runSpeed, waddleDeeRunHitBoxes,
-                new GameObject.CollisionListener() {
-                    @Override
-                    public void onCollision(GameObject object1, GameObject object2) {
-                        if (GameObject.getCollisionType(object1, object2).contains("right")) {
-                            if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))){
-                                waddleDee.setXPosition(waddleDee.getXPosition() + runSpeed);
+                                Log.i("Collision", object1.getObjectName() + " collided with the left of " + object2.getObjectName());
                             }
-
-                            Log.i("Collision", object1.getObjectName() + " collided with the right of " + object2.getObjectName());
                         }
-                    }
-                },
-                new Character.NotGroundedListener() {
-                    @Override
-                    public void notGrounded() {
-                        if(!waddleDee.isJumpStarted() && waddleDee.isStopJump() && !waddleDee.isFallStarted() && waddleDee.isStopFall()) {
-                            waddleDee.getUdHandler().removeCallbacksAndMessages(null);
-                            waddleDee.stopFall();
-                            waddleDee.getUdHandler().postDelayed(waddleDee.getAllActions().get("Fall"), 0);
-                        }
-                    }
-                },
-                new Character.PositionListener() {
-                    @Override
-                    public void atPosition(float xPosition, float yPosition) {
-
-                    }
-                });
-
-        Runnable wRightRun = waddleDee.walk(waddleDee.getLrHandler(), R.drawable.waddledeewalk, "right", runSpeed, waddleDeeRunHitBoxes,
-                new GameObject.CollisionListener() {
-                    @Override
-                    public void onCollision(GameObject object1, GameObject object2) {
-                        if (GameObject.getCollisionType(object1, object2).contains("left")) {
-                            if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))) {
-                                waddleDee.setXPosition(waddleDee.getXPosition() - runSpeed);
+                    },
+                    new Character.NotGroundedListener() {
+                        @Override
+                        public void notGrounded() {
+                            if(!tempNPC.isJumpStarted() && tempNPC.isStopJump() && !tempNPC.isFallStarted() && tempNPC.isStopFall()) {
+                                tempNPC.getUdHandler().removeCallbacksAndMessages(null);
+                                tempNPC.stopFall();
+                                tempNPC.getUdHandler().postDelayed(tempNPC.getAllActions().get("Fall"), 0);
                             }
-
-                            Log.i("Collision", object1.getObjectName() + " collided with the left of " + object2.getObjectName());
                         }
-                    }
-                },
-                new Character.NotGroundedListener() {
-                    @Override
-                    public void notGrounded() {
-                        if(!waddleDee.isJumpStarted() && waddleDee.isStopJump() && !waddleDee.isFallStarted() && waddleDee.isStopFall()) {
-                            waddleDee.getUdHandler().removeCallbacksAndMessages(null);
-                            waddleDee.stopFall();
-                            waddleDee.getUdHandler().postDelayed(waddleDee.getAllActions().get("Fall"), 0);
+                    },
+                    new Character.PositionListener() {
+                        @Override
+                        public void atPosition(float xPosition, float yPosition) {
+
                         }
-                    }
-                },
-                new Character.PositionListener() {
-                    @Override
-                    public void atPosition(float xPosition, float yPosition) {
+                    });
 
-                    }
-                });
+            Runnable wLeftRun = tempNPC.walk(tempNPC.getLrHandler(), R.drawable.waddledeewalk, "left", runSpeed, waddleDeeRunHitBoxes,
+                    new GameObject.CollisionListener() {
+                        @Override
+                        public void onCollision(GameObject object1, GameObject object2) {
+                            if (GameObject.getCollisionType(object1, object2).contains("right")) {
+                                if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))){
+                                    tempNPC.setXPosition(tempNPC.getXPosition() + runSpeed);
+                                }
 
-        waddleDee.getAllActions().put("Left Walk", wLeftWalk);
-        waddleDee.getAllActions().put("Left Run", wLeftRun);
-        waddleDee.getAllActions().put("Right Walk", wRightWalk);
-        waddleDee.getAllActions().put("Right Run", wRightRun);
-        waddleDee.getAllActions().put("Jump", wJump);
-        waddleDee.getAllActions().put("Fall", wFall);
+                                Log.i("Collision", object1.getObjectName() + " collided with the right of " + object2.getObjectName());
+                            }
+                        }
+                    },
+                    new Character.NotGroundedListener() {
+                        @Override
+                        public void notGrounded() {
+                            if(!tempNPC.isJumpStarted() && tempNPC.isStopJump() && !tempNPC.isFallStarted() && tempNPC.isStopFall()) {
+                                tempNPC.getUdHandler().removeCallbacksAndMessages(null);
+                                tempNPC.stopFall();
+                                tempNPC.getUdHandler().postDelayed(tempNPC.getAllActions().get("Fall"), 0);
+                            }
+                        }
+                    },
+                    new Character.PositionListener() {
+                        @Override
+                        public void atPosition(float xPosition, float yPosition) {
 
-        // Add all NPCs to HashMap
-        allNPCs.put("Waddle Dee 1", waddleDee);
+                        }
+                    });
+
+            Runnable wRightRun = tempNPC.walk(tempNPC.getLrHandler(), R.drawable.waddledeewalk, "right", runSpeed, waddleDeeRunHitBoxes,
+                    new GameObject.CollisionListener() {
+                        @Override
+                        public void onCollision(GameObject object1, GameObject object2) {
+                            if (GameObject.getCollisionType(object1, object2).contains("left")) {
+                                if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))) {
+                                    tempNPC.setXPosition(tempNPC.getXPosition() - runSpeed);
+                                }
+
+                                Log.i("Collision", object1.getObjectName() + " collided with the left of " + object2.getObjectName());
+                            }
+                        }
+                    },
+                    new Character.NotGroundedListener() {
+                        @Override
+                        public void notGrounded() {
+                            if(!tempNPC.isJumpStarted() && tempNPC.isStopJump() && !tempNPC.isFallStarted() && tempNPC.isStopFall()) {
+                                tempNPC.getUdHandler().removeCallbacksAndMessages(null);
+                                tempNPC.stopFall();
+                                tempNPC.getUdHandler().postDelayed(tempNPC.getAllActions().get("Fall"), 0);
+                            }
+                        }
+                    },
+                    new Character.PositionListener() {
+                        @Override
+                        public void atPosition(float xPosition, float yPosition) {
+
+                        }
+                    });
+
+            tempNPC.getAllActions().put("Left Walk", wLeftWalk);
+            tempNPC.getAllActions().put("Left Run", wLeftRun);
+            tempNPC.getAllActions().put("Right Walk", wRightWalk);
+            tempNPC.getAllActions().put("Right Run", wRightRun);
+            tempNPC.getAllActions().put("Jump", wJump);
+            tempNPC.getAllActions().put("Fall", wFall);
+
+            // Add all NPCs to HashMap
+            allNPCs.put("Waddle Dee " + String.valueOf(x), tempNPC);
+            x++;
+        }
     }
 
     // Sets up character controls/interactions
     // Majority of in-game logic resides here
     @SuppressLint("ClickableViewAccessibility")
-    private void controllerSetUp(float walkSpeed, float runSpeed, float jumpHeight, float highJumpHeight, float floatJumpHeight){
+    private void controllerSetUp(){
 
         leftButton.setOnTouchListener(new View.OnTouchListener() {
             
@@ -1471,17 +1493,21 @@ public class InGameActivity extends AppCompatActivity {
 
         if(object2.isIngredient() && object1.isCharacter()){
             if(!((Ingredient) object2).isCollected()) {
-                ((Ingredient) object2).setCollected(true);
-                Runnable collectAnimation = ((Ingredient) object2).collected(oHandler);
-                oHandler.postDelayed(collectAnimation, 0);
+                if(object1.getObjectName().toLowerCase().equals("kirby")) {
+                    ((Ingredient) object2).setCollected(true);
+                    Runnable collectAnimation = ((Ingredient) object2).collected(oHandler);
+                    oHandler.postDelayed(collectAnimation, 0);
+                }
             }
             return true;
         }
         else if(object1.isIngredient() && object2.isCharacter()){
             if(!((Ingredient) object1).isCollected()) {
-                ((Ingredient) object1).setCollected(true);
-                Runnable collectAnimation = ((Ingredient) object1).collected(oHandler);
-                oHandler.postDelayed(collectAnimation, 0);
+                if(object2.getObjectName().toLowerCase().equals("kirby")) {
+                    ((Ingredient) object1).setCollected(true);
+                    Runnable collectAnimation = ((Ingredient) object1).collected(oHandler);
+                    oHandler.postDelayed(collectAnimation, 0);
+                }
             }
             return true;
         }
@@ -1491,12 +1517,16 @@ public class InGameActivity extends AppCompatActivity {
         else if(object1.isCharacter() && object2.isCharacter() && collisionType.contains("top")){
             ((Character) object1).getUdHandler().removeCallbacksAndMessages(null);
             ((Character) object1).stopFall();
+            ((Character) object1).setYPosition(object2.getHitBox().topLeft().y - ((Character) object1).getHitBox().getYBottom());
             ((Character) object1).setObjectResource(((Character) object1).getIdleResource());
             ((Character) object1).setHitBox(((Character) object1).getIdleHitBox());
             ((Character) object1).showHitBox();
 
             ((Character) object1).stopJump();
             if(object1.getObjectName().toLowerCase().equals("kirby")) {
+                isFloating = false;
+                startFloatFinished = false;
+                jumpCount = 0;
                 ((Character) object1).getUdHandler().postDelayed(((Character) object1).getAllActions().get("High Jump"), 0);
             }
             else{
@@ -1516,10 +1546,10 @@ public class InGameActivity extends AppCompatActivity {
     // Debugging method
     public void viewInfoDebug(View view){
 
-        GameObject.displayHitBoxes = true;
-        for(GameObject object : collisionGameLayout.getLayoutObjects()){
-            object.showHitBox();
-        }
+//        GameObject.displayHitBoxes = true;
+//        for(GameObject object : collisionGameLayout.getLayoutObjects()){
+//            object.showHitBox();
+//        }
 
 
         try {

@@ -19,6 +19,7 @@ public class Character extends GameObject{
     // The following help to control jump, fall, and action logic
     private boolean jumpStarted, stopJump;
     private boolean actionStarted, stopAction;
+    private boolean stopMoving;
 
     // Resource for the character (animation or static)
     private int idleResource;
@@ -61,6 +62,8 @@ public class Character extends GameObject{
         this.actionStarted = false;
         this.stopAction = true;
 
+        this.stopMoving = false;
+
         this.lrHandler = new Handler();
         this.udHandler = new Handler();
         this.aHandler = new Handler();
@@ -89,6 +92,8 @@ public class Character extends GameObject{
             @Override public void run() {
 
                 // Movement
+                stopMoving = false;
+
                 if(direction.toLowerCase().equals("left")) {
                     setFacingRight(false);
                     setRotationY(180);
@@ -149,8 +154,9 @@ public class Character extends GameObject{
                     notGroundedListener.notGrounded();
                 }
 
-
-                handler.postDelayed(this, 1);
+                if(!stopMoving) {
+                    handler.postDelayed(this, 1);
+                }
 
             }
         };
@@ -510,6 +516,10 @@ public class Character extends GameObject{
     public void stopAction(){
         actionStarted = false;
         stopAction = true;
+    }
+
+    public void setStopMoving(boolean stopMoving){
+        this.stopMoving = stopMoving;
     }
 
     // Getters and Setters:
