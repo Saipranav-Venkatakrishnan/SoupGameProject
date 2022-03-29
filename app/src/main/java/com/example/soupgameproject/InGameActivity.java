@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -1757,5 +1758,9 @@ public class InGameActivity extends AppCompatActivity {
                         // Hide the status bar
                         // | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
+    }
+    public void settingPage(View view) {
+        Intent intent = new Intent(this, SettingsPage.class);
+        startActivity(intent);
     }
 }
