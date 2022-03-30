@@ -238,10 +238,8 @@ public class GameLayout {
         for(GameLayout gameLayout : allLayouts){
             for(GameObject gameObject : gameLayout.getLayoutObjects()){
                 // Apply  tint
-                if(!gameObject.getObjectName().toLowerCase().equals("sun")) {
-                    gameObject.setBackgroundTintMode(PorterDuff.Mode.MULTIPLY);
-                    gameObject.setBackgroundTintList(ColorStateList.valueOf(color));
-                }
+                gameObject.setBackgroundTintMode(PorterDuff.Mode.MULTIPLY);
+                gameObject.setBackgroundTintList(ColorStateList.valueOf(color));
             }
         }
     }
@@ -250,10 +248,8 @@ public class GameLayout {
         for(GameLayout gameLayout : allLayouts){
             for(GameObject gameObject : gameLayout.getLayoutObjects()){
                 // Apply  tint
-                if(!gameObject.getObjectName().toLowerCase().equals("sun")) {
-                    gameObject.setBackgroundTintMode(PorterDuff.Mode.SRC_ATOP);
-                    gameObject.setBackgroundTintList(ColorStateList.valueOf(color));
-                }
+                gameObject.setBackgroundTintMode(PorterDuff.Mode.SRC_ATOP);
+                gameObject.setBackgroundTintList(ColorStateList.valueOf(color));
             }
         }
     }
