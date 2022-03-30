@@ -1,8 +1,13 @@
 package com.example.soupgameproject;
 
+import static com.example.soupgameproject.SettingsPage.SHARED_PREF;
+import static com.example.soupgameproject.SettingsPage.SWITCH;
+import static com.example.soupgameproject.SettingsPage.isOn;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
@@ -52,5 +57,53 @@ public class TitleActivity extends AppCompatActivity {
                         // Hide the nav bar and status bar
                         // | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
+    }
+
+    private void saveData() {
+        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        isOn = sharedPreferences.getBoolean(SWITCH, false);
+
+        editor.commit();
+
+        editor.apply();
+    }
+
+    public void loadData(){
+        //SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
+    }
+
+    public void updateViews(){
+
+
+    }
+
+    protected void onRestart() {
+        super.onRestart();
+        loadData();
+        updateViews();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadData();
+        updateViews();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        saveData();
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        saveData();
     }
 }
