@@ -1,9 +1,14 @@
 package com.example.soupgameproject;
 
-public class Soup {
+import android.content.Context;
+
+public class Soup{
 
     private int starRank;
     private String soupName;
+    private int soupResource;
+    private int soupColor;
+
 
     // Subject to change
     private final int minIngredients = 3;
