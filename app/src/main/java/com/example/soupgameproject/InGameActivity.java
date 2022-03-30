@@ -62,26 +62,30 @@ public class InGameActivity extends AppCompatActivity {
     // Deal with other runnables unrelated to animations
     private Handler rHandler;
 
-    // Game Camera variables
+    // Game Camera variables (SAVE)
     private Camera gameCamera;
 
     // Deal with camera movement
     private Handler cHandler;
-
+    // (SAVE)
     private Runnable leftWalkCamera, leftRunCamera, rightWalkCamera, rightRunCamera;
 
     // Character variables
     // (SAVE)
     private Character kirby;
+
+    // Don't save these
     private float walkSpeed, runSpeed, jumpHeight, highJumpHeight, floatJumpHeight;
 
-    private ArrayList<HitBox> kirbyWalkHitBoxes, kirbyRunHitBoxes, kirbyFallHitBoxes, kirbyFlipFallHitBoxes,
-            kirbyFloatHitBoxes, kirbyJumpHitBox, kirbyFloatFallHitBoxes, kirbyStartFloatHitBoxes, kirbyStopFloatHitBoxes;
+    // (SAVE)
     private boolean isFloating;
     private boolean startFloatFinished;
     private int jumpCount;
 
+    // Save the hashmap
     private HashMap<String, Character> allNPCs = new HashMap<String, Character>();
+
+
     private ArrayList<Character> npcCopyList;
     
     // Day/Night cycle variables
@@ -338,6 +342,9 @@ public class InGameActivity extends AppCompatActivity {
         floatJumpHeight = 5;
 
         // Hit Boxes Set Up
+
+        ArrayList<HitBox> kirbyWalkHitBoxes, kirbyRunHitBoxes, kirbyFallHitBoxes, kirbyFlipFallHitBoxes,
+                kirbyFloatHitBoxes, kirbyJumpHitBox, kirbyFloatFallHitBoxes, kirbyStartFloatHitBoxes, kirbyStopFloatHitBoxes;
 
         kirbyWalkHitBoxes = new ArrayList<HitBox>();
         kirbyRunHitBoxes = new ArrayList<HitBox>();
