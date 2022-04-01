@@ -2115,28 +2115,28 @@ public class InGameActivity extends AppCompatActivity {
 //        //TEST_ENVIORNMENT_FOREGROUND_GAME_OBJECTS = "testEnvironmentForegroundGameObjects";
 //    }
 //
-//    public void updateViews(){
-//        if(isOn){
-//            playAudio();
-//        }
-//        else{
-//            pauseAudio();
-//        }
+    public void updateViews(){
+        if(isOn){
+            playAudio();
+        }
+        else{
+            pauseAudio();
+        }
+
+    }
 //
-//    }
-//
-//    protected void onRestart() {
-//        super.onRestart();
-//        loadData();
-//        updateViews();
-//    }
-//
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        loadData();
-//        updateViews();
-//    }
+    protected void onRestart() {
+        super.onRestart();
+        //loadData();
+        updateViews();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //loadData();
+        updateViews();
+    }
 //
 //    @Override
 //    protected void onStop() {
