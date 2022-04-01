@@ -1919,239 +1919,239 @@ public class InGameActivity extends AppCompatActivity {
         });
     }
 
-    private void saveData() {
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        Gson gson = new Gson();
-        String json = gson.toJson(backgroundGameLayout);
-        editor.putString(BACKGROUND_GAME_LAYOUT, json);
-
-        gson = new Gson();
-        json = gson.toJson(collisionGameLayout);
-        editor.putString(COLLISION_GAME_LAYOUT, json);
-
-        gson = new Gson();
-        json = gson.toJson(foregroundGameLayout);
-        editor.putString(FOREGROUND_GAME_LAYOUT, json);
-
-        gson = new Gson();
-        json = gson.toJson(gameCamera);
-        editor.putString(GAME_CAMERA, json);
-
-        gson = new Gson();
-        json = gson.toJson(leftWalkCamera);
-        editor.putString(LEFT_WALK_CAMERA, json);
-
-        gson = new Gson();
-        json = gson.toJson(leftRunCamera);
-        editor.putString(LEFT_RUN_CAMERA, json);
-
-        gson = new Gson();
-        json = gson.toJson(rightWalkCamera);
-        editor.putString(RIGHT_WALK_CAMERA, json);
-
-        gson = new Gson();
-        json = gson.toJson(rightRunCamera);
-        editor.putString(RIGHT_RUN_CAMERA, json);
-
-        gson = new Gson();
-        json = gson.toJson(kirby);
-        editor.putString(KIRBY, json);
-
-        editor.putBoolean(IS_FLOATING, isFloating);
-
-        editor.putBoolean(START_FLOAT_FINISHED, startFloatFinished);
-
-        editor.putInt(JUMP_COUNT, jumpCount);
-
-        gson = new Gson();
-        json = gson.toJson(allNPCs);
-        editor.putString(ALL_NPCS, json);
-
-        editor.putString(TIME_OF_DAY, timeOfDay);
-
-        gson = new Gson();
-        json = gson.toJson(testEnvironmentBackgroundGameObjects);
-        editor.putString(TEST_ENVIORNMENT_BACKGROUND_GAME_OBJECTS, json);
-
-        gson = new Gson();
-        json = gson.toJson(testEnvironmentCollisionGameObjects);
-        editor.putString(TEST_ENVIORNMENT_COLLISION_GAME_OBJECTS, json);
-
-        gson = new Gson();
-        json = gson.toJson(testEnvironmentForegroundGameObjects);
-        editor.putString(TEST_ENVIORNMENT_FOREGROUND_GAME_OBJECTS, json);
-
-
-
-
-
-        editor.commit();
-
-        editor.apply();
-
-        Toast.makeText(this, "Data Saved", Toast.LENGTH_SHORT).show();
-    }
-
-    public void loadData(){
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
-        timeOfDay = sharedPreferences.getString(TIME_OF_DAY, "Morning");
-        isFloating = sharedPreferences.getBoolean(IS_FLOATING, false);
-        startFloatFinished = sharedPreferences.getBoolean(START_FLOAT_FINISHED, false);
-        jumpCount = sharedPreferences.getInt(JUMP_COUNT, 0);
-        Gson gson = new Gson();
-        String json = sharedPreferences.getString(BACKGROUND_GAME_LAYOUT, "");
-        if(!json.equals("")){
-            backgroundGameLayout = gson.fromJson(json, GameLayout.class);
-            //Log.i("Sai", testObject.toString());
-        }
-        else{
-            backgroundGameLayout = null;
-        }
-
-        gson = new Gson();
-        json = sharedPreferences.getString(COLLISION_GAME_LAYOUT, "");
-        if(!json.equals("")){
-            collisionGameLayout = gson.fromJson(json, GameLayout.class);
-            //Log.i("Sai", testObject.toString());
-        }
-        else{
-            collisionGameLayout = null;
-        }
-
-        gson = new Gson();
-        json = sharedPreferences.getString(FOREGROUND_GAME_LAYOUT, "");
-        if(!json.equals("")){
-            foregroundGameLayout = gson.fromJson(json, GameLayout.class);
-            //Log.i("Sai", testObject.toString());
-        }
-        else{
-            foregroundGameLayout = null;
-        }
-
-        gson = new Gson();
-        json = sharedPreferences.getString(GAME_CAMERA, "");
-        if(!json.equals("")){
-            gameCamera = gson.fromJson(json, Camera.class);
-            //Log.i("Sai", testObject.toString());
-        }
-        else{
-            gameCamera = null;
-        }
-
-        gson = new Gson();
-        json = sharedPreferences.getString(LEFT_WALK_CAMERA, "");
-        if(!json.equals("")){
-            leftWalkCamera = gson.fromJson(json, Runnable.class);
-            //Log.i("Sai", testObject.toString());
-        }
-        else{
-            leftWalkCamera = null;
-        }
-
-        gson = new Gson();
-        json = sharedPreferences.getString(LEFT_RUN_CAMERA, "");
-        if(!json.equals("")){
-            leftRunCamera = gson.fromJson(json, Runnable.class);
-            //Log.i("Sai", testObject.toString());
-        }
-        else{
-            leftRunCamera = null;
-        }
-
-        gson = new Gson();
-        json = sharedPreferences.getString(RIGHT_WALK_CAMERA, "");
-        if(!json.equals("")){
-            rightWalkCamera = gson.fromJson(json, Runnable.class);
-            //Log.i("Sai", testObject.toString());
-        }
-        else{
-            rightWalkCamera = null;
-        }
-
-        gson = new Gson();
-        json = sharedPreferences.getString(RIGHT_RUN_CAMERA, "");
-        if(!json.equals("")){
-            rightRunCamera = gson.fromJson(json, Runnable.class);
-            //Log.i("Sai", testObject.toString());
-        }
-        else{
-            rightRunCamera = null;
-        }
-
-        gson = new Gson();
-        json = sharedPreferences.getString(KIRBY, "");
-        if(!json.equals("")){
-            kirby = gson.fromJson(json, Character.class);
-            //Log.i("Sai", testObject.toString());
-        }
-        else{
-            kirby = null;
-        }
-
-        gson = new Gson();
-        json = sharedPreferences.getString(ALL_NPCS, "");
-        if(!json.equals("")){
-            allNPCs = gson.fromJson(json, HashMap.class);
-            //Log.i("Sai", testObject.toString());
-        }
-        else{
-            allNPCs = null;
-        }
-
-        gson = new Gson();
-        json = sharedPreferences.getString(TEST_ENVIORNMENT_BACKGROUND_GAME_OBJECTS, "");
-        if(!json.equals("")){
-            testEnvironmentBackgroundGameObjects = gson.fromJson(json, ArrayList.class);
-            //Log.i("Sai", testObject.toString());
-        }
-        else{
-            testEnvironmentBackgroundGameObjects = null;
-        }
-
-
-        //TEST_ENVIORNMENT_COLLISION_GAME_OBJECTS = "testEnvironmentCollisionGameObjects";
-        //TEST_ENVIORNMENT_FOREGROUND_GAME_OBJECTS = "testEnvironmentForegroundGameObjects";
-    }
-
-    public void updateViews(){
-        if(isOn){
-            playAudio();
-        }
-        else{
-            pauseAudio();
-        }
-
-    }
-
-    protected void onRestart() {
-        super.onRestart();
-        loadData();
-        updateViews();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadData();
-        updateViews();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        saveData();
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        saveData();
-    }
+//    private void saveData() {
+//        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//
+//        Gson gson = new Gson();
+//        String json = gson.toJson(backgroundGameLayout);
+//        editor.putString(BACKGROUND_GAME_LAYOUT, json);
+//
+//        gson = new Gson();
+//        json = gson.toJson(collisionGameLayout);
+//        editor.putString(COLLISION_GAME_LAYOUT, json);
+//
+//        gson = new Gson();
+//        json = gson.toJson(foregroundGameLayout);
+//        editor.putString(FOREGROUND_GAME_LAYOUT, json);
+//
+//        gson = new Gson();
+//        json = gson.toJson(gameCamera);
+//        editor.putString(GAME_CAMERA, json);
+//
+//        gson = new Gson();
+//        json = gson.toJson(leftWalkCamera);
+//        editor.putString(LEFT_WALK_CAMERA, json);
+//
+//        gson = new Gson();
+//        json = gson.toJson(leftRunCamera);
+//        editor.putString(LEFT_RUN_CAMERA, json);
+//
+//        gson = new Gson();
+//        json = gson.toJson(rightWalkCamera);
+//        editor.putString(RIGHT_WALK_CAMERA, json);
+//
+//        gson = new Gson();
+//        json = gson.toJson(rightRunCamera);
+//        editor.putString(RIGHT_RUN_CAMERA, json);
+//
+//        gson = new Gson();
+//        json = gson.toJson(kirby);
+//        editor.putString(KIRBY, json);
+//
+//        editor.putBoolean(IS_FLOATING, isFloating);
+//
+//        editor.putBoolean(START_FLOAT_FINISHED, startFloatFinished);
+//
+//        editor.putInt(JUMP_COUNT, jumpCount);
+//
+//        gson = new Gson();
+//        json = gson.toJson(allNPCs);
+//        editor.putString(ALL_NPCS, json);
+//
+//        editor.putString(TIME_OF_DAY, timeOfDay);
+//
+//        gson = new Gson();
+//        json = gson.toJson(testEnvironmentBackgroundGameObjects);
+//        editor.putString(TEST_ENVIORNMENT_BACKGROUND_GAME_OBJECTS, json);
+//
+////        gson = new Gson();
+////        json = gson.toJson(testEnvironmentCollisionGameObjects);
+////        editor.putString(TEST_ENVIORNMENT_COLLISION_GAME_OBJECTS, json);
+//
+//        gson = new Gson();
+//        json = gson.toJson(testEnvironmentForegroundGameObjects);
+//        editor.putString(TEST_ENVIORNMENT_FOREGROUND_GAME_OBJECTS, json);
+//
+//
+//
+//
+//
+//        editor.commit();
+//
+//        editor.apply();
+//
+//        Toast.makeText(this, "Data Saved", Toast.LENGTH_SHORT).show();
+//    }
+//
+//    public void loadData(){
+//        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
+//        timeOfDay = sharedPreferences.getString(TIME_OF_DAY, "Morning");
+//        isFloating = sharedPreferences.getBoolean(IS_FLOATING, false);
+//        startFloatFinished = sharedPreferences.getBoolean(START_FLOAT_FINISHED, false);
+//        jumpCount = sharedPreferences.getInt(JUMP_COUNT, 0);
+//        Gson gson = new Gson();
+//        String json = sharedPreferences.getString(BACKGROUND_GAME_LAYOUT, "");
+//        if(!json.equals("")){
+//            backgroundGameLayout = gson.fromJson(json, GameLayout.class);
+//            //Log.i("Sai", testObject.toString());
+//        }
+//        else{
+//            backgroundGameLayout = null;
+//        }
+//
+//        gson = new Gson();
+//        json = sharedPreferences.getString(COLLISION_GAME_LAYOUT, "");
+//        if(!json.equals("")){
+//            collisionGameLayout = gson.fromJson(json, GameLayout.class);
+//            //Log.i("Sai", testObject.toString());
+//        }
+//        else{
+//            collisionGameLayout = null;
+//        }
+//
+//        gson = new Gson();
+//        json = sharedPreferences.getString(FOREGROUND_GAME_LAYOUT, "");
+//        if(!json.equals("")){
+//            foregroundGameLayout = gson.fromJson(json, GameLayout.class);
+//            //Log.i("Sai", testObject.toString());
+//        }
+//        else{
+//            foregroundGameLayout = null;
+//        }
+//
+//        gson = new Gson();
+//        json = sharedPreferences.getString(GAME_CAMERA, "");
+//        if(!json.equals("")){
+//            gameCamera = gson.fromJson(json, Camera.class);
+//            //Log.i("Sai", testObject.toString());
+//        }
+//        else{
+//            gameCamera = null;
+//        }
+//
+//        gson = new Gson();
+//        json = sharedPreferences.getString(LEFT_WALK_CAMERA, "");
+//        if(!json.equals("")){
+//            leftWalkCamera = gson.fromJson(json, Runnable.class);
+//            //Log.i("Sai", testObject.toString());
+//        }
+//        else{
+//            leftWalkCamera = null;
+//        }
+//
+//        gson = new Gson();
+//        json = sharedPreferences.getString(LEFT_RUN_CAMERA, "");
+//        if(!json.equals("")){
+//            leftRunCamera = gson.fromJson(json, Runnable.class);
+//            //Log.i("Sai", testObject.toString());
+//        }
+//        else{
+//            leftRunCamera = null;
+//        }
+//
+//        gson = new Gson();
+//        json = sharedPreferences.getString(RIGHT_WALK_CAMERA, "");
+//        if(!json.equals("")){
+//            rightWalkCamera = gson.fromJson(json, Runnable.class);
+//            //Log.i("Sai", testObject.toString());
+//        }
+//        else{
+//            rightWalkCamera = null;
+//        }
+//
+//        gson = new Gson();
+//        json = sharedPreferences.getString(RIGHT_RUN_CAMERA, "");
+//        if(!json.equals("")){
+//            rightRunCamera = gson.fromJson(json, Runnable.class);
+//            //Log.i("Sai", testObject.toString());
+//        }
+//        else{
+//            rightRunCamera = null;
+//        }
+//
+//        gson = new Gson();
+//        json = sharedPreferences.getString(KIRBY, "");
+//        if(!json.equals("")){
+//            kirby = gson.fromJson(json, Character.class);
+//            //Log.i("Sai", testObject.toString());
+//        }
+//        else{
+//            kirby = null;
+//        }
+//
+//        gson = new Gson();
+//        json = sharedPreferences.getString(ALL_NPCS, "");
+//        if(!json.equals("")){
+//            allNPCs = gson.fromJson(json, HashMap.class);
+//            //Log.i("Sai", testObject.toString());
+//        }
+//        else{
+//            allNPCs = null;
+//        }
+//
+//        gson = new Gson();
+//        json = sharedPreferences.getString(TEST_ENVIORNMENT_BACKGROUND_GAME_OBJECTS, "");
+//        if(!json.equals("")){
+//            testEnvironmentBackgroundGameObjects = gson.fromJson(json, ArrayList.class);
+//            //Log.i("Sai", testObject.toString());
+//        }
+//        else{
+//            testEnvironmentBackgroundGameObjects = null;
+//        }
+//
+//
+//        //TEST_ENVIORNMENT_COLLISION_GAME_OBJECTS = "testEnvironmentCollisionGameObjects";
+//        //TEST_ENVIORNMENT_FOREGROUND_GAME_OBJECTS = "testEnvironmentForegroundGameObjects";
+//    }
+//
+//    public void updateViews(){
+//        if(isOn){
+//            playAudio();
+//        }
+//        else{
+//            pauseAudio();
+//        }
+//
+//    }
+//
+//    protected void onRestart() {
+//        super.onRestart();
+//        loadData();
+//        updateViews();
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        loadData();
+//        updateViews();
+//    }
+//
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//
+//        saveData();
+//
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//
+//        saveData();
+//    }
 
 
 
