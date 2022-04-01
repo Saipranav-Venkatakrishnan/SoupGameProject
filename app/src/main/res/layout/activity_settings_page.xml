@@ -7,12 +7,12 @@
     android:layout_height="match_parent"
     tools:context=".SettingsPage">
 
-  <Switch
+  <ToggleButton
       android:id="@+id/switch1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:rotation="90"
-      android:text="Music Off/On"
+      android:text="Music?"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"

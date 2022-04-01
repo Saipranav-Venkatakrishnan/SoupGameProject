@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.gson.Gson;
 
@@ -30,7 +31,7 @@ import java.util.Random;
 
 public class SettingsPage extends AppCompatActivity {
 
-    private Switch anotherSwitch;
+    private ToggleButton anotherSwitch;
     public static final String SWITCH = "switch2";
     public static final String SHARED_PREF = "sharedPref";
     public static boolean isOn;
