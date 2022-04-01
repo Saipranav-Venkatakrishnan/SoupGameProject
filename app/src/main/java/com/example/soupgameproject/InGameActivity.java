@@ -22,6 +22,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -119,6 +120,14 @@ public class InGameActivity extends AppCompatActivity {
 
     // User Interface variables
     private Button leftButton, rightButton, jumpButton, actionButton;
+
+    // Inventory variables
+    private ImageView iv_1, iv_2, iv_3, iv_4, iv_5, iv_6, iv_7, iv_8, iv_9, iv_10, iv_11, iv_12, iv_13, iv_14, iv_15;
+
+    private ImageView[] invImages = new ImageView[] {iv_1, iv_2, iv_3, iv_4, iv_5, iv_6, iv_7, iv_8, iv_9, iv_10, iv_11, iv_12, iv_13, iv_14, iv_15};
+    private int[] invRes = new int[] {R.id.iv1, R.id.iv2, R.id.iv3, R.id.iv4, R.id.iv5, R.id.iv6, R.id.iv7, R.id.iv8, R.id.iv9, R.id.iv10, R.id.iv11, R.id.iv12, R.id.iv13, R.id.iv14, R.id.iv15};
+    private int[] invDrawables = new int[15];
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -1801,6 +1810,16 @@ public class InGameActivity extends AppCompatActivity {
     public void settingPage(View view) {
         Intent intent = new Intent(this, SettingsPage.class);
         startActivity(intent);
+    }
+
+    public void inventoryPage(View v) {
+        ConstraintLayout layout = (ConstraintLayout) this.findViewById(R.id.inventoryLayout);
+        layout.setVisibility(View.VISIBLE);
+    }
+
+    public void closeInventory(View v) {
+        ConstraintLayout layout = (ConstraintLayout) this.findViewById(R.id.inventoryLayout);
+        layout.setVisibility(View.INVISIBLE);
     }
 
     public void playAudio() {
