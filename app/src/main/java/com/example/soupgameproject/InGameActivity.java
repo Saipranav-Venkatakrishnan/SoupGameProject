@@ -170,6 +170,21 @@ public class InGameActivity extends AppCompatActivity {
         testEnvironmentCollisionGameObjects = new ArrayList<GameObject>();
         testEnvironmentForegroundGameObjects = new ArrayList<GameObject>();
 
+
+//        for(int i = 0; i < 30; i++){
+//            float ratio = (int) (Math.random() * 6 + 4)/10F;
+//            int xPosition = (int) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY));
+//            testEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio),(int)(43* ratio),
+//                    R.drawable.testtree, xPosition, gameCamera.getBottomYPosition() + 6, false));
+//        }
+//
+//        for(int i = 0; i < 20; i++){
+//            float ratio = (int) (Math.random() * 6 + 4)/10F;
+//            int xPosition = (int) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY));
+//            testEnvironmentForegroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio),(int)(43* ratio),
+//                    R.drawable.testtree, xPosition, gameCamera.getBottomYPosition() + 6, false));
+//        }
+
         for(int i = 0; i < npcCopyList.size(); i ++) {
             allNPCs.get("Waddle Dee " + String.valueOf(i)).setYPosition((int) (Math.random() * 40) + gameCamera.getTopYPosition());
             allNPCs.get("Waddle Dee " + String.valueOf(i)).setXPosition((int)(Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY)/14F) * 14);
@@ -180,14 +195,14 @@ public class InGameActivity extends AppCompatActivity {
                 R.drawable.testground, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
                 (int)(TitleActivity.WIDTH/TitleActivity.DENSITY), 300, 0, gameCamera.getBottomYPosition(),0,-294)));
 
-        for(int i = 0; i < 25; i++){
-            float ratio = (int) (Math.random() * 6 + 4)/10F;
-            int xPosition = (int) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY));
-            testEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio),(int)(43* ratio),
-                    R.drawable.testtree, xPosition, gameCamera.getBottomYPosition() + 6, true,
-                    new HitBox(InGameActivity.this, true, (int)(7* ratio),(int)(39* ratio),xPosition
-                            ,gameCamera.getBottomYPosition()+6,(float)(16* ratio),0)));
-        }
+//        for(int i = 0; i < 15; i++){
+//            float ratio = (int) (Math.random() * 6 + 4)/10F;
+//            int xPosition = (int) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY));
+//            testEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio),(int)(43* ratio),
+//                    R.drawable.testtree, xPosition, gameCamera.getBottomYPosition() + 6, true,
+//                    new HitBox(InGameActivity.this, true, (int)(7* ratio),(int)(39* ratio),xPosition
+//                            ,gameCamera.getBottomYPosition()+6,(float)(16* ratio),0)));
+//        }
 
         GameObject rightBoundary = new GameObject(this, "Boundary", 50, (int)(TitleActivity.HEIGHT/TitleActivity.DENSITY),
                         R.drawable.boundary, -50,0,true);
@@ -264,6 +279,7 @@ public class InGameActivity extends AppCompatActivity {
         if(environment.toLowerCase().equals("test")){
             backgroundGameLayout.setBackgroundImage(R.drawable.cloudsbackgroundextended);
             backgroundGameLayout.setLayoutObjects(testEnvironmentBackgroundGameObjects);
+            foregroundGameLayout.setLayoutObjects(testEnvironmentForegroundGameObjects);
 
             collisionGameLayout.removeLayoutObject(kirby);
             kirby.setYPosition(gameCamera.getBottomYPosition() + 6 - kirby.getHitBox().getYBottom());
@@ -318,15 +334,17 @@ public class InGameActivity extends AppCompatActivity {
     private void itemSetup(String environment){
 
         if(environment.toLowerCase().equals("test")){
-            for(int i = 0; i < 50; i++){
-                Ingredient ingredient = new Ingredient(this, "Heart",10,10,
-                        R.drawable.testitem,
+            for(int i = 0; i < 10; i++){
+                double size = Math.random() * 2 + 1;
+
+                Ingredient carrot = new Ingredient(this, "Carrot",(int)(size * 10),(int)(6 * size),
+                        R.drawable.carrot,
                         (float) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY - 10)),
                         (float)(gameCamera.getTopYPosition()) + 70);
                 
-                collisionGameLayout.addLayoutObject(ingredient);
+                collisionGameLayout.addLayoutObject(carrot);
                 
-                Runnable fall = ingredient.fall(oHandler, GameObject.GRAVITY/10F, new GameObject.CollisionListener() {
+                Runnable carrotFall = carrot.fall(oHandler, GameObject.GRAVITY/10F, new GameObject.CollisionListener() {
                     @Override
                     public void onCollision(GameObject object1, GameObject object2) {
                         if (GameObject.getCollisionType(object1, object2).contains("top")) {
@@ -345,7 +363,91 @@ public class InGameActivity extends AppCompatActivity {
                     }
                 });
 
-                oHandler.postDelayed(fall, 5000);
+                oHandler.postDelayed(carrotFall, 5000);
+
+                Ingredient mushroom = new Ingredient(this, "Mushroom",(int)(8 * size),(int)(8*size),
+                        R.drawable.mushroom,
+                        (float) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY - 10)),
+                        (float)(gameCamera.getTopYPosition()) + 70);
+
+                collisionGameLayout.addLayoutObject(mushroom);
+
+                Runnable mushroomFall = mushroom.fall(oHandler, GameObject.GRAVITY/10F, new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                            if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
+                                object1.stopFall();
+
+                                object1.setYPosition(object2.getHitBox().topLeft().y);
+
+                                object1.getHitBox().setYPosition(object1.getYPosition());
+                                object1.setHitBox(object1.getHitBox());
+                                object1.showHitBox();
+                            }
+
+                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                        }
+                    }
+                });
+
+                oHandler.postDelayed(mushroomFall, 5000);
+
+                Ingredient radish = new Ingredient(this, "Radish",(int)(8 * size),(int)(8* size),
+                        R.drawable.radish,
+                        (float) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY - 10)),
+                        (float)(gameCamera.getTopYPosition()) + 70);
+
+                collisionGameLayout.addLayoutObject(radish);
+
+                Runnable radishFall = radish.fall(oHandler, GameObject.GRAVITY/10F, new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                            if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
+                                object1.stopFall();
+
+                                object1.setYPosition(object2.getHitBox().topLeft().y);
+
+                                object1.getHitBox().setYPosition(object1.getYPosition());
+                                object1.setHitBox(object1.getHitBox());
+                                object1.showHitBox();
+                            }
+
+                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                        }
+                    }
+                });
+
+                oHandler.postDelayed(radishFall, 5000);
+
+                Ingredient tomato = new Ingredient(this, "Radish",(int)(8 * size),(int)(8* size),
+                        R.drawable.tomato,
+                        (float) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY - 10)),
+                        (float)(gameCamera.getTopYPosition()) + 70);
+
+                collisionGameLayout.addLayoutObject(tomato);
+
+                Runnable tomatoFall = tomato.fall(oHandler, GameObject.GRAVITY/10F, new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                            if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
+                                object1.stopFall();
+
+                                object1.setYPosition(object2.getHitBox().topLeft().y);
+
+                                object1.getHitBox().setYPosition(object1.getYPosition());
+                                object1.setHitBox(object1.getHitBox());
+                                object1.showHitBox();
+                            }
+
+                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                        }
+                    }
+                });
+
+                oHandler.postDelayed(tomatoFall, 5000);
             }
         }
 
@@ -356,10 +458,13 @@ public class InGameActivity extends AppCompatActivity {
         // In general: Create Character, define attributes of character (ex: walk speed), define all hit boxes, and finally define all actions
 
         // Kirby Set Up
-        HitBox kirbyIdleHitBox = new HitBox(this, true, (int) (30 * 20/59F),(int)(20 * 18/39F),
+        int kirbyWidth = 30;
+        int kirbyHeight = 20;
+
+        HitBox kirbyIdleHitBox = new HitBox(this, true, (int) (kirbyWidth * 20/59F),(int)(kirbyHeight * 18/39F),
                 0, 0, 30 * 19/59F,0);
 
-        kirby = new Character(this, "Kirby", 30, 20, 0, 0,
+        kirby = new Character(this, "Kirby", kirbyWidth, kirbyHeight, 0, 0,
                 kirbyIdleHitBox, true, R.drawable.kirbyidle);
         kirby.setObjectResource(R.drawable.kirbyidle);
 
@@ -967,16 +1072,19 @@ public class InGameActivity extends AppCompatActivity {
         // Create multiple Waddle Dee
         npcCopyList = new ArrayList<Character>();
         // ~30-40 limit on number of NPCs
-        for(int i = 0; i < 25; i++){
+        for(int i = 0; i < 1; i++){
             npcCopyList.add(null);
         }
 
         int x = 0;
         for(Character npc : npcCopyList){
-            HitBox waddleDeeIdleHitBox = new HitBox(this, true, (int) (14 * 20/27F),(int)(12 * 18/23F),
+            int waddleWidth = 28;
+            int waddleHeight = 24;
+
+            HitBox waddleDeeIdleHitBox = new HitBox(this, true, (int) (waddleWidth * 20/27F),(int)(waddleHeight * 18/23F),
                     0, 0, 14 * 3 /27F,0);
 
-            npc = new Character(this, "Waddle Dee", 14, 12, 0, 0,
+            npc = new Character(this, "Waddle Dee", waddleWidth, waddleHeight, 0, 0,
                     waddleDeeIdleHitBox, true, R.drawable.waddledeeidle);
             npc.setObjectResource(R.drawable.waddledeeidle);
 
@@ -1595,10 +1703,13 @@ public class InGameActivity extends AppCompatActivity {
     // Debugging method
     public void viewInfoDebug(View view){
 
-//        GameObject.displayHitBoxes = true;
-//        for(GameObject object : collisionGameLayout.getLayoutObjects()){
-//            object.showHitBox();
-//        }
+        GameObject.displayHitBoxes = true;
+        for(GameObject object : collisionGameLayout.getLayoutObjects()){
+            object.showHitBox();
+        }
+        for(GameObject object: backgroundGameLayout.getLayoutObjects()){
+            object.showHitBox();
+        }
 
 
         try {
