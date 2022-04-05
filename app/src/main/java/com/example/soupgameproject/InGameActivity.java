@@ -58,10 +58,11 @@ public class InGameActivity extends AppCompatActivity {
     public static final String TEST_ENVIORNMENT_FOREGROUND_GAME_OBJECTS = "testEnvironmentForegroundGameObjects";
     public static final String FIRST_TIME = "firstTime";
 
+
     // Debugging variables
-    float centerX, centerY;
-    boolean zoomed;
-    boolean firstTime = false;
+    private float centerX, centerY;
+    private boolean zoomed;
+    private boolean firstTime;
 
     // Game layout set up variables
 
@@ -96,7 +97,7 @@ public class InGameActivity extends AppCompatActivity {
     // (SAVE)
     private Character kirby; //
 
-    // Don't save these
+    // Save these
     private float walkSpeed, runSpeed, jumpHeight, highJumpHeight, floatJumpHeight;
 
     // (SAVE)
@@ -105,7 +106,7 @@ public class InGameActivity extends AppCompatActivity {
     private int jumpCount; //
 
     // Save the hashmap
-    private HashMap<String, Character> allNPCs = new HashMap<String, Character>(); //
+    private HashMap<String, Character> allNPCs;//
 
 
     private ArrayList<Character> npcCopyList;
@@ -151,21 +152,45 @@ public class InGameActivity extends AppCompatActivity {
         oHandler = new Handler();
         npcHandler = new Handler();
 
+        controllerSetUp();
 
-        // Debugging variables
-        gameCamera = new Camera(scalingFrameLayout,gameContainerLayout);
+        dayNightCycle();
+    }
+
+    // Camera creation on first open of application
+    private void initialCameraSetUp(){
+        walkSpeed = 1/3F;
+        runSpeed = 1/2F;
+        gameCamera = new Camera(scalingFrameLayout, gameContainerLayout);
+        leftWalkCamera = gameCamera.moveLeft(cHandler, walkSpeed * TitleActivity.DENSITY);
+        leftRunCamera = gameCamera.moveLeft(cHandler, runSpeed * TitleActivity.DENSITY);
+        rightWalkCamera = gameCamera.moveRight(cHandler, walkSpeed * TitleActivity.DENSITY);
+        rightRunCamera = gameCamera.moveRight(cHandler, runSpeed * TitleActivity.DENSITY);
+
+        // Debugging Variables
         centerX = gameCamera.getXPosition();
         centerY = gameCamera.getYPosition();
         zoomed = true;
+    }
 
-        // Set up time once
-        timeOfDay = "Morning";
+    // Sets up the camera for a chosen environment. Called in environmentSetUp. It is unnecessary to call this elsewhere
+    private void cameraSetUp(String environment){
+        if(environment.toLowerCase().equals("test")){
+            gameCamera.setScale(fitZoom(3832,359));
+            gameCamera.setLeftXPosition(0);
+        }
+        else if(environment.toLowerCase().equals("test2")){
+            gameCamera.setScale(fitZoom(3832,500));
+            gameCamera.setLeftXPosition(0);
+        }
+    }
 
-        // Set up characters once only.
-        characterSetUp();
+    // Environment initial set up. Populates ArrayLists of objects for each environment.
+    private void initialEnvironmentSetUp(){
+        // For each environment, set the camera to that environment and then populate ArrayLists
 
-        // Set up the camera to the appropriate environment and then instantiate all environment objects. Repeat for each environment.
-        // Set up once only
+        // Test environment
+
         cameraSetUp("test");
 
         testEnvironmentBackgroundGameObjects = new ArrayList<GameObject>();
@@ -207,7 +232,7 @@ public class InGameActivity extends AppCompatActivity {
 //        }
 
         GameObject rightBoundary = new GameObject(this, "Boundary", 50, (int)(TitleActivity.HEIGHT/TitleActivity.DENSITY),
-                        R.drawable.boundary, -50,0,true);
+                R.drawable.boundary, -50,0,true);
         GameObject leftBoundary = new GameObject(this, "Boundary", 50, (int)(TitleActivity.HEIGHT/TitleActivity.DENSITY),
                 R.drawable.boundary, (TitleActivity.WIDTH/TitleActivity.DENSITY),0,true);
         GameObject topBoundary = new GameObject(this, "Boundary", (int)(TitleActivity.WIDTH/TitleActivity.DENSITY),
@@ -217,35 +242,15 @@ public class InGameActivity extends AppCompatActivity {
         testEnvironmentCollisionGameObjects.add(leftBoundary);
         testEnvironmentCollisionGameObjects.add(topBoundary);
 
-        // Call to show the chosen environment.
+
+
+        // After populating all ArrayLists, set up the first environment the player will be in (which will be the forest)
+        // This will not work yet as the forest area has not yet been created. For testing purposes, load in the test environment
+        //environmentSetUp("Forest");
         environmentSetUp("test");
-
-        controllerSetUp();
-
-        dayNightCycle();
     }
 
-    // Sets up the camera for a chosen environment
-    private void cameraSetUp(String environment){
-        // *Should only do this part of the set up once...and then save it.*
-        gameCamera = new Camera(scalingFrameLayout, gameContainerLayout);
-        leftWalkCamera = gameCamera.moveLeft(cHandler, walkSpeed * TitleActivity.DENSITY);
-        leftRunCamera = gameCamera.moveLeft(cHandler, runSpeed * TitleActivity.DENSITY);
-        rightWalkCamera = gameCamera.moveRight(cHandler, walkSpeed * TitleActivity.DENSITY);
-        rightRunCamera = gameCamera.moveRight(cHandler, runSpeed * TitleActivity.DENSITY);
-
-
-        if(environment.toLowerCase().equals("test")){
-            gameCamera.setScale(fitZoom(3832,359));
-            gameCamera.setLeftXPosition(0);
-        }
-        else if(environment.toLowerCase().equals("test2")){
-            gameCamera.setScale(fitZoom(3832,500));
-            gameCamera.setLeftXPosition(0);
-        }
-    }
-
-    // Sets up a chosen in-game environment
+    // Sets up a chosen in-game environment. Use to change environments
     private void environmentSetUp(String environment){
         try{
             backgroundGameLayout.removeAllLayoutObjects();
@@ -456,10 +461,22 @@ public class InGameActivity extends AppCompatActivity {
     }
 
     // Sets up all characters for the first time the app is used
-    private void characterSetUp(){
+    private void initialCharacterSetUp(){
         // In general: Create Character, define attributes of character (ex: walk speed), define all hit boxes, and finally define all actions
 
         // Kirby Set Up
+
+        // Kirby Attributes
+        walkSpeed = 1/3F;
+        runSpeed = 1/2F;
+        jumpHeight = 10;
+        highJumpHeight = 20;
+        floatJumpHeight = 5;
+
+        isFloating = false;
+        startFloatFinished = false;
+        jumpCount = 0;
+
         int kirbyWidth = 30;
         int kirbyHeight = 20;
 
@@ -470,11 +487,6 @@ public class InGameActivity extends AppCompatActivity {
                 kirbyIdleHitBox, true, R.drawable.kirbyidle);
         kirby.setObjectResource(R.drawable.kirbyidle);
 
-        walkSpeed = 1/3F;
-        runSpeed = 1/2F;
-        jumpHeight = 10;
-        highJumpHeight = 20;
-        floatJumpHeight = 5;
 
         // Hit Boxes Set Up
 
@@ -1066,6 +1078,7 @@ public class InGameActivity extends AppCompatActivity {
 
 
         // NPC Set Ups
+        allNPCs = new HashMap<String, Character>();
 
         // Create Waddle Dee + Action Set Up
         float walkSpeed = 1/3F;
@@ -2134,6 +2147,9 @@ public class InGameActivity extends AppCompatActivity {
         isFloating = sharedPreferences.getBoolean(IS_FLOATING, false);
         startFloatFinished = sharedPreferences.getBoolean(START_FLOAT_FINISHED, false);
         jumpCount = sharedPreferences.getInt(JUMP_COUNT, 0);
+
+        firstTime = sharedPreferences.getBoolean(FIRST_TIME, true);
+
         Gson gson = new Gson();
         String json = sharedPreferences.getString(BACKGROUND_GAME_LAYOUT, "");
         if(!json.equals("")){
@@ -2257,24 +2273,21 @@ public class InGameActivity extends AppCompatActivity {
             pauseAudio();
         }
 
-        if(backgroundGameLayout == null){ //First time game loads
+        //First time game loads
+        if(firstTime){
+            firstTime = false;
 
+            initialCameraSetUp();
+            initialCharacterSetUp();
+            initialEnvironmentSetUp();
         }
 
     }
 //
     protected void onRestart() {
         super.onRestart();
-
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
-        firstTime = sharedPreferences.getBoolean(FIRST_TIME, false);
-
-        if(firstTime){
-            loadData();
-            updateViews();
-        }
-        firstTime = true;
-
+         loadData();
+         updateViews();
 
         Log.i("Sai", "Restart");
     }
@@ -2282,15 +2295,8 @@ public class InGameActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
-        firstTime = sharedPreferences.getBoolean(FIRST_TIME, false);
-        Log.i("Sai", "Load" + firstTime);
-        if(firstTime){
-            loadData();
-            updateViews();
-        }
-        firstTime = true;
-
+        loadData();
+        updateViews();
 
         Log.i("Sai", "Resume");
     }
