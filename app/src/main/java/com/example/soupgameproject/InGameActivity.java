@@ -2275,6 +2275,7 @@ public class InGameActivity extends AppCompatActivity {
 
         //First time game loads
         if(firstTime){
+            Log.i("SetUp","Initial Set Up");
             firstTime = false;
 
             initialCameraSetUp();
