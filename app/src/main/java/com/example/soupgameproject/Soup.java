@@ -2,17 +2,22 @@ package com.example.soupgameproject;
 
 import android.content.Context;
 
+import java.util.HashMap;
+
 public class Soup{
 
     private int starRank;
     private String soupName;
-    private int soupResource;
+    private static final int bowlResource = R.drawable.soupbase;
+    private static final int soupResource = R.drawable.souptop;
     private int soupColor;
 
 
+
+
     // Subject to change
-    private final int minIngredients = 3;
-    private final int maxIngredients = 10;
+    private static final int minIngredients = 3;
+    private static final int maxIngredients = 10;
 
     // Basic Soup Constructor
     // 1 ingredient
@@ -72,5 +77,9 @@ public class Soup{
         }
 
         return -1;
+    }
+
+    private int soupColorHandler(){
+        return 0;
     }
 }
