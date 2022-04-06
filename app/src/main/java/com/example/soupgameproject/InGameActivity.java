@@ -59,6 +59,10 @@ public class InGameActivity extends AppCompatActivity {
     public static final String FIRST_TIME = "firstTime";
 
 
+    public static final String SAVE_TEST = "saveTest";
+
+    private SaveTestObject saveTest;
+
     // Debugging variables
     private float centerX, centerY;
     private boolean zoomed;
@@ -347,7 +351,7 @@ public class InGameActivity extends AppCompatActivity {
                 Ingredient carrot = new Ingredient(this, "Carrot",(int)(size * 10),(int)(6 * size),
                         R.drawable.carrot,
                         (float) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY - 10)),
-                        (float)(gameCamera.getTopYPosition()) + 70);
+                        (float)(gameCamera.getTopYPosition()) + 70,0,0,0,0);
                 
                 collisionGameLayout.addLayoutObject(carrot);
                 
@@ -375,7 +379,7 @@ public class InGameActivity extends AppCompatActivity {
                 Ingredient mushroom = new Ingredient(this, "Mushroom",(int)(8 * size),(int)(8*size),
                         R.drawable.mushroom,
                         (float) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY - 10)),
-                        (float)(gameCamera.getTopYPosition()) + 70);
+                        (float)(gameCamera.getTopYPosition()) + 70,0,0,0,0);
 
                 collisionGameLayout.addLayoutObject(mushroom);
 
@@ -403,7 +407,7 @@ public class InGameActivity extends AppCompatActivity {
                 Ingredient radish = new Ingredient(this, "Radish",(int)(8 * size),(int)(8* size),
                         R.drawable.radish,
                         (float) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY - 10)),
-                        (float)(gameCamera.getTopYPosition()) + 70);
+                        (float)(gameCamera.getTopYPosition()) + 70,0,0,0,0);
 
                 collisionGameLayout.addLayoutObject(radish);
 
@@ -431,7 +435,7 @@ public class InGameActivity extends AppCompatActivity {
                 Ingredient tomato = new Ingredient(this, "Radish",(int)(8 * size),(int)(8* size),
                         R.drawable.tomato,
                         (float) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY - 10)),
-                        (float)(gameCamera.getTopYPosition()) + 70);
+                        (float)(gameCamera.getTopYPosition()) + 70,0,0,0,0);
 
                 collisionGameLayout.addLayoutObject(tomato);
 
@@ -2069,20 +2073,27 @@ public class InGameActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         Gson gson = new Gson();
-        String json = gson.toJson(backgroundGameLayout);
-        editor.putString(BACKGROUND_GAME_LAYOUT, json);
+        String json;
+//        json = gson.toJson(backgroundGameLayout);
+//        editor.putString(BACKGROUND_GAME_LAYOUT, json);
+//
+//        gson = new Gson();
+//        json = gson.toJson(collisionGameLayout);
+//        editor.putString(COLLISION_GAME_LAYOUT, json);
+//
+//        gson = new Gson();
+//        json = gson.toJson(foregroundGameLayout);
+//        editor.putString(FOREGROUND_GAME_LAYOUT, json);
+
+//        gson = new Gson();
+//        String json = gson.toJson(gameCamera);
+//        editor.putString(GAME_CAMERA, json);
 
         gson = new Gson();
-        json = gson.toJson(collisionGameLayout);
-        editor.putString(COLLISION_GAME_LAYOUT, json);
-
-        gson = new Gson();
-        json = gson.toJson(foregroundGameLayout);
-        editor.putString(FOREGROUND_GAME_LAYOUT, json);
-
-        gson = new Gson();
-        json = gson.toJson(gameCamera);
-        editor.putString(GAME_CAMERA, json);
+        ArrayList<Integer> test = new ArrayList<Integer>();
+        test.add(1);
+        json = gson.toJson(new SaveTestObject(this,1,test));
+        editor.putString(SAVE_TEST,json);
 
         gson = new Gson();
         json = gson.toJson(leftWalkCamera);
@@ -2100,32 +2111,32 @@ public class InGameActivity extends AppCompatActivity {
         json = gson.toJson(rightRunCamera);
         editor.putString(RIGHT_RUN_CAMERA, json);
 
-        gson = new Gson();
-        json = gson.toJson(kirby);
-        editor.putString(KIRBY, json);
+//        gson = new Gson();
+//        json = gson.toJson(kirby);
+//        editor.putString(KIRBY, json);
 
         editor.putBoolean(IS_FLOATING, isFloating);
 
-        editor.putBoolean(FIRST_TIME, firstTime);
+//        editor.putBoolean(FIRST_TIME, firstTime);
 
         editor.putBoolean(START_FLOAT_FINISHED, startFloatFinished);
 
         editor.putInt(JUMP_COUNT, jumpCount);
 
-        gson = new Gson();
-        json = gson.toJson(allNPCs);
-        editor.putString(ALL_NPCS, json);
+//        gson = new Gson();
+//        json = gson.toJson(allNPCs);
+//        editor.putString(ALL_NPCS, json);
 
         editor.putString(TIME_OF_DAY, timeOfDay);
 
-        gson = new Gson();
-        json = gson.toJson(testEnvironmentBackgroundGameObjects);
-        editor.putString(TEST_ENVIORNMENT_BACKGROUND_GAME_OBJECTS, json);
-
+//        gson = new Gson();
+//        json = gson.toJson(testEnvironmentBackgroundGameObjects);
+//        editor.putString(TEST_ENVIORNMENT_BACKGROUND_GAME_OBJECTS, json);
+//
 //        gson = new Gson();
 //        json = gson.toJson(testEnvironmentCollisionGameObjects);
 //        editor.putString(TEST_ENVIORNMENT_COLLISION_GAME_OBJECTS, json);
-
+//
 //        gson = new Gson();
 //        json = gson.toJson(testEnvironmentForegroundGameObjects);
 //        editor.putString(TEST_ENVIORNMENT_FOREGROUND_GAME_OBJECTS, json);

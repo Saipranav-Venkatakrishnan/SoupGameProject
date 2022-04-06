@@ -354,7 +354,6 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
             long initialTime = 0;
             long initialAnimationTime = 0;
             float initialYPosition = 0;
-            int i = 0;
 
             @Override
             public void run() {
@@ -446,7 +445,7 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
 
     public void setCenterYPosition(float centerYPosition){
         this.yPosition = centerYPosition-objectHeight/2F;
-        this.hitBox.setXPosition(this.yPosition);
+        this.hitBox.setYPosition(this.yPosition);
         setTranslationY(-this.yPosition * TitleActivity.DENSITY);
     }
 
