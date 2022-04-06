@@ -134,6 +134,7 @@ public class InGameActivity extends AppCompatActivity {
     private ImageView[] invImages = new ImageView[] {iv_1, iv_2, iv_3, iv_4, iv_5, iv_6, iv_7, iv_8, iv_9, iv_10, iv_11, iv_12, iv_13, iv_14, iv_15};
     private int[] invRes = new int[] {R.id.iv1, R.id.iv2, R.id.iv3, R.id.iv4, R.id.iv5, R.id.iv6, R.id.iv7, R.id.iv8, R.id.iv9, R.id.iv10, R.id.iv11, R.id.iv12, R.id.iv13, R.id.iv14, R.id.iv15};
     private int[] invDrawables = new int[15];
+    private int itemCount = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,6 +160,23 @@ public class InGameActivity extends AppCompatActivity {
         controllerSetUp();
 
         dayNightCycle();
+
+        // Temporary inventory stuff
+        iv_1 = (ImageView) findViewById(R.id.iv1);
+        iv_2 = (ImageView) findViewById(R.id.iv2);
+        iv_3 = (ImageView) findViewById(R.id.iv3);
+        iv_4 = (ImageView) findViewById(R.id.iv4);
+        iv_5 = (ImageView) findViewById(R.id.iv5);
+        iv_6 = (ImageView) findViewById(R.id.iv6);
+        iv_7 = (ImageView) findViewById(R.id.iv7);
+        iv_8 = (ImageView) findViewById(R.id.iv8);
+        iv_9 = (ImageView) findViewById(R.id.iv9);
+        iv_10 = (ImageView) findViewById(R.id.iv10);
+        iv_11 = (ImageView) findViewById(R.id.iv11);
+        iv_12 = (ImageView) findViewById(R.id.iv12);
+        iv_13 = (ImageView) findViewById(R.id.iv13);
+        iv_14 = (ImageView) findViewById(R.id.iv14);
+        iv_15 = (ImageView) findViewById(R.id.iv15);
     }
 
     // Camera creation on first open of application
