@@ -486,7 +486,7 @@ public class InGameActivity extends AppCompatActivity {
 
                 oHandler.postDelayed(radishFall, 5000);
 
-                Ingredient tomato = new Ingredient(this, "Radish",(int)(8 * size),(int)(8* size),
+                Ingredient tomato = new Ingredient(this, "Tomato",(int)(8 * size),(int)(8* size),
                         R.drawable.tomato,
                         (float) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY - 10)),
                         (float)(gameCamera.getTopYPosition()) + 70,0,0,0,0);
@@ -1769,8 +1769,39 @@ public class InGameActivity extends AppCompatActivity {
         Runnable collectAnimation = ingredient.collected(oHandler);
         oHandler.postDelayed(collectAnimation, 0);
         // Example test
-        invDrawables[0] = ingredient.getObjectResource();
-        iv_1.setImageResource(invDrawables[0]);
+        //invDrawables[0] = ingredient.getObjectResource();
+        //iv_1.setImageResource(invDrawables[0]);
+
+        String itemName = ingredient.getName();
+        itemCount++;
+
+        if(itemCount < 15) {
+            switch(itemName) {
+                case "Carrot":
+                    invDrawables[itemCount] = R.drawable.carrot;
+                    break;
+
+                case "Tomato":
+                    invDrawables[itemCount] = R.drawable.tomato;
+                    break;
+
+                case "Mushroom":
+                    invDrawables[itemCount] = R.drawable.mushroom;
+                    break;
+
+                case "Radish":
+                    invDrawables[itemCount] = R.drawable.radish;
+                    break;
+
+                case "Plant":
+                    invDrawables[itemCount] = R.drawable.plant1;
+                    break;
+            }
+        }
+        else{
+            Toast.makeText(InGameActivity.this, "Max Items Collected",
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     // This method helps to find the scale for the game camera to zoom to
@@ -1994,6 +2025,12 @@ public class InGameActivity extends AppCompatActivity {
     public void inventoryPage(View v) {
         ConstraintLayout layout = (ConstraintLayout) this.findViewById(R.id.inventoryLayout);
         layout.setVisibility(View.VISIBLE);
+
+        for (int i = 0; i < invImages.length; i++) {
+            invImages[i] = (ImageView) findViewById(invRes[i]);
+            invImages[i].setImageResource(invDrawables[i]);
+            invImages[i].setVisibility(View.VISIBLE);
+        }
     }
 
     public void closeInventory(View v) {
