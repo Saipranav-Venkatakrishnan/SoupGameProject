@@ -376,6 +376,7 @@ public class InGameActivity extends AppCompatActivity {
             kirby.setXPosition(kirbyXPosition);
             kirby.setYPosition(kirbyYPosition);
 
+            itemSetup(environment);
             collisionGameLayout.addLayoutObject(kirby);
             collisionGameLayout.addLayoutObjects(testEnvironmentCollisionGameObjects);
 
@@ -420,13 +421,12 @@ public class InGameActivity extends AppCompatActivity {
             kirby.setXPosition(kirbyXPosition);
             kirby.setYPosition(kirbyYPosition);
 
+            itemSetup(environment);
             collisionGameLayout.addLayoutObject(kirby);
             collisionGameLayout.addLayoutObjects(forestEnvironmentCollisionGameObjects);
 
             kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
         }
-
-        itemSetup(environment);
 
     }
 
