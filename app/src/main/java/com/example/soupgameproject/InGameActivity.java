@@ -219,6 +219,8 @@ public class InGameActivity extends AppCompatActivity {
         iv_15 = (ImageView) findViewById(R.id.iv15);
 
         invImages = new ImageView[] {iv_1, iv_2, iv_3, iv_4, iv_5, iv_6, iv_7, iv_8, iv_9, iv_10, iv_11, iv_12, iv_13, iv_14, iv_15};
+
+        Log.i("Nick",String.valueOf((TitleActivity.WIDTH/TitleActivity.DENSITY)));
     }
 
     // Camera creation and set up
@@ -318,6 +320,38 @@ public class InGameActivity extends AppCompatActivity {
         forestEnvironmentCollisionGameObjects.add(rightBoundary);
         forestEnvironmentCollisionGameObjects.add(leftBoundary);
         forestEnvironmentCollisionGameObjects.add(topBoundary);
+
+
+        int tWidth = (int)(TitleActivity.WIDTH/TitleActivity.DENSITY);
+
+        float ratio = 2;
+
+        forestEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio),(int)(43* ratio),
+                R.drawable.testtree, 100, gameCamera.getBottomYPosition() + 6, false,
+                new HitBox(InGameActivity.this, true, (int)(7* ratio),(int)(39* ratio),100
+                        ,gameCamera.getBottomYPosition()+6,(float)(16* ratio),0)));
+        forestEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio),(int)(43* ratio),
+                R.drawable.testtree, 200, gameCamera.getBottomYPosition() + 6, false,
+                new HitBox(InGameActivity.this, true, (int)(7* ratio),(int)(39* ratio),200
+                        ,gameCamera.getBottomYPosition()+6,(float)(16* ratio),0)));
+        forestEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio),(int)(43* ratio),
+                R.drawable.testtree, 300, gameCamera.getBottomYPosition() + 6, false,
+                new HitBox(InGameActivity.this, true, (int)(7* ratio),(int)(39* ratio),300
+                        ,gameCamera.getBottomYPosition()+6,(float)(16* ratio),0)));
+        forestEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio),(int)(43* ratio),
+                R.drawable.testtree, 400, gameCamera.getBottomYPosition() + 6, false,
+                new HitBox(InGameActivity.this, true, (int)(7* ratio),(int)(39* ratio),400
+                        ,gameCamera.getBottomYPosition()+6,(float)(16* ratio),0)));
+        forestEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio),(int)(43* ratio),
+                R.drawable.testtree, 500, gameCamera.getBottomYPosition() + 6, false,
+                new HitBox(InGameActivity.this, true, (int)(7* ratio),(int)(39* ratio),500
+                        ,gameCamera.getBottomYPosition()+6,(float)(16* ratio),0)));
+        forestEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio),(int)(43* ratio),
+                R.drawable.testtree, 600, gameCamera.getBottomYPosition() + 6, false,
+                new HitBox(InGameActivity.this, true, (int)(7* ratio),(int)(39* ratio),600
+                        ,gameCamera.getBottomYPosition()+6,(float)(16* ratio),0)));
+
+
 
 
 
@@ -1872,13 +1906,13 @@ public class InGameActivity extends AppCompatActivity {
     // Debugging method
     public void viewInfoDebug(View view){
 
-        GameObject.displayHitBoxes = true;
-        for(GameObject object : collisionGameLayout.getLayoutObjects()){
-            object.showHitBox();
-        }
-        for(GameObject object: backgroundGameLayout.getLayoutObjects()){
-            object.showHitBox();
-        }
+//        GameObject.displayHitBoxes = true;
+//        for(GameObject object : collisionGameLayout.getLayoutObjects()){
+//            object.showHitBox();
+//        }
+//        for(GameObject object: backgroundGameLayout.getLayoutObjects()){
+//            object.showHitBox();
+//        }
 
 
         try {
@@ -2360,8 +2394,7 @@ public class InGameActivity extends AppCompatActivity {
         gameCameraYPosition = sharedPreferences.getFloat(GAME_CAMERA_YPOSITION, -1);
         gameCameraFixed = sharedPreferences.getBoolean(GAME_CAMERA_FIXED, true);
 
-        // Change default value to "Forest" later
-        environment = sharedPreferences.getString(ENVIRONMENT,"Test");
+        environment = sharedPreferences.getString(ENVIRONMENT,"Forest");
 
         kirbyXPosition = sharedPreferences.getFloat(KIRBY_XPOSITION, 0);
 
