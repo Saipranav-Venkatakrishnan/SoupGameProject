@@ -53,6 +53,15 @@ public class InGameActivity extends AppCompatActivity {
 //    public static final String TEST_ENVIRONMENT_COLLISION_GAME_OBJECTS = "testEnvironmentCollisionGameObjects";
 //    public static final String TEST_ENVIRONMENT_FOREGROUND_GAME_OBJECTS = "testEnvironmentForegroundGameObjects";
     public static final String TIME_OF_DAY = "timeOfDay";
+    public static final String LIGHTING_BA = "lightingBA";
+    public static final String LIGHTING_BR = "lightingBR";
+    public static final String LIGHTING_BG = "lightingBG";
+    public static final String LIGHTING_BB = "lightingBB";
+    public static final String LIGHTING_OA = "lightingOA";
+    public static final String LIGHTING_OR = "lightingOR";
+    public static final String LIGHTING_OG = "lightingOG";
+    public static final String LIGHTING_OB = "lightingOB";
+
     public static final String IS_FLOATING = "isFloating";
     public static final String START_FLOAT_FINISHED = "startFloatFinished";
     public static final String JUMP_COUNT = "jumpCount";
@@ -65,6 +74,8 @@ public class InGameActivity extends AppCompatActivity {
     public static final String KIRBY_YPOSITION = "kirbyYPosition";
 
     public static final String ENVIRONMENT = "environment";
+
+    public static final String INV_DRAWABLES = "invDrawables";
 
     // Debugging variables
     private float centerX, centerY;
@@ -125,6 +136,15 @@ public class InGameActivity extends AppCompatActivity {
     // Day/Night cycle variables
     // (SAVE)
     private String timeOfDay; //
+    private int bA;
+    private int bR;
+    private int bG;
+    private int bB;
+
+    private int oA;
+    private int oR;
+    private int oG;
+    private int oB;
 
     // Environment variables (SAVE)
 
@@ -168,8 +188,6 @@ public class InGameActivity extends AppCompatActivity {
         npcHandler = new Handler();
 
         controllerSetUp();
-
-        dayNightCycle();
 
         // Temporary inventory stuff
         iv_1 = (ImageView) findViewById(R.id.iv1);
@@ -1706,9 +1724,7 @@ public class InGameActivity extends AppCompatActivity {
         if(object2.isIngredient() && object1.isCharacter()){
             if(!((Ingredient) object2).isCollected()) {
                 if(object1.getObjectName().toLowerCase().equals("kirby")) {
-                    ((Ingredient) object2).setCollected(true);
-                    Runnable collectAnimation = ((Ingredient) object2).collected(oHandler);
-                    oHandler.postDelayed(collectAnimation, 0);
+                    collectIngredient((Ingredient) object2);
                 }
             }
             return true;
@@ -1716,9 +1732,7 @@ public class InGameActivity extends AppCompatActivity {
         else if(object1.isIngredient() && object2.isCharacter()){
             if(!((Ingredient) object1).isCollected()) {
                 if(object2.getObjectName().toLowerCase().equals("kirby")) {
-                    ((Ingredient) object1).setCollected(true);
-                    Runnable collectAnimation = ((Ingredient) object1).collected(oHandler);
-                    oHandler.postDelayed(collectAnimation, 0);
+                    collectIngredient((Ingredient) object1);
                 }
             }
             return true;
@@ -1748,6 +1762,15 @@ public class InGameActivity extends AppCompatActivity {
         }
 
         return false;
+    }
+
+    private void collectIngredient(Ingredient ingredient){
+        ingredient.setCollected(true);
+        Runnable collectAnimation = ingredient.collected(oHandler);
+        oHandler.postDelayed(collectAnimation, 0);
+        // Example test
+        invDrawables[0] = ingredient.getObjectResource();
+        iv_1.setImageResource(invDrawables[0]);
     }
 
     // This method helps to find the scale for the game camera to zoom to
@@ -1808,17 +1831,6 @@ public class InGameActivity extends AppCompatActivity {
         rHandler = new Handler();
 
         Runnable lighting = new Runnable() {
-
-            private int bA = 0;
-            private int bR = 255;
-            private int bG = 255;
-            private int bB = 190;
-
-            private int oA = 0;
-            private int oR = 255;
-            private int oG = 255;
-            private int oB = 190;
-
 
             @Override
             public void run() {
@@ -2106,6 +2118,17 @@ public class InGameActivity extends AppCompatActivity {
     }
 
     private void saveData() {
+        backgroundGameLayout.removeAllLayoutObjects();
+        collisionGameLayout.removeAllLayoutObjects();
+        foregroundGameLayout.removeAllLayoutObjects();
+        oHandler.removeCallbacksAndMessages(null);
+        cHandler.removeCallbacksAndMessages(null);
+        rHandler.removeCallbacksAndMessages(null);
+        kirby.getUdHandler().removeCallbacksAndMessages(null);
+        kirby.getLrHandler().removeCallbacksAndMessages(null);
+        kirby.getAHandler().removeCallbacksAndMessages(null);
+
+
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
@@ -2119,6 +2142,14 @@ public class InGameActivity extends AppCompatActivity {
         editor.putInt(JUMP_COUNT, jumpCount);
 
         editor.putString(TIME_OF_DAY, timeOfDay);
+        editor.putInt(LIGHTING_BA,bA);
+        editor.putInt(LIGHTING_BR,bR);
+        editor.putInt(LIGHTING_BG,bG);
+        editor.putInt(LIGHTING_BB,bB);
+        editor.putInt(LIGHTING_OA,oA);
+        editor.putInt(LIGHTING_OR,oR);
+        editor.putInt(LIGHTING_OG,oG);
+        editor.putInt(LIGHTING_OB,oB);
 
         editor.putString(ENVIRONMENT, environment);
 
@@ -2200,6 +2231,16 @@ public class InGameActivity extends AppCompatActivity {
     public void loadData(){
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
         timeOfDay = sharedPreferences.getString(TIME_OF_DAY, "Morning");
+        bA = sharedPreferences.getInt(LIGHTING_BA, 0);
+        bR = sharedPreferences.getInt(LIGHTING_BR, 255);
+        bG = sharedPreferences.getInt(LIGHTING_BG, 255);
+        bB = sharedPreferences.getInt(LIGHTING_BB, 190);
+        oA = sharedPreferences.getInt(LIGHTING_OA, 0);
+        oR = sharedPreferences.getInt(LIGHTING_OR, 255);
+        oG = sharedPreferences.getInt(LIGHTING_OG, 255);
+        oB = sharedPreferences.getInt(LIGHTING_OB, 190);
+
+
         isFloating = sharedPreferences.getBoolean(IS_FLOATING, false);
         startFloatFinished = sharedPreferences.getBoolean(START_FLOAT_FINISHED, false);
         jumpCount = sharedPreferences.getInt(JUMP_COUNT, 0);
@@ -2213,6 +2254,7 @@ public class InGameActivity extends AppCompatActivity {
         kirbyXPosition = sharedPreferences.getFloat(KIRBY_XPOSITION, 0);
 
         kirbyYPosition = sharedPreferences.getFloat(KIRBY_YPOSITION, TitleActivity.HEIGHT/(2 * TitleActivity.DENSITY));
+
 
 
         // Since saving custom objects isn't working. Don't load in custom objects.
@@ -2343,6 +2385,7 @@ public class InGameActivity extends AppCompatActivity {
         initialCameraSetUp();
         initialCharacterSetUp();
         initialEnvironmentSetUp();
+        dayNightCycle();
     }
 //
     protected void onRestart() {
