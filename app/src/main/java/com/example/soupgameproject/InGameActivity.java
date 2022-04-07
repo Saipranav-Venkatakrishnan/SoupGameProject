@@ -39,34 +39,36 @@ public class InGameActivity extends AppCompatActivity {
     //MusicPlayer Activity
     public static MediaPlayer mediaPlayer;
     public static boolean shouldPlay;
-    public static final String BACKGROUND_GAME_LAYOUT = "backgroundGameLayout";
-    public static final String COLLISION_GAME_LAYOUT = "collisionGameLayout";
-    public static final String FOREGROUND_GAME_LAYOUT = "foregroundGameLayout";
-    public static final String GAME_CAMERA = "gameCamera";
-    public static final String LEFT_WALK_CAMERA = "leftWalkCamera";
-    public static final String LEFT_RUN_CAMERA = "leftRunCamera";
-    public static final String RIGHT_WALK_CAMERA = "rightWalkCamera";
-    public static final String RIGHT_RUN_CAMERA = "rightRunCamera";
-    public static final String KIRBY = "kirby";
+//    public static final String BACKGROUND_GAME_LAYOUT = "backgroundGameLayout";
+//    public static final String COLLISION_GAME_LAYOUT = "collisionGameLayout";
+//    public static final String FOREGROUND_GAME_LAYOUT = "foregroundGameLayout";
+//    public static final String GAME_CAMERA = "gameCamera";
+//    public static final String LEFT_WALK_CAMERA = "leftWalkCamera";
+//    public static final String LEFT_RUN_CAMERA = "leftRunCamera";
+//    public static final String RIGHT_WALK_CAMERA = "rightWalkCamera";
+//    public static final String RIGHT_RUN_CAMERA = "rightRunCamera";
+//    public static final String KIRBY = "kirby";
+//    public static final String ALL_NPCS = "allNPCs";
+//    public static final String TEST_ENVIRONMENT_BACKGROUND_GAME_OBJECTS = "testEnvironmentBackgroundGameObjects";
+//    public static final String TEST_ENVIRONMENT_COLLISION_GAME_OBJECTS = "testEnvironmentCollisionGameObjects";
+//    public static final String TEST_ENVIRONMENT_FOREGROUND_GAME_OBJECTS = "testEnvironmentForegroundGameObjects";
+    public static final String TIME_OF_DAY = "timeOfDay";
     public static final String IS_FLOATING = "isFloating";
     public static final String START_FLOAT_FINISHED = "startFloatFinished";
     public static final String JUMP_COUNT = "jumpCount";
-    public static final String ALL_NPCS = "allNPCs";
-    public static final String TIME_OF_DAY = "timeOfDay";
-    public static final String TEST_ENVIORNMENT_BACKGROUND_GAME_OBJECTS = "testEnvironmentBackgroundGameObjects";
-    public static final String TEST_ENVIORNMENT_COLLISION_GAME_OBJECTS = "testEnvironmentCollisionGameObjects";
-    public static final String TEST_ENVIORNMENT_FOREGROUND_GAME_OBJECTS = "testEnvironmentForegroundGameObjects";
-    public static final String FIRST_TIME = "firstTime";
 
+    public static final String GAME_CAMERA_XPOSITION = "gameCameraXPosition";
+    public static final String GAME_CAMERA_YPOSITION = "gameCameraYPosition";
+    public static final String GAME_CAMERA_FIXED = "gameCameraFixed";
 
-    public static final String SAVE_TEST = "saveTest";
+    public static final String KIRBY_XPOSITION = "kirbyXPosition";
+    public static final String KIRBY_YPOSITION = "kirbyYPosition";
 
-    private SaveTestObject saveTest;
+    public static final String ENVIRONMENT = "environment";
 
     // Debugging variables
     private float centerX, centerY;
     private boolean zoomed;
-    private boolean firstTime;
 
     // Game layout set up variables
 
@@ -91,6 +93,9 @@ public class InGameActivity extends AppCompatActivity {
 
     // Game Camera variables (SAVE)
     private Camera gameCamera; //
+    private float gameCameraXPosition;
+    private float gameCameraYPosition;
+    private boolean gameCameraFixed;
 
     // Deal with camera movement
     private Handler cHandler;
@@ -100,6 +105,8 @@ public class InGameActivity extends AppCompatActivity {
     // Character variables
     // (SAVE)
     private Character kirby; //
+    private float kirbyXPosition;
+    private float kirbyYPosition;
 
     // Save these
     private float walkSpeed, runSpeed, jumpHeight, highJumpHeight, floatJumpHeight;
@@ -120,6 +127,9 @@ public class InGameActivity extends AppCompatActivity {
     private String timeOfDay; //
 
     // Environment variables (SAVE)
+
+    private String environment;
+
     // Test Environment GameObjects
     private ArrayList<GameObject> testEnvironmentBackgroundGameObjects;
     private ArrayList<GameObject> testEnvironmentCollisionGameObjects;
@@ -179,7 +189,7 @@ public class InGameActivity extends AppCompatActivity {
         iv_15 = (ImageView) findViewById(R.id.iv15);
     }
 
-    // Camera creation on first open of application
+    // Camera creation and set up
     private void initialCameraSetUp(){
         walkSpeed = 1/3F;
         runSpeed = 1/2F;
@@ -234,11 +244,11 @@ public class InGameActivity extends AppCompatActivity {
 //                    R.drawable.testtree, xPosition, gameCamera.getBottomYPosition() + 6, false));
 //        }
 
-        for(int i = 0; i < npcCopyList.size(); i ++) {
-            allNPCs.get("Waddle Dee " + String.valueOf(i)).setYPosition((int) (Math.random() * 40) + gameCamera.getTopYPosition());
-            allNPCs.get("Waddle Dee " + String.valueOf(i)).setXPosition((int)(Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY)/14F) * 14);
-            testEnvironmentCollisionGameObjects.add(allNPCs.get("Waddle Dee " + String.valueOf(i)));
-        }
+//        for(int i = 0; i < npcCopyList.size(); i ++) {
+//            allNPCs.get("Waddle Dee " + String.valueOf(i)).setYPosition((int) (Math.random() * 40) + gameCamera.getTopYPosition());
+//            allNPCs.get("Waddle Dee " + String.valueOf(i)).setXPosition((int)(Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY)/14F) * 14);
+//            testEnvironmentCollisionGameObjects.add(allNPCs.get("Waddle Dee " + String.valueOf(i)));
+//        }
 
         testEnvironmentCollisionGameObjects.add(new GameObject(this, "Ground", (int)(TitleActivity.WIDTH/TitleActivity.DENSITY),10,
                 R.drawable.testground, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
@@ -269,11 +279,12 @@ public class InGameActivity extends AppCompatActivity {
         // After populating all ArrayLists, set up the first environment the player will be in (which will be the forest)
         // This will not work yet as the forest area has not yet been created. For testing purposes, load in the test environment
         //environmentSetUp("Forest");
-        environmentSetUp("test");
+        environmentSetUp(environment);
     }
 
-    // Sets up a chosen in-game environment. Use to change environments
+    // Sets up a brand new chosen in-game environment. Use to change environments
     private void environmentSetUp(String environment){
+        this.environment = environment;
         try{
             backgroundGameLayout.removeAllLayoutObjects();
             backgroundGameLayout.setBackgroundImage(android.R.color.transparent);
@@ -302,6 +313,13 @@ public class InGameActivity extends AppCompatActivity {
 
         cameraSetUp(environment);
 
+        if(gameCameraXPosition != -1 && gameCameraYPosition != -1) {
+            gameCamera.setXPosition(gameCameraXPosition);
+            gameCamera.setYPosition(gameCameraYPosition);
+        }
+
+        gameCamera.setFixedPosition(gameCameraFixed);
+
         // In general: First add Kirby, then add Items, then add the various ArrayLists of GameObjects to appropriate GameLayouts,
         // then deal with NPC actions.
 
@@ -311,44 +329,44 @@ public class InGameActivity extends AppCompatActivity {
             foregroundGameLayout.setLayoutObjects(testEnvironmentForegroundGameObjects);
 
             collisionGameLayout.removeLayoutObject(kirby);
-            kirby.setYPosition(gameCamera.getBottomYPosition() + 6 - kirby.getHitBox().getYBottom());
+
+            kirby.setXPosition(kirbyXPosition);
+            kirby.setYPosition(kirbyYPosition);
+
             itemSetup(environment);
             collisionGameLayout.addLayoutObject(kirby);
             collisionGameLayout.addLayoutObjects(testEnvironmentCollisionGameObjects);
 
-            gameCamera.setFixedPosition(true);
+//            npcHandler.postDelayed(new Runnable() {
+//
+//                private boolean isWalking = false;
+//
+//                @Override
+//                public void run() {
+//                    for(int i = 0; i < npcCopyList.size(); i++) {
+//                        if (allNPCs.get("Waddle Dee " + String.valueOf(i)).isGrounded()) {
+//                            allNPCs.get("Waddle Dee " + String.valueOf(i)).getUdHandler().removeCallbacksAndMessages(null);
+//                            allNPCs.get("Waddle Dee " + String.valueOf(i)).stopJump();
+//                            allNPCs.get("Waddle Dee " + String.valueOf(i)).getUdHandler()
+//                                    .postDelayed(allNPCs.get("Waddle Dee " + String.valueOf(i)).getAllActions().get("Jump"), 0);
+//                        }
+//
+//
+//                        if (!isWalking) {
+//                            allNPCs.get("Waddle Dee " + String.valueOf(i)).getLrHandler().postDelayed(allNPCs.get("Waddle Dee " + String.valueOf(i))
+//                                    .getAllActions().get("Left Walk"), 0);
+//                            if(i == npcCopyList.size()-1) {
+//                                isWalking = true;
+//                            }
+//                        }
+//                    }
+//
+//
+//                    npcHandler.postDelayed(this, 2000);
+//                }
+//            },2000);
 
-            npcHandler.postDelayed(new Runnable() {
-
-                private boolean isWalking = false;
-
-                @Override
-                public void run() {
-                    for(int i = 0; i < npcCopyList.size(); i++) {
-                        if (allNPCs.get("Waddle Dee " + String.valueOf(i)).isGrounded()) {
-                            allNPCs.get("Waddle Dee " + String.valueOf(i)).getUdHandler().removeCallbacksAndMessages(null);
-                            allNPCs.get("Waddle Dee " + String.valueOf(i)).stopJump();
-                            allNPCs.get("Waddle Dee " + String.valueOf(i)).getUdHandler()
-                                    .postDelayed(allNPCs.get("Waddle Dee " + String.valueOf(i)).getAllActions().get("Jump"), 0);
-                        }
-
-
-                        if (!isWalking) {
-                            allNPCs.get("Waddle Dee " + String.valueOf(i)).getLrHandler().postDelayed(allNPCs.get("Waddle Dee " + String.valueOf(i))
-                                    .getAllActions().get("Left Walk"), 0);
-                            if(i == npcCopyList.size()-1) {
-                                isWalking = true;
-                            }
-                        }
-                    }
-
-
-                    npcHandler.postDelayed(this, 2000);
-                }
-            },2000);
-
-
-
+            kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
         }
         else if(environment.toLowerCase().equals("test2")){
             kirby.setYPosition(gameCamera.getBottomYPosition() + 6 - kirby.getHitBox().getYBottom());
@@ -482,7 +500,7 @@ public class InGameActivity extends AppCompatActivity {
 
     }
 
-    // Sets up all characters for the first time the app is used
+    // Sets up all characters
     private void initialCharacterSetUp(){
         // In general: Create Character, define attributes of character (ex: walk speed), define all hit boxes, and finally define all actions
 
@@ -1753,7 +1771,7 @@ public class InGameActivity extends AppCompatActivity {
             Log.i("CharacterDebug", "Character: Position: xPosition = " + String.valueOf(kirby.getXPosition()) +
                     " yPosition = " + String.valueOf(kirby.getYPosition()) + " | Width = " + String.valueOf(kirby.getObjectWidth()) +
                     " Height = " + String.valueOf(kirby.getObjectHeight()) + " | Attributes: isGrounded = " + String.valueOf(kirby.isGrounded()) +
-                    " isFacingRight = " + String.valueOf(kirby.isFacingRight()) + " | Hitbox: xPosition = " + String.valueOf(kirby.getHitBox().getXPosition()) +
+                    " isFacingRight = " + String.valueOf(kirby.isFacingRight()) + " | HitBox: xPosition = " + String.valueOf(kirby.getHitBox().getXPosition()) +
                     " yPosition = " + String.valueOf(kirby.getHitBox().getYPosition())
                     + " | Animation Running = " + String.valueOf(kirby.getCharacterAnimation().isRunning()));
         }
@@ -1785,6 +1803,7 @@ public class InGameActivity extends AppCompatActivity {
 
     }
 
+    // fix
     public void dayNightCycle(){
         rHandler = new Handler();
 
@@ -2092,6 +2111,34 @@ public class InGameActivity extends AppCompatActivity {
 
         Gson gson = new Gson();
         String json;
+
+        editor.putBoolean(IS_FLOATING, isFloating);
+
+        editor.putBoolean(START_FLOAT_FINISHED, startFloatFinished);
+
+        editor.putInt(JUMP_COUNT, jumpCount);
+
+        editor.putString(TIME_OF_DAY, timeOfDay);
+
+        editor.putString(ENVIRONMENT, environment);
+
+        gameCameraXPosition = gameCamera.getXPosition();
+        gameCameraYPosition = gameCamera.getYPosition();
+        gameCameraFixed = gameCamera.isFixedPosition();
+
+        editor.putFloat(GAME_CAMERA_XPOSITION,gameCameraXPosition);
+        editor.putFloat(GAME_CAMERA_YPOSITION,gameCameraYPosition);
+        editor.putBoolean(GAME_CAMERA_FIXED, gameCameraFixed);
+
+        kirbyXPosition = kirby.getXPosition();
+        kirbyYPosition = kirby.getYPosition();
+
+        editor.putFloat(KIRBY_XPOSITION, kirbyXPosition);
+        editor.putFloat(KIRBY_YPOSITION, kirbyYPosition);
+
+
+
+        // Saving custom objects not working.
 //        json = gson.toJson(backgroundGameLayout);
 //        editor.putString(BACKGROUND_GAME_LAYOUT, json);
 //
@@ -2107,61 +2154,41 @@ public class InGameActivity extends AppCompatActivity {
 //        String json = gson.toJson(gameCamera);
 //        editor.putString(GAME_CAMERA, json);
 
-        gson = new Gson();
-        ArrayList<Integer> test = new ArrayList<Integer>();
-        test.add(1);
-        json = gson.toJson(new SaveTestObject(this,1,test));
-        editor.putString(SAVE_TEST,json);
-
-        gson = new Gson();
-        json = gson.toJson(leftWalkCamera);
-        editor.putString(LEFT_WALK_CAMERA, json);
-
-        gson = new Gson();
-        json = gson.toJson(leftRunCamera);
-        editor.putString(LEFT_RUN_CAMERA, json);
-
-        gson = new Gson();
-        json = gson.toJson(rightWalkCamera);
-        editor.putString(RIGHT_WALK_CAMERA, json);
-
-        gson = new Gson();
-        json = gson.toJson(rightRunCamera);
-        editor.putString(RIGHT_RUN_CAMERA, json);
+//        gson = new Gson();
+//        json = gson.toJson(leftWalkCamera);
+//        editor.putString(LEFT_WALK_CAMERA, json);
+//
+//        gson = new Gson();
+//        json = gson.toJson(leftRunCamera);
+//        editor.putString(LEFT_RUN_CAMERA, json);
+//
+//        gson = new Gson();
+//        json = gson.toJson(rightWalkCamera);
+//        editor.putString(RIGHT_WALK_CAMERA, json);
+//
+//        gson = new Gson();
+//        json = gson.toJson(rightRunCamera);
+//        editor.putString(RIGHT_RUN_CAMERA, json);
 
 //        gson = new Gson();
 //        json = gson.toJson(kirby);
 //        editor.putString(KIRBY, json);
 
-        editor.putBoolean(IS_FLOATING, isFloating);
-
-//        editor.putBoolean(FIRST_TIME, firstTime);
-
-        editor.putBoolean(START_FLOAT_FINISHED, startFloatFinished);
-
-        editor.putInt(JUMP_COUNT, jumpCount);
-
 //        gson = new Gson();
 //        json = gson.toJson(allNPCs);
 //        editor.putString(ALL_NPCS, json);
 
-        editor.putString(TIME_OF_DAY, timeOfDay);
-
 //        gson = new Gson();
 //        json = gson.toJson(testEnvironmentBackgroundGameObjects);
-//        editor.putString(TEST_ENVIORNMENT_BACKGROUND_GAME_OBJECTS, json);
+//        editor.putString(TEST_ENVIRONMENT_BACKGROUND_GAME_OBJECTS, json);
 //
 //        gson = new Gson();
 //        json = gson.toJson(testEnvironmentCollisionGameObjects);
-//        editor.putString(TEST_ENVIORNMENT_COLLISION_GAME_OBJECTS, json);
+//        editor.putString(TEST_ENVIRONMENT_COLLISION_GAME_OBJECTS, json);
 //
 //        gson = new Gson();
 //        json = gson.toJson(testEnvironmentForegroundGameObjects);
-//        editor.putString(TEST_ENVIORNMENT_FOREGROUND_GAME_OBJECTS, json);
-
-
-
-
+//        editor.putString(TEST_ENVIRONMENT_FOREGROUND_GAME_OBJECTS, json);
 
         editor.commit();
 
@@ -2176,122 +2203,132 @@ public class InGameActivity extends AppCompatActivity {
         isFloating = sharedPreferences.getBoolean(IS_FLOATING, false);
         startFloatFinished = sharedPreferences.getBoolean(START_FLOAT_FINISHED, false);
         jumpCount = sharedPreferences.getInt(JUMP_COUNT, 0);
+        gameCameraXPosition = sharedPreferences.getFloat(GAME_CAMERA_XPOSITION, -1);
+        gameCameraYPosition = sharedPreferences.getFloat(GAME_CAMERA_YPOSITION, -1);
+        gameCameraFixed = sharedPreferences.getBoolean(GAME_CAMERA_FIXED, true);
 
-        firstTime = sharedPreferences.getBoolean(FIRST_TIME, true);
+        // Change default value to "Forest" later
+        environment = sharedPreferences.getString(ENVIRONMENT,"Test");
 
-        Gson gson = new Gson();
-        String json = sharedPreferences.getString(BACKGROUND_GAME_LAYOUT, "");
-        if(!json.equals("")){
-            backgroundGameLayout = gson.fromJson(json, GameLayout.class);
-            //Log.i("Sai", testObject.toString());
-        }
-        else{
-            backgroundGameLayout = null;
-        }
+        kirbyXPosition = sharedPreferences.getFloat(KIRBY_XPOSITION, 0);
 
-        gson = new Gson();
-        json = sharedPreferences.getString(COLLISION_GAME_LAYOUT, "");
-        if(!json.equals("")){
-            collisionGameLayout = gson.fromJson(json, GameLayout.class);
-            //Log.i("Sai", testObject.toString());
-        }
-        else{
-            collisionGameLayout = null;
-        }
-
-        gson = new Gson();
-        json = sharedPreferences.getString(FOREGROUND_GAME_LAYOUT, "");
-        if(!json.equals("")){
-            foregroundGameLayout = gson.fromJson(json, GameLayout.class);
-            //Log.i("Sai", testObject.toString());
-        }
-        else{
-            foregroundGameLayout = null;
-        }
-
-        gson = new Gson();
-        json = sharedPreferences.getString(GAME_CAMERA, "");
-        if(!json.equals("")){
-            gameCamera = gson.fromJson(json, Camera.class);
-            //Log.i("Sai", testObject.toString());
-        }
-        else{
-            gameCamera = null;
-        }
-
-        gson = new Gson();
-        json = sharedPreferences.getString(LEFT_WALK_CAMERA, "");
-        if(!json.equals("")){
-            leftWalkCamera = gson.fromJson(json, Runnable.class);
-            //Log.i("Sai", testObject.toString());
-        }
-        else{
-            leftWalkCamera = null;
-        }
-
-        gson = new Gson();
-        json = sharedPreferences.getString(LEFT_RUN_CAMERA, "");
-        if(!json.equals("")){
-            leftRunCamera = gson.fromJson(json, Runnable.class);
-            //Log.i("Sai", testObject.toString());
-        }
-        else{
-            leftRunCamera = null;
-        }
-
-        gson = new Gson();
-        json = sharedPreferences.getString(RIGHT_WALK_CAMERA, "");
-        if(!json.equals("")){
-            rightWalkCamera = gson.fromJson(json, Runnable.class);
-            //Log.i("Sai", testObject.toString());
-        }
-        else{
-            rightWalkCamera = null;
-        }
-
-        gson = new Gson();
-        json = sharedPreferences.getString(RIGHT_RUN_CAMERA, "");
-        if(!json.equals("")){
-            rightRunCamera = gson.fromJson(json, Runnable.class);
-            //Log.i("Sai", testObject.toString());
-        }
-        else{
-            rightRunCamera = null;
-        }
-
-        gson = new Gson();
-        json = sharedPreferences.getString(KIRBY, "");
-        if(!json.equals("")){
-            kirby = gson.fromJson(json, Character.class);
-            //Log.i("Sai", testObject.toString());
-        }
-        else{
-            kirby = null;
-        }
-
-        gson = new Gson();
-        json = sharedPreferences.getString(ALL_NPCS, "");
-        if(!json.equals("")){
-            allNPCs = gson.fromJson(json, HashMap.class);
-            //Log.i("Sai", testObject.toString());
-        }
-        else{
-            allNPCs = null;
-        }
-
-        gson = new Gson();
-        json = sharedPreferences.getString(TEST_ENVIORNMENT_BACKGROUND_GAME_OBJECTS, "");
-        if(!json.equals("")){
-            testEnvironmentBackgroundGameObjects = gson.fromJson(json, ArrayList.class);
-            //Log.i("Sai", testObject.toString());
-        }
-        else{
-            testEnvironmentBackgroundGameObjects = null;
-        }
+        kirbyYPosition = sharedPreferences.getFloat(KIRBY_YPOSITION, TitleActivity.HEIGHT/(2 * TitleActivity.DENSITY));
 
 
-        //TEST_ENVIORNMENT_COLLISION_GAME_OBJECTS = "testEnvironmentCollisionGameObjects";
-        //TEST_ENVIORNMENT_FOREGROUND_GAME_OBJECTS = "testEnvironmentForegroundGameObjects";
+        // Since saving custom objects isn't working. Don't load in custom objects.
+//        Gson gson = new Gson();
+//        String json = sharedPreferences.getString(BACKGROUND_GAME_LAYOUT, "");
+//        if(!json.equals("")){
+//            backgroundGameLayout = gson.fromJson(json, GameLayout.class);
+//            //Log.i("Sai", testObject.toString());
+//        }
+//        else{
+//            backgroundGameLayout = null;
+//        }
+//
+//        gson = new Gson();
+//        json = sharedPreferences.getString(COLLISION_GAME_LAYOUT, "");
+//        if(!json.equals("")){
+//            collisionGameLayout = gson.fromJson(json, GameLayout.class);
+//            //Log.i("Sai", testObject.toString());
+//        }
+//        else{
+//            collisionGameLayout = null;
+//        }
+//
+//        gson = new Gson();
+//        json = sharedPreferences.getString(FOREGROUND_GAME_LAYOUT, "");
+//        if(!json.equals("")){
+//            foregroundGameLayout = gson.fromJson(json, GameLayout.class);
+//            //Log.i("Sai", testObject.toString());
+//        }
+//        else{
+//            foregroundGameLayout = null;
+//        }
+//
+//        gson = new Gson();
+//        json = sharedPreferences.getString(GAME_CAMERA, "");
+//        if(!json.equals("")){
+//            gameCamera = gson.fromJson(json, Camera.class);
+//            //Log.i("Sai", testObject.toString());
+//        }
+//        else{
+//            gameCamera = null;
+//        }
+//
+//        gson = new Gson();
+//        json = sharedPreferences.getString(LEFT_WALK_CAMERA, "");
+//        if(!json.equals("")){
+//            leftWalkCamera = gson.fromJson(json, Runnable.class);
+//            //Log.i("Sai", testObject.toString());
+//        }
+//        else{
+//            leftWalkCamera = null;
+//        }
+//
+//        gson = new Gson();
+//        json = sharedPreferences.getString(LEFT_RUN_CAMERA, "");
+//        if(!json.equals("")){
+//            leftRunCamera = gson.fromJson(json, Runnable.class);
+//            //Log.i("Sai", testObject.toString());
+//        }
+//        else{
+//            leftRunCamera = null;
+//        }
+//
+//        gson = new Gson();
+//        json = sharedPreferences.getString(RIGHT_WALK_CAMERA, "");
+//        if(!json.equals("")){
+//            rightWalkCamera = gson.fromJson(json, Runnable.class);
+//            //Log.i("Sai", testObject.toString());
+//        }
+//        else{
+//            rightWalkCamera = null;
+//        }
+//
+//        gson = new Gson();
+//        json = sharedPreferences.getString(RIGHT_RUN_CAMERA, "");
+//        if(!json.equals("")){
+//            rightRunCamera = gson.fromJson(json, Runnable.class);
+//            //Log.i("Sai", testObject.toString());
+//        }
+//        else{
+//            rightRunCamera = null;
+//        }
+//
+//        gson = new Gson();
+//        json = sharedPreferences.getString(KIRBY, "");
+//        if(!json.equals("")){
+//            kirby = gson.fromJson(json, Character.class);
+//            //Log.i("Sai", testObject.toString());
+//        }
+//        else{
+//            kirby = null;
+//        }
+//
+//        gson = new Gson();
+//        json = sharedPreferences.getString(ALL_NPCS, "");
+//        if(!json.equals("")){
+//            allNPCs = gson.fromJson(json, HashMap.class);
+//            //Log.i("Sai", testObject.toString());
+//        }
+//        else{
+//            allNPCs = null;
+//        }
+//
+//        gson = new Gson();
+//        json = sharedPreferences.getString(TEST_ENVIRONMENT_BACKGROUND_GAME_OBJECTS, "");
+//        if(!json.equals("")){
+//            testEnvironmentBackgroundGameObjects = gson.fromJson(json, ArrayList.class);
+//            //Log.i("Sai", testObject.toString());
+//        }
+//        else{
+//            testEnvironmentBackgroundGameObjects = null;
+//        }
+
+
+        //TEST_ENVIRONMENT_COLLISION_GAME_OBJECTS = "testEnvironmentCollisionGameObjects";
+        //TEST_ENVIRONMENT_FOREGROUND_GAME_OBJECTS = "testEnvironmentForegroundGameObjects";
     }
 
     public void updateViews(){
@@ -2301,17 +2338,11 @@ public class InGameActivity extends AppCompatActivity {
         else{
             pauseAudio();
         }
+         Log.i("SetUp","Initial Set Up");
 
-        //First time game loads
-        if(firstTime){
-            Log.i("SetUp","Initial Set Up");
-            firstTime = false;
-
-            initialCameraSetUp();
-            initialCharacterSetUp();
-            initialEnvironmentSetUp();
-        }
-
+        initialCameraSetUp();
+        initialCharacterSetUp();
+        initialEnvironmentSetUp();
     }
 //
     protected void onRestart() {
