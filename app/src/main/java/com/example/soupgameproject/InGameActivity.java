@@ -76,6 +76,8 @@ public class InGameActivity extends AppCompatActivity {
     public static final String ENVIRONMENT = "environment";
 
     public static final String INV_DRAWABLES = "invDrawables";
+    public static final String ITEM_COUNT = "itemCount";
+    public static final String ITEM_NAMES = "itemNames";
 
     // Debugging variables
     private float centerX, centerY;
@@ -155,16 +157,26 @@ public class InGameActivity extends AppCompatActivity {
     private ArrayList<GameObject> testEnvironmentCollisionGameObjects;
     private ArrayList<GameObject> testEnvironmentForegroundGameObjects;
 
+    private ArrayList<GameObject> forestEnvironmentBackgroundGameObjects;
+    private ArrayList<GameObject> forestEnvironmentCollisionGameObjects;
+    private ArrayList<GameObject> forestEnvironmentForegroundGameObjects;
+
     // User Interface variables
     private Button leftButton, rightButton, jumpButton, actionButton;
 
     // Inventory variables
     private ImageView iv_1, iv_2, iv_3, iv_4, iv_5, iv_6, iv_7, iv_8, iv_9, iv_10, iv_11, iv_12, iv_13, iv_14, iv_15;
 
-    private ImageView[] invImages = new ImageView[] {iv_1, iv_2, iv_3, iv_4, iv_5, iv_6, iv_7, iv_8, iv_9, iv_10, iv_11, iv_12, iv_13, iv_14, iv_15};
+    private ImageView[] invImages;
     private int[] invRes = new int[] {R.id.iv1, R.id.iv2, R.id.iv3, R.id.iv4, R.id.iv5, R.id.iv6, R.id.iv7, R.id.iv8, R.id.iv9, R.id.iv10, R.id.iv11, R.id.iv12, R.id.iv13, R.id.iv14, R.id.iv15};
-    private int[] invDrawables = new int[15];
-    private int itemCount = -1;
+    private int[] invDrawables;
+    private int itemCount;
+
+    private String[] itemNames;
+
+    private ArrayList<Ingredient> userIngredients;
+
+    private HashMap<String,Ingredient> ingredientKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,6 +217,8 @@ public class InGameActivity extends AppCompatActivity {
         iv_13 = (ImageView) findViewById(R.id.iv13);
         iv_14 = (ImageView) findViewById(R.id.iv14);
         iv_15 = (ImageView) findViewById(R.id.iv15);
+
+        invImages = new ImageView[] {iv_1, iv_2, iv_3, iv_4, iv_5, iv_6, iv_7, iv_8, iv_9, iv_10, iv_11, iv_12, iv_13, iv_14, iv_15};
     }
 
     // Camera creation and set up
@@ -229,8 +243,8 @@ public class InGameActivity extends AppCompatActivity {
             gameCamera.setScale(fitZoom(3832,359));
             gameCamera.setLeftXPosition(0);
         }
-        else if(environment.toLowerCase().equals("test2")){
-            gameCamera.setScale(fitZoom(3832,500));
+        else if(environment.toLowerCase().equals("forest")){
+            gameCamera.setScale(fitZoom(3832,359));
             gameCamera.setLeftXPosition(0);
         }
     }
@@ -238,7 +252,12 @@ public class InGameActivity extends AppCompatActivity {
     // Environment initial set up. Populates ArrayLists of objects for each environment.
     private void initialEnvironmentSetUp(){
         // For each environment, set the camera to that environment and then populate ArrayLists
-
+        GameObject rightBoundary = new GameObject(this, "Boundary", 50, (int)(TitleActivity.HEIGHT/TitleActivity.DENSITY),
+                R.drawable.boundary, -50,0,true);
+        GameObject leftBoundary = new GameObject(this, "Boundary", 50, (int)(TitleActivity.HEIGHT/TitleActivity.DENSITY),
+                R.drawable.boundary, (TitleActivity.WIDTH/TitleActivity.DENSITY),0,true);
+        GameObject topBoundary = new GameObject(this, "Boundary", (int)(TitleActivity.WIDTH/TitleActivity.DENSITY),
+                300, R.drawable.boundary, 0,gameCamera.getTopYPosition(),true);
         // Test environment
 
         cameraSetUp("test");
@@ -272,31 +291,37 @@ public class InGameActivity extends AppCompatActivity {
                 R.drawable.testground, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
                 (int)(TitleActivity.WIDTH/TitleActivity.DENSITY), 300, 0, gameCamera.getBottomYPosition(),0,-294)));
 
-//        for(int i = 0; i < 15; i++){
-//            float ratio = (int) (Math.random() * 6 + 4)/10F;
-//            int xPosition = (int) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY));
-//            testEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio),(int)(43* ratio),
-//                    R.drawable.testtree, xPosition, gameCamera.getBottomYPosition() + 6, true,
-//                    new HitBox(InGameActivity.this, true, (int)(7* ratio),(int)(39* ratio),xPosition
-//                            ,gameCamera.getBottomYPosition()+6,(float)(16* ratio),0)));
-//        }
+        for(int i = 0; i < 50; i++){
+            float ratio = (int) (Math.random() * 6 + 4)/10F;
+            int xPosition = (int) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY));
+            testEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio),(int)(43* ratio),
+                    R.drawable.testtree, xPosition, gameCamera.getBottomYPosition() + 6, true,
+                    new HitBox(InGameActivity.this, true, (int)(7* ratio),(int)(39* ratio),xPosition
+                            ,gameCamera.getBottomYPosition()+6,(float)(16* ratio),0)));
+        }
 
-        GameObject rightBoundary = new GameObject(this, "Boundary", 50, (int)(TitleActivity.HEIGHT/TitleActivity.DENSITY),
-                R.drawable.boundary, -50,0,true);
-        GameObject leftBoundary = new GameObject(this, "Boundary", 50, (int)(TitleActivity.HEIGHT/TitleActivity.DENSITY),
-                R.drawable.boundary, (TitleActivity.WIDTH/TitleActivity.DENSITY),0,true);
-        GameObject topBoundary = new GameObject(this, "Boundary", (int)(TitleActivity.WIDTH/TitleActivity.DENSITY),
-                300, R.drawable.boundary, 0,gameCamera.getTopYPosition(),true);
 
         testEnvironmentCollisionGameObjects.add(rightBoundary);
         testEnvironmentCollisionGameObjects.add(leftBoundary);
         testEnvironmentCollisionGameObjects.add(topBoundary);
 
+        // Forest Environment
+        cameraSetUp("Forest");
+
+        forestEnvironmentBackgroundGameObjects = new ArrayList<GameObject>();
+        forestEnvironmentCollisionGameObjects = new ArrayList<GameObject>();
+        forestEnvironmentForegroundGameObjects = new ArrayList<GameObject>();
+
+        forestEnvironmentCollisionGameObjects.add(new GameObject(this, "Ground", (int)(TitleActivity.WIDTH/TitleActivity.DENSITY),10,
+                R.drawable.testground, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
+                (int)(TitleActivity.WIDTH/TitleActivity.DENSITY), 300, 0, gameCamera.getBottomYPosition(),0,-294)));
+        forestEnvironmentCollisionGameObjects.add(rightBoundary);
+        forestEnvironmentCollisionGameObjects.add(leftBoundary);
+        forestEnvironmentCollisionGameObjects.add(topBoundary);
+
 
 
         // After populating all ArrayLists, set up the first environment the player will be in (which will be the forest)
-        // This will not work yet as the forest area has not yet been created. For testing purposes, load in the test environment
-        //environmentSetUp("Forest");
         environmentSetUp(environment);
     }
 
@@ -351,7 +376,6 @@ public class InGameActivity extends AppCompatActivity {
             kirby.setXPosition(kirbyXPosition);
             kirby.setYPosition(kirbyYPosition);
 
-            itemSetup(environment);
             collisionGameLayout.addLayoutObject(kirby);
             collisionGameLayout.addLayoutObjects(testEnvironmentCollisionGameObjects);
 
@@ -386,14 +410,24 @@ public class InGameActivity extends AppCompatActivity {
 
             kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
         }
-        else if(environment.toLowerCase().equals("test2")){
-            kirby.setYPosition(gameCamera.getBottomYPosition() + 6 - kirby.getHitBox().getYBottom());
+        else if(environment.toLowerCase().equals("forest")){
+            backgroundGameLayout.setBackgroundImage(R.drawable.cloudsbackgroundextended);
+            backgroundGameLayout.setLayoutObjects(forestEnvironmentBackgroundGameObjects);
+            foregroundGameLayout.setLayoutObjects(forestEnvironmentForegroundGameObjects);
+
+            collisionGameLayout.removeLayoutObject(kirby);
+
+            kirby.setXPosition(kirbyXPosition);
+            kirby.setYPosition(kirbyYPosition);
 
             collisionGameLayout.addLayoutObject(kirby);
-            collisionGameLayout.addLayoutObject(new GameObject(this, "Ground", (int)(TitleActivity.WIDTH/TitleActivity.DENSITY),10,
-                    R.drawable.testground, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
-                    (int)(TitleActivity.WIDTH/TitleActivity.DENSITY), 6, 0, gameCamera.getBottomYPosition(),0,0)));
+            collisionGameLayout.addLayoutObjects(forestEnvironmentCollisionGameObjects);
+
+            kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
         }
+
+        itemSetup(environment);
+
     }
 
     private void itemSetup(String environment){
@@ -514,6 +548,9 @@ public class InGameActivity extends AppCompatActivity {
 
                 oHandler.postDelayed(tomatoFall, 5000);
             }
+        }
+        else if(environment.toLowerCase().equals("forest")){
+
         }
 
     }
@@ -1458,6 +1495,29 @@ public class InGameActivity extends AppCompatActivity {
         }
     }
 
+    // Inventory Saving
+    private void initialInventorySetUp(){
+        userIngredients = new ArrayList<Ingredient>();
+        ingredientKey = new HashMap<String, Ingredient>();
+        ingredientKey.put("Carrot", new Ingredient(this, "Carrot",0,0,
+                R.drawable.carrot,0,0,0,0,0,0));
+        ingredientKey.put("Mushroom", new Ingredient(this, "Mushroom",0,0,
+                R.drawable.mushroom,0,0,0,0,0,0));
+        ingredientKey.put("Radish",new Ingredient(this, "Radish",0,0,
+                R.drawable.radish,0,0,0,0,0,0));
+        ingredientKey.put("Tomato",new Ingredient(this, "Tomato",0,0,
+                R.drawable.tomato,0,0,0,0,0,0));
+        ingredientKey.put("Plant",new Ingredient(this, "Plant",0,0,
+                R.drawable.plant1,0,0,0,0,0,0));
+
+        for(int i = 0; i < 15; i++){
+            if(invDrawables[i] != 0) {
+                invImages[i].setImageResource(invDrawables[i]);
+                userIngredients.add(ingredientKey.get(itemNames[i]));
+            }
+        }
+    }
+
     // Sets up character controls/interactions
     // Majority of in-game logic resides here
     @SuppressLint("ClickableViewAccessibility")
@@ -1765,17 +1825,13 @@ public class InGameActivity extends AppCompatActivity {
     }
 
     private void collectIngredient(Ingredient ingredient){
-        ingredient.setCollected(true);
-        Runnable collectAnimation = ingredient.collected(oHandler);
-        oHandler.postDelayed(collectAnimation, 0);
-        // Example test
-        //invDrawables[0] = ingredient.getObjectResource();
-        //iv_1.setImageResource(invDrawables[0]);
-
         String itemName = ingredient.getName();
-        itemCount++;
 
-        if(itemCount < 15) {
+        if(itemCount < 14) {
+            ingredient.setCollected(true);
+            Runnable collectAnimation = ingredient.collected(oHandler);
+            oHandler.postDelayed(collectAnimation, 0);
+            itemCount++;
             switch(itemName) {
                 case "Carrot":
                     invDrawables[itemCount] = R.drawable.carrot;
@@ -1797,10 +1853,14 @@ public class InGameActivity extends AppCompatActivity {
                     invDrawables[itemCount] = R.drawable.plant1;
                     break;
             }
+
+            invImages[itemCount].setImageResource(invDrawables[itemCount]);
+            itemNames[itemCount] = itemName;
+            userIngredients.add(ingredientKey.get(itemName));
         }
         else{
-            Toast.makeText(InGameActivity.this, "Max Items Collected",
-                    Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "Max Items Collected", Toast.LENGTH_SHORT).show();
+            Log.i("Items","Max items collected");
         }
     }
 
@@ -1857,7 +1917,7 @@ public class InGameActivity extends AppCompatActivity {
 
     }
 
-    // fix
+    // Not perfect. When reloading into game, lighting may flicker once during certain times of day...
     public void dayNightCycle(){
         rHandler = new Handler();
 
@@ -2024,7 +2084,12 @@ public class InGameActivity extends AppCompatActivity {
 
     public void inventoryPage(View v) {
         ConstraintLayout layout = (ConstraintLayout) this.findViewById(R.id.inventoryLayout);
-        layout.setVisibility(View.VISIBLE);
+        if(layout.getVisibility() == View.INVISIBLE) {
+            layout.setVisibility(View.VISIBLE);
+        }
+        else{
+            closeInventory(v);
+        }
 
         for (int i = 0; i < invImages.length; i++) {
             invImages[i] = (ImageView) findViewById(invRes[i]);
@@ -2204,6 +2269,14 @@ public class InGameActivity extends AppCompatActivity {
         editor.putFloat(KIRBY_XPOSITION, kirbyXPosition);
         editor.putFloat(KIRBY_YPOSITION, kirbyYPosition);
 
+        editor.putInt(ITEM_COUNT, itemCount);
+
+        json = gson.toJson(invDrawables);
+        editor.putString(INV_DRAWABLES,json);
+
+        json = gson.toJson(itemNames);
+        editor.putString(ITEM_NAMES,json);
+
 
 
         // Saving custom objects not working.
@@ -2292,6 +2365,25 @@ public class InGameActivity extends AppCompatActivity {
 
         kirbyYPosition = sharedPreferences.getFloat(KIRBY_YPOSITION, TitleActivity.HEIGHT/(2 * TitleActivity.DENSITY));
 
+        itemCount = sharedPreferences.getInt(ITEM_COUNT, -1);
+
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString(INV_DRAWABLES, "");
+        if(!json.equals("")){
+            invDrawables = gson.fromJson(json, int[].class);
+        }
+        else{
+            invDrawables = new int[15];
+        }
+
+        gson = new Gson();
+        json = sharedPreferences.getString(ITEM_NAMES, "");
+        if(!json.equals("")){
+            itemNames = gson.fromJson(json, String[].class);
+        }
+        else{
+            itemNames = new String[15];
+        }
 
 
         // Since saving custom objects isn't working. Don't load in custom objects.
@@ -2422,6 +2514,7 @@ public class InGameActivity extends AppCompatActivity {
         initialCameraSetUp();
         initialCharacterSetUp();
         initialEnvironmentSetUp();
+        initialInventorySetUp();
         dayNightCycle();
     }
 //
