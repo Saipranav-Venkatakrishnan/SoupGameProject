@@ -79,6 +79,7 @@ public class InGameActivity extends AppCompatActivity {
     public static final String ITEM_COUNT = "itemCount";
     public static final String ITEM_NAMES = "itemNames";
 
+
     // Debugging variables
     private float centerX, centerY;
     private boolean zoomed;
@@ -584,6 +585,101 @@ public class InGameActivity extends AppCompatActivity {
             }
         }
         else if(environment.toLowerCase().equals("forest")){
+            // Make better randomizer later
+            int totalItemCount = 20;
+            int carrotCount = (int)(Math.random() * totalItemCount) + 1;
+            int mushroomCount = (int)(Math.random() * (totalItemCount - carrotCount));
+            int tomatoCount = totalItemCount-carrotCount-mushroomCount;
+
+            for(int i = 0; i < carrotCount; i++) {
+                Ingredient carrot = new Ingredient(this, "Carrot", 10, 6,
+                        R.drawable.carrot,
+                        (float) (Math.random() * (TitleActivity.WIDTH / TitleActivity.DENSITY - 10)),
+                        (float) (gameCamera.getTopYPosition()) + 70, 0, 0, 0, 0);
+
+                collisionGameLayout.addLayoutObject(carrot);
+
+                Runnable carrotFall = carrot.fall(oHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
+                                object1.stopFall();
+
+                                object1.setYPosition(object2.getHitBox().topLeft().y);
+
+                                object1.getHitBox().setYPosition(object1.getYPosition());
+                                object1.setHitBox(object1.getHitBox());
+                                object1.showHitBox();
+                            }
+
+                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                        }
+                    }
+                });
+
+                oHandler.postDelayed(carrotFall, 5);
+            }
+
+            for(int i = 0; i < mushroomCount; i++) {
+                Ingredient mushroom = new Ingredient(this, "Mushroom", (int) (8), (int) (8),
+                        R.drawable.mushroom,
+                        (float) (Math.random() * (TitleActivity.WIDTH / TitleActivity.DENSITY - 10)),
+                        (float) (gameCamera.getTopYPosition()) + 70, 0, 0, 0, 0);
+
+                collisionGameLayout.addLayoutObject(mushroom);
+
+                Runnable mushroomFall = mushroom.fall(oHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
+                                object1.stopFall();
+
+                                object1.setYPosition(object2.getHitBox().topLeft().y);
+
+                                object1.getHitBox().setYPosition(object1.getYPosition());
+                                object1.setHitBox(object1.getHitBox());
+                                object1.showHitBox();
+                            }
+
+                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                        }
+                    }
+                });
+
+                oHandler.postDelayed(mushroomFall, 5);
+            }
+
+            for(int i = 0; i < tomatoCount; i++) {
+                Ingredient tomato = new Ingredient(this, "Tomato", (int) (8), (int) (8),
+                        R.drawable.tomato,
+                        (float) (Math.random() * (TitleActivity.WIDTH / TitleActivity.DENSITY - 10)),
+                        (float) (gameCamera.getTopYPosition()) + 70, 0, 0, 0, 0);
+
+                collisionGameLayout.addLayoutObject(tomato);
+
+                Runnable tomatoFall = tomato.fall(oHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
+                                object1.stopFall();
+
+                                object1.setYPosition(object2.getHitBox().topLeft().y);
+
+                                object1.getHitBox().setYPosition(object1.getYPosition());
+                                object1.setHitBox(object1.getHitBox());
+                                object1.showHitBox();
+                            }
+
+                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                        }
+                    }
+                });
+
+                oHandler.postDelayed(tomatoFall, 5);
+            }
 
         }
 
