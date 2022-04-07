@@ -2271,9 +2271,11 @@ public class InGameActivity extends AppCompatActivity {
 
         editor.putInt(ITEM_COUNT, itemCount);
 
+        gson = new Gson();
         json = gson.toJson(invDrawables);
         editor.putString(INV_DRAWABLES,json);
 
+        gson = new Gson();
         json = gson.toJson(itemNames);
         editor.putString(ITEM_NAMES,json);
 
@@ -2496,6 +2498,7 @@ public class InGameActivity extends AppCompatActivity {
 //        else{
 //            testEnvironmentBackgroundGameObjects = null;
 //        }
+
 
 
         //TEST_ENVIRONMENT_COLLISION_GAME_OBJECTS = "testEnvironmentCollisionGameObjects";
