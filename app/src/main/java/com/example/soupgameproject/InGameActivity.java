@@ -369,10 +369,11 @@ public class InGameActivity extends AppCompatActivity {
                 R.drawable.tree1, tWidth/5 + tWidth/10, gameCamera.getBottomYPosition() + 6, true,
                 new HitBox(InGameActivity.this, true, (int)(7 * ratio4),(int)(39 * ratio4),tWidth/5 + tWidth/10
                         ,gameCamera.getBottomYPosition()+6,(float)(16 * ratio4),0)));
-        forestEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio4),(int)(43 * ratio4),
-                R.drawable.tree1, tWidth/2 - tWidth/27, gameCamera.getBottomYPosition() + 6, true,
-                new HitBox(InGameActivity.this, true, (int)(7 * ratio4),(int)(39 * ratio4),tWidth/2 - tWidth/27
-                        ,gameCamera.getBottomYPosition()+6,(float)(16 * ratio4),0)));
+        // fix this one
+//        forestEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio4),(int)(43 * ratio4),
+//                R.drawable.tree1, tWidth/2 - tWidth/27, gameCamera.getBottomYPosition() + 6, true,
+//                new HitBox(InGameActivity.this, true, (int)(7 * ratio4),(int)(39 * ratio4),tWidth/2 - tWidth/27
+//                        ,gameCamera.getBottomYPosition()+6,(float)(16 * ratio4),0)));
         forestEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39*ratio5),(int)(43*ratio5),
                 R.drawable.tree1, tWidth/2 - tWidth/20, gameCamera.getBottomYPosition() + 6, true,
                 new HitBox(InGameActivity.this, true, (int)(7*ratio5),(int)(39*ratio5),tWidth/2 - tWidth/20
@@ -387,7 +388,7 @@ public class InGameActivity extends AppCompatActivity {
                         ,gameCamera.getBottomYPosition()+6,(float)(16*ratio5),0)));
 
         float ratio6 = 6/7F;
-        float ratio8 = 8/7;
+        float ratio8 = 8/7F;
 
         forestEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39*ratio6),(int)(43*ratio6),
                 R.drawable.tree2, tWidth/4 - tWidth/60, gameCamera.getBottomYPosition() + 6, true,
@@ -409,10 +410,11 @@ public class InGameActivity extends AppCompatActivity {
                 R.drawable.tree2, tWidth - tWidth/3 - tWidth/25, gameCamera.getBottomYPosition() + 6, true,
                 new HitBox(InGameActivity.this, true, (int)(7*ratio8),(int)(39*ratio8),tWidth - tWidth/3 - tWidth/25
                         ,gameCamera.getBottomYPosition()+6,(float)(16*ratio8),0)));
-        forestEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39*ratio8),(int)(43*ratio8),
-                R.drawable.tree2, tWidth/3 + tWidth/2, gameCamera.getBottomYPosition() + 6, true,
-                new HitBox(InGameActivity.this, true, (int)(7*ratio8),(int)(39*ratio8),tWidth/3 + tWidth/2
-                        ,gameCamera.getBottomYPosition()+6,(float)(16*ratio8),0)));
+        // Make this one more left
+//        forestEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39*ratio8),(int)(43*ratio8),
+//                R.drawable.tree2, tWidth/3 + tWidth/2, gameCamera.getBottomYPosition() + 6, true,
+//                new HitBox(InGameActivity.this, true, (int)(7*ratio8),(int)(39*ratio8),tWidth/3 + tWidth/2
+//                        ,gameCamera.getBottomYPosition()+6,(float)(16*ratio8),0)));
         forestEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39*ratio6),(int)(43*ratio6),
                 R.drawable.tree2, tWidth - tWidth/10, gameCamera.getBottomYPosition() + 6, true,
                 new HitBox(InGameActivity.this, true, (int)(7*ratio6),(int)(39*ratio6),tWidth - tWidth/10
