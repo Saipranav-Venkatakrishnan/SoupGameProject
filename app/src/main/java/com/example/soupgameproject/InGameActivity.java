@@ -325,32 +325,56 @@ public class InGameActivity extends AppCompatActivity {
 
         int tWidth = (int)(TitleActivity.WIDTH/TitleActivity.DENSITY);
 
-        float ratio = 2;
+        float ratio = 17/10F;
+        float ratio2 = 19/10F;
 
         forestEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio),(int)(43* ratio),
-                R.drawable.testtree, 100, gameCamera.getBottomYPosition() + 6, false,
-                new HitBox(InGameActivity.this, true, (int)(7* ratio),(int)(39* ratio),100
-                        ,gameCamera.getBottomYPosition()+6,(float)(16* ratio),0)));
-        forestEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio),(int)(43* ratio),
-                R.drawable.testtree, 200, gameCamera.getBottomYPosition() + 6, false,
+                R.drawable.tree7, tWidth/18, gameCamera.getBottomYPosition() + 6, false,
                 new HitBox(InGameActivity.this, true, (int)(7* ratio),(int)(39* ratio),200
                         ,gameCamera.getBottomYPosition()+6,(float)(16* ratio),0)));
         forestEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio),(int)(43* ratio),
-                R.drawable.testtree, 300, gameCamera.getBottomYPosition() + 6, false,
-                new HitBox(InGameActivity.this, true, (int)(7* ratio),(int)(39* ratio),300
+                R.drawable.tree7, tWidth/4, gameCamera.getBottomYPosition() + 6, false,
+                new HitBox(InGameActivity.this, true, (int)(7* ratio),(int)(39* ratio),100
                         ,gameCamera.getBottomYPosition()+6,(float)(16* ratio),0)));
+        forestEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio2),(int)(43* ratio2),
+                R.drawable.tree7, tWidth/3, gameCamera.getBottomYPosition() + 6, false,
+                new HitBox(InGameActivity.this, true, (int)(7* ratio2),(int)(39* ratio2),100
+                        ,gameCamera.getBottomYPosition()+6,(float)(16* ratio2),0)));
         forestEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio),(int)(43* ratio),
-                R.drawable.testtree, 400, gameCamera.getBottomYPosition() + 6, false,
-                new HitBox(InGameActivity.this, true, (int)(7* ratio),(int)(39* ratio),400
+                R.drawable.tree7, tWidth/2, gameCamera.getBottomYPosition() + 6, false,
+                new HitBox(InGameActivity.this, true, (int)(7* ratio),(int)(39* ratio),100
                         ,gameCamera.getBottomYPosition()+6,(float)(16* ratio),0)));
+        forestEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio2),(int)(43* ratio2),
+                R.drawable.tree7, tWidth - tWidth/3, gameCamera.getBottomYPosition() + 6, false,
+                new HitBox(InGameActivity.this, true, (int)(7* ratio2),(int)(39* ratio2),100
+                        ,gameCamera.getBottomYPosition()+6,(float)(16* ratio2),0)));
         forestEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio),(int)(43* ratio),
-                R.drawable.testtree, 500, gameCamera.getBottomYPosition() + 6, false,
-                new HitBox(InGameActivity.this, true, (int)(7* ratio),(int)(39* ratio),500
+                R.drawable.tree7, tWidth - tWidth/7, gameCamera.getBottomYPosition() + 6, false,
+                new HitBox(InGameActivity.this, true, (int)(7* ratio),(int)(39* ratio),100
                         ,gameCamera.getBottomYPosition()+6,(float)(16* ratio),0)));
-        forestEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio),(int)(43* ratio),
-                R.drawable.testtree, 600, gameCamera.getBottomYPosition() + 6, false,
-                new HitBox(InGameActivity.this, true, (int)(7* ratio),(int)(39* ratio),600
-                        ,gameCamera.getBottomYPosition()+6,(float)(16* ratio),0)));
+
+        float ratio3 = 13/10F;
+
+        forestEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio3),(int)(43* ratio3),
+                R.drawable.tree3, tWidth/7, gameCamera.getBottomYPosition() + 6, false,
+                new HitBox(InGameActivity.this, true, (int)(7* ratio3),(int)(39* ratio3),100
+                        ,gameCamera.getBottomYPosition()+6,(float)(16* ratio3),0)));
+        forestEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio3),(int)(43* ratio3),
+                R.drawable.tree3, tWidth/2 - tWidth/12, gameCamera.getBottomYPosition() + 6, false,
+                new HitBox(InGameActivity.this, true, (int)(7* ratio3),(int)(39* ratio3),100
+                        ,gameCamera.getBottomYPosition()+6,(float)(16* ratio3),0)));
+        forestEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio3),(int)(43* ratio3),
+                R.drawable.tree3, tWidth/2 + tWidth/11, gameCamera.getBottomYPosition() + 6, false,
+                new HitBox(InGameActivity.this, true, (int)(7* ratio3),(int)(39* ratio3),100
+                        ,gameCamera.getBottomYPosition()+6,(float)(16* ratio3),0)));
+        forestEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39),(int)(43),
+                R.drawable.tree3, tWidth/2 + tWidth/7, gameCamera.getBottomYPosition() + 6, false,
+                new HitBox(InGameActivity.this, true, (int)(7),(int)(39),100
+                        ,gameCamera.getBottomYPosition()+6,(float)(16),0)));
+        forestEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio3),(int)(43* ratio3),
+                R.drawable.tree3, tWidth - tWidth/5, gameCamera.getBottomYPosition() + 6, false,
+                new HitBox(InGameActivity.this, true, (int)(7* ratio3),(int)(39* ratio3),100
+                        ,gameCamera.getBottomYPosition()+6,(float)(16* ratio3),0)));
 
 
 
