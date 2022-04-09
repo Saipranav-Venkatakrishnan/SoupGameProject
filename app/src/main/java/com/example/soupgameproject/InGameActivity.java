@@ -65,6 +65,7 @@ public class InGameActivity extends AppCompatActivity {
     public static final String IS_FLOATING = "isFloating";
     public static final String START_FLOAT_FINISHED = "startFloatFinished";
     public static final String JUMP_COUNT = "jumpCount";
+    public static final String IS_GROUNDED = "isGrounded";
 
     public static final String GAME_CAMERA_XPOSITION = "gameCameraXPosition";
     public static final String GAME_CAMERA_YPOSITION = "gameCameraYPosition";
@@ -80,8 +81,10 @@ public class InGameActivity extends AppCompatActivity {
     public static final String ITEM_NAMES = "itemNames";
 
 
+
     // Debugging variables
-    private float centerX, centerY;
+    private float centerX = (TitleActivity.WIDTH/2F)/ TitleActivity.DENSITY;
+    private float centerY = (TitleActivity.HEIGHT/2F)/ TitleActivity.DENSITY;
     private boolean zoomed;
 
     // Game layout set up variables
@@ -129,6 +132,7 @@ public class InGameActivity extends AppCompatActivity {
     private boolean isFloating; //
     private boolean startFloatFinished; //
     private int jumpCount; //
+    private boolean isGrounded;
 
     // Save the hashmap
     private HashMap<String, Character> allNPCs;//
@@ -235,8 +239,6 @@ public class InGameActivity extends AppCompatActivity {
         rightRunCamera = gameCamera.moveRight(cHandler, runSpeed * TitleActivity.DENSITY);
 
         // Debugging Variables
-        centerX = gameCamera.getXPosition();
-        centerY = gameCamera.getYPosition();
         zoomed = true;
     }
 
@@ -259,11 +261,12 @@ public class InGameActivity extends AppCompatActivity {
                 R.drawable.boundary, -50,0,true);
         GameObject leftBoundary = new GameObject(this, "Boundary", 50, (int)(TitleActivity.HEIGHT/TitleActivity.DENSITY),
                 R.drawable.boundary, (TitleActivity.WIDTH/TitleActivity.DENSITY),0,true);
-        GameObject topBoundary = new GameObject(this, "Boundary", (int)(TitleActivity.WIDTH/TitleActivity.DENSITY),
-                300, R.drawable.boundary, 0,gameCamera.getTopYPosition(),true);
         // Test environment
 
         cameraSetUp("test");
+
+        GameObject topBoundary = new GameObject(this, "Boundary", (int)(TitleActivity.WIDTH/TitleActivity.DENSITY),
+                300, R.drawable.boundary, 0,gameCamera.getTopYPosition(),true);
 
         testEnvironmentBackgroundGameObjects = new ArrayList<GameObject>();
         testEnvironmentCollisionGameObjects = new ArrayList<GameObject>();
@@ -524,7 +527,12 @@ public class InGameActivity extends AppCompatActivity {
             collisionGameLayout.addLayoutObject(kirby);
             collisionGameLayout.addLayoutObjects(forestEnvironmentCollisionGameObjects);
 
-            kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
+            if(!isGrounded) {
+                kirby.setGrounded(false);
+                kirby.getUdHandler().removeCallbacksAndMessages(null);
+                kirby.stopFall();
+                kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 0);
+            }
         }
 
     }
@@ -2066,13 +2074,16 @@ public class InGameActivity extends AppCompatActivity {
     // Debugging method
     public void viewInfoDebug(View view){
 
-//        GameObject.displayHitBoxes = true;
-//        for(GameObject object : collisionGameLayout.getLayoutObjects()){
-//            object.showHitBox();
-//        }
-//        for(GameObject object: backgroundGameLayout.getLayoutObjects()){
-//            object.showHitBox();
-//        }
+        GameObject.displayHitBoxes = true;
+        for(GameObject object : collisionGameLayout.getLayoutObjects()){
+            object.showHitBox();
+        }
+        for(GameObject object: backgroundGameLayout.getLayoutObjects()){
+            object.showHitBox();
+        }
+        for(GameObject object: foregroundGameLayout.getLayoutObjects()){
+            object.showHitBox();
+        }
 
 
         try {
@@ -2414,12 +2425,30 @@ public class InGameActivity extends AppCompatActivity {
     }
 
     private void saveData() {
+
+        GameObject.displayHitBoxes = false;
+        for(GameObject object : collisionGameLayout.getLayoutObjects()){
+            object.getHitBox().stopShowingHitBox();
+        }
+        for(GameObject object: backgroundGameLayout.getLayoutObjects()){
+            object.getHitBox().stopShowingHitBox();
+        }
+        for(GameObject object: foregroundGameLayout.getLayoutObjects()){
+            object.getHitBox().stopShowingHitBox();
+        }
+
         backgroundGameLayout.removeAllLayoutObjects();
         collisionGameLayout.removeAllLayoutObjects();
         foregroundGameLayout.removeAllLayoutObjects();
         oHandler.removeCallbacksAndMessages(null);
         cHandler.removeCallbacksAndMessages(null);
         rHandler.removeCallbacksAndMessages(null);
+
+        kirby.stopFall();
+        kirby.stopAction();
+        kirby.stopJump();
+        kirby.setStopMoving(true);
+
         kirby.getUdHandler().removeCallbacksAndMessages(null);
         kirby.getLrHandler().removeCallbacksAndMessages(null);
         kirby.getAHandler().removeCallbacksAndMessages(null);
@@ -2436,6 +2465,8 @@ public class InGameActivity extends AppCompatActivity {
         editor.putBoolean(START_FLOAT_FINISHED, startFloatFinished);
 
         editor.putInt(JUMP_COUNT, jumpCount);
+
+        editor.putBoolean(IS_GROUNDED, kirby.isGrounded());
 
         editor.putString(TIME_OF_DAY, timeOfDay);
         editor.putInt(LIGHTING_BA,bA);
@@ -2553,6 +2584,7 @@ public class InGameActivity extends AppCompatActivity {
         gameCameraXPosition = sharedPreferences.getFloat(GAME_CAMERA_XPOSITION, -1);
         gameCameraYPosition = sharedPreferences.getFloat(GAME_CAMERA_YPOSITION, -1);
         gameCameraFixed = sharedPreferences.getBoolean(GAME_CAMERA_FIXED, true);
+        isGrounded = sharedPreferences.getBoolean(IS_GROUNDED, false);
 
         environment = sharedPreferences.getString(ENVIRONMENT,"Forest");
 

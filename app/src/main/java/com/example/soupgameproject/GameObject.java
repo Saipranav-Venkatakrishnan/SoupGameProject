@@ -319,10 +319,10 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
         PointF l2 = object2.getHitBox().topLeft();
         PointF r2 = object2.getHitBox().bottomRight();
 
-        if((l2.y >= r1.y && l1.y - object1.getHitBox().getHitHeight()/2 >= l2.y) && (l1.x < r2.x && r1.x > l2.x)){
+        if((l2.y >= r1.y && l1.y - object1.getHitBox().getHitHeight()/2F >= l2.y) && (l1.x < r2.x && r1.x > l2.x)){
             collisionType += "top";
         }
-        else if((l1.y >= r2.y && r1.y + object1.getHitBox().getHitHeight()/2 <= r2.y) && (l1.x < r2.x && r1.x > l2.x)){
+        else if((l1.y >= r2.y && r1.y + object1.getHitBox().getHitHeight()/2F <= r2.y) && (l1.x < r2.x && r1.x > l2.x)){
             collisionType += "bottom";
         }
 
