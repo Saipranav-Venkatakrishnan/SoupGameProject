@@ -316,7 +316,7 @@
         android:layout_height="wrap_content"
         android:onClick="viewInfoDebug"
         android:text="Debug"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

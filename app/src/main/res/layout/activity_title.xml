@@ -24,7 +24,7 @@
         android:background="@drawable/soupbase"
         android:scaleType="fitStart"
         app:srcCompat="@drawable/souptop"
-        tools:layout_editor_absoluteX="118dp"
-        tools:layout_editor_absoluteY="119dp" />
+        tools:layout_editor_absoluteX="43dp"
+        tools:layout_editor_absoluteY="55dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

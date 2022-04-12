@@ -144,7 +144,7 @@ public class Character extends GameObject{
 
                 for(GameObject object : detectCollisions()) {
                     collisionListener.onCollision(Character.this, object);
-                    if (GameObject.getCollisionType(Character.this, object).equals("top") && isGrounded) {
+                    if (!object.isIngredient() && GameObject.getCollisionType(Character.this, object).equals("top") && isGrounded) {
                         groundedSomewhere = true;
                     }
                 }
