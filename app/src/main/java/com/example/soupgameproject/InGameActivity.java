@@ -61,6 +61,7 @@ public class InGameActivity extends AppCompatActivity {
     public static final String LIGHTING_OR = "lightingOR";
     public static final String LIGHTING_OG = "lightingOG";
     public static final String LIGHTING_OB = "lightingOB";
+    public static final String NEGATE_DAY_NIGHT = "negateDayNight";
 
     public static final String IS_FLOATING = "isFloating";
     public static final String START_FLOAT_FINISHED = "startFloatFinished";
@@ -488,6 +489,7 @@ public class InGameActivity extends AppCompatActivity {
             backgroundGameLayout.setLayoutObjects(testEnvironmentBackgroundGameObjects);
             foregroundGameLayout.setLayoutObjects(testEnvironmentForegroundGameObjects);
 
+
             collisionGameLayout.removeLayoutObject(kirby);
 
             kirby.setXPosition(kirbyXPosition);
@@ -527,6 +529,8 @@ public class InGameActivity extends AppCompatActivity {
             },2000);
 
             kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
+
+            setLightingTemporarily(255,255,255,255,255,255);
         }
         else if(environment.toLowerCase().equals("forest")){
             backgroundGameLayout.setBackgroundImage(R.drawable.cloudsbackgroundextended);
@@ -2542,6 +2546,7 @@ public class InGameActivity extends AppCompatActivity {
         editor.putInt(LIGHTING_OR,oR);
         editor.putInt(LIGHTING_OG,oG);
         editor.putInt(LIGHTING_OB,oB);
+        editor.putBoolean(NEGATE_DAY_NIGHT, negateDayNight);
 
         editor.putString(ENVIRONMENT, environment);
 
@@ -2641,6 +2646,7 @@ public class InGameActivity extends AppCompatActivity {
         oR = sharedPreferences.getInt(LIGHTING_OR, 255);
         oG = sharedPreferences.getInt(LIGHTING_OG, 255);
         oB = sharedPreferences.getInt(LIGHTING_OB, 190);
+        negateDayNight = sharedPreferences.getBoolean(NEGATE_DAY_NIGHT,false);
 
 
         isFloating = sharedPreferences.getBoolean(IS_FLOATING, false);
