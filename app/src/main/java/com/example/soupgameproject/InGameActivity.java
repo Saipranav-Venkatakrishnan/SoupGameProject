@@ -170,6 +170,14 @@ public class InGameActivity extends AppCompatActivity {
     private ArrayList<GameObject> forestEnvironmentCollisionGameObjects;
     private ArrayList<GameObject> forestEnvironmentForegroundGameObjects;
 
+    private ArrayList<GameObject> houseEnvironmentBackgroundGameObjects;
+    private ArrayList<GameObject> houseEnvironmentCollisionGameObjects;
+    private ArrayList<GameObject> houseEnvironmentForegroundGameObjects;
+
+    private ArrayList<GameObject> swampEnvironmentBackgroundGameObjects;
+    private ArrayList<GameObject> swampEnvironmentCollisionGameObjects;
+    private ArrayList<GameObject> swampEnvironmentForegroundGameObjects;
+
     // User Interface variables
     private Button leftButton, rightButton, jumpButton, actionButton;
 
@@ -258,6 +266,14 @@ public class InGameActivity extends AppCompatActivity {
             gameCamera.setScale(fitZoom(3832,359));
             gameCamera.setLeftXPosition(0);
         }
+        else if(environment.toLowerCase().equals("house")){
+            // temporary camera set up
+            gameCamera.setScale(fitZoom(3832,359));
+            gameCamera.setXPosition(centerX);
+        }
+        else if(environment.toLowerCase().equals("swamp")){
+
+        }
     }
 
     // Environment initial set up. Populates ArrayLists of objects for each environment.
@@ -267,8 +283,9 @@ public class InGameActivity extends AppCompatActivity {
                 R.drawable.boundary, -50,0,true);
         GameObject leftBoundary = new GameObject(this, "Boundary", 50, (int)(TitleActivity.HEIGHT/TitleActivity.DENSITY),
                 R.drawable.boundary, (TitleActivity.WIDTH/TitleActivity.DENSITY),0,true);
-        // Test environment
 
+        // (Expand ... to see)
+        // Test environment
         cameraSetUp("test");
 
         GameObject topBoundary = new GameObject(this, "Boundary", (int)(TitleActivity.WIDTH/TitleActivity.DENSITY),
@@ -438,6 +455,32 @@ public class InGameActivity extends AppCompatActivity {
                 new HitBox(InGameActivity.this, true, (int)(140 * houseRatio),(int)(100 * houseRatio),tWidth-tWidth/10F,
                         gameCamera.getBottomYPosition()+6 - (int)(31 * houseRatio), (int)(220 * houseRatio), (int)(31 * houseRatio)));
         forestEnvironmentBackgroundGameObjects.add(mushroomHouse);
+        // House Environment
+        cameraSetUp("House");
+
+        houseEnvironmentBackgroundGameObjects = new ArrayList<GameObject>();
+        houseEnvironmentCollisionGameObjects = new ArrayList<GameObject>();
+        houseEnvironmentForegroundGameObjects = new ArrayList<GameObject>();
+
+        // temporary objects:
+        houseEnvironmentCollisionGameObjects.add(new GameObject(this, "Ground", (int)(TitleActivity.WIDTH/TitleActivity.DENSITY),10,
+                R.drawable.testground, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
+                (int)(TitleActivity.WIDTH/TitleActivity.DENSITY), 300, 0, gameCamera.getBottomYPosition(),0,-294)));
+        // Cauldron
+        float cauldronRatio = 1/40F;
+        GameObject cauldron = new GameObject(this, "Cauldron", (int)(1650 * cauldronRatio), (int)(1289 * cauldronRatio), R.drawable.cauldronbase, centerX,
+                gameCamera.getBottomYPosition() + 6, true);
+        cauldron.setScaleType(ImageView.ScaleType.FIT_START);
+        cauldron.setImageResource(R.drawable.cauldrontop);
+        houseEnvironmentCollisionGameObjects.add(cauldron);
+
+        // Swamp Environment
+        cameraSetUp("Swamp");
+
+        swampEnvironmentBackgroundGameObjects = new ArrayList<GameObject>();
+        swampEnvironmentCollisionGameObjects = new ArrayList<GameObject>();
+        swampEnvironmentForegroundGameObjects = new ArrayList<GameObject>();
+
 
         // After populating all ArrayLists, set up the first environment the player will be in (which will be the forest)
         environmentSetUp(environment);
@@ -552,6 +595,29 @@ public class InGameActivity extends AppCompatActivity {
                 kirby.stopFall();
                 kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 0);
             }
+        }
+        else if(environment.toLowerCase().equals("house")){
+            backgroundGameLayout.setBackgroundImage(R.drawable.cloudsbackgroundextended);
+            backgroundGameLayout.setLayoutObjects(houseEnvironmentBackgroundGameObjects);
+            foregroundGameLayout.setLayoutObjects(houseEnvironmentForegroundGameObjects);
+
+            collisionGameLayout.removeLayoutObject(kirby);
+
+            kirby.setXPosition(kirbyXPosition);
+            kirby.setYPosition(kirbyYPosition);
+
+            collisionGameLayout.addLayoutObject(kirby);
+            collisionGameLayout.addLayoutObjects(houseEnvironmentCollisionGameObjects);
+
+            if(!isGrounded) {
+                kirby.setGrounded(false);
+                kirby.getUdHandler().removeCallbacksAndMessages(null);
+                kirby.stopFall();
+                kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 0);
+            }
+        }
+        else if(environment.toLowerCase().equals("swamp")){
+
         }
 
     }
@@ -1999,18 +2065,17 @@ public class InGameActivity extends AppCompatActivity {
                             }
 
                             if(kirby.isGrounded() && closeToHouse && environment.toLowerCase().equals("forest")){
-                                // test
                                 gameCameraXPosition = -1;
                                 gameCameraYPosition = -1;
                                 gameCameraFixed = true;
-                                kirbyXPosition = 0;
+                                kirbyXPosition = centerX - kirby.getObjectWidth();
                                 kirbyYPosition = gameCamera.getBottomYPosition()+6;
                                 negateDayNightCycle(true);
                                 setLightingTemporarily(255,255,255,255,255,255);
 
-                                environmentSetUp("test");
+                                environmentSetUp("house");
                             }
-                            else if(kirby.isGrounded() && environment.toLowerCase().equals("test")){
+                            else if(kirby.isGrounded() && environment.toLowerCase().equals("house")){
                                 kirbyXPosition = TitleActivity.WIDTH/TitleActivity.DENSITY - (TitleActivity.WIDTH/TitleActivity.DENSITY/11F);
                                 kirbyYPosition = gameCamera.getBottomYPosition()+6;
                                 gameCameraFixed = true;
