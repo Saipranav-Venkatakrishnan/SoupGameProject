@@ -16,6 +16,7 @@ public class Soup{
     private static final int bowlResource = R.drawable.soupbase;
     private static final int soupResource = R.drawable.souptop;
     private int soupColor;
+    private int bowlColor;
     
     private ArrayList<Ingredient> ingredients;
     private ArrayList<Integer> amountOfIngredient;
@@ -39,6 +40,7 @@ public class Soup{
         amountOfIngredient.add(amount);
 
         soupColorHandler();
+        bowlColorHandler();
     }
 
     // Paired Soup Constructor
@@ -72,6 +74,7 @@ public class Soup{
         amountOfIngredient.add(amount2);
 
         soupColorHandler();
+        bowlColorHandler();
     }
 
     // Special Soup Constructor
@@ -123,12 +126,28 @@ public class Soup{
         
         soupColor = Color.argb(a, r, g, b);
     }
+
+    // Maybe have different colored bowls depending on rank?
+    private void bowlColorHandler(){
+        if(starRank == 3){
+            bowlColor = Color.argb(120,255, 215, 0);
+        }
+        else if(starRank == 2){
+            bowlColor = Color.argb(100,250, 250, 250);
+        }
+        else{
+            bowlColor = Color.argb(100,205, 127, 50);
+        }
+    }
     
-    private void showSoup(ImageView imageView){
+    public void showSoup(ImageView imageView){
         imageView.setBackgroundResource(bowlResource);
         imageView.setImageResource(soupResource);
         imageView.setScaleType(ImageView.ScaleType.FIT_START);
         imageView.setImageTintMode(PorterDuff.Mode.SRC_ATOP);
         imageView.setImageTintList(ColorStateList.valueOf(soupColor));
+
+        imageView.setBackgroundTintMode(PorterDuff.Mode.SRC_ATOP);
+        imageView.setBackgroundTintList(ColorStateList.valueOf(bowlColor));
     }
 }

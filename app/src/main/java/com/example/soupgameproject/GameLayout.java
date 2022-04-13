@@ -220,6 +220,12 @@ public class GameLayout {
                 // Apply tint
                 gameLayout.getBackgroundImageView().setImageTintMode(PorterDuff.Mode.MULTIPLY);
                 gameLayout.getBackgroundImageView().setImageTintList(ColorStateList.valueOf(color));
+
+                for (GameObject gameObject : gameLayout.getLayoutObjects()) {
+                    // Apply  tint
+                    gameObject.setBackgroundTintMode(PorterDuff.Mode.MULTIPLY);
+                    gameObject.setBackgroundTintList(ColorStateList.valueOf(color));
+                }
             }
         }
     }
@@ -230,26 +236,36 @@ public class GameLayout {
                 // Apply tint
                 gameLayout.getBackgroundImageView().setImageTintMode(PorterDuff.Mode.SRC_ATOP);
                 gameLayout.getBackgroundImageView().setImageTintList(ColorStateList.valueOf(color));
+
+                for (GameObject gameObject : gameLayout.getLayoutObjects()) {
+                    // Apply  tint
+                    gameObject.setBackgroundTintMode(PorterDuff.Mode.SRC_ATOP);
+                    gameObject.setBackgroundTintList(ColorStateList.valueOf(color));
+                }
             }
         }
     }
 
     public static void darkenObjectLighting(int color){
         for(GameLayout gameLayout : allLayouts){
-            for(GameObject gameObject : gameLayout.getLayoutObjects()){
-                // Apply  tint
-                gameObject.setBackgroundTintMode(PorterDuff.Mode.MULTIPLY);
-                gameObject.setBackgroundTintList(ColorStateList.valueOf(color));
+            if(!gameLayout.getName().toLowerCase().equals("background")) {
+                for (GameObject gameObject : gameLayout.getLayoutObjects()) {
+                    // Apply  tint
+                    gameObject.setBackgroundTintMode(PorterDuff.Mode.MULTIPLY);
+                    gameObject.setBackgroundTintList(ColorStateList.valueOf(color));
+                }
             }
         }
     }
 
     public static void brightenObjectLighting(int color){
         for(GameLayout gameLayout : allLayouts){
-            for(GameObject gameObject : gameLayout.getLayoutObjects()){
-                // Apply  tint
-                gameObject.setBackgroundTintMode(PorterDuff.Mode.SRC_ATOP);
-                gameObject.setBackgroundTintList(ColorStateList.valueOf(color));
+            if(!gameLayout.getName().toLowerCase().equals("background")) {
+                for (GameObject gameObject : gameLayout.getLayoutObjects()) {
+                    // Apply  tint
+                    gameObject.setBackgroundTintMode(PorterDuff.Mode.SRC_ATOP);
+                    gameObject.setBackgroundTintList(ColorStateList.valueOf(color));
+                }
             }
         }
     }

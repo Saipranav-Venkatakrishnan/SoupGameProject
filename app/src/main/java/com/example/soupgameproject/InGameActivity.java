@@ -83,6 +83,10 @@ public class InGameActivity extends AppCompatActivity {
 
 
 
+    // General Screen Size Variables in DP
+    private float tWidth = TitleActivity.WIDTH/TitleActivity.DENSITY;
+    private float tHeight = TitleActivity.HEIGHT/TitleActivity.DENSITY;
+    
     // Debugging variables
     private float centerX = (TitleActivity.WIDTH/2F)/ TitleActivity.DENSITY;
     private float centerY = (TitleActivity.HEIGHT/2F)/ TitleActivity.DENSITY;
@@ -103,8 +107,11 @@ public class InGameActivity extends AppCompatActivity {
     // NPC Handler
     private Handler npcHandler;
 
-    // Deal with other animations unrelated to characters
-    private Handler oHandler;
+    // Deal with item animations
+    private Handler itemHandler;
+
+    // Deal with environment animations
+    private Handler eHandler;
 
     // Deal with other runnables unrelated to animations
     private Handler rHandler;
@@ -169,6 +176,8 @@ public class InGameActivity extends AppCompatActivity {
     private ArrayList<GameObject> forestEnvironmentBackgroundGameObjects;
     private ArrayList<GameObject> forestEnvironmentCollisionGameObjects;
     private ArrayList<GameObject> forestEnvironmentForegroundGameObjects;
+    
+    private ArrayList<GameObject> forestClouds;
 
     private ArrayList<GameObject> houseEnvironmentBackgroundGameObjects;
     private ArrayList<GameObject> houseEnvironmentCollisionGameObjects;
@@ -213,7 +222,8 @@ public class InGameActivity extends AppCompatActivity {
 
         // Set up Handlers
         cHandler = new Handler();
-        oHandler = new Handler();
+        itemHandler = new Handler();
+        eHandler = new Handler();
         npcHandler = new Handler();
 
         controllerSetUp();
@@ -237,7 +247,7 @@ public class InGameActivity extends AppCompatActivity {
 
         invImages = new ImageView[] {iv_1, iv_2, iv_3, iv_4, iv_5, iv_6, iv_7, iv_8, iv_9, iv_10, iv_11, iv_12, iv_13, iv_14, iv_15};
 
-        Log.i("Nick",String.valueOf((TitleActivity.WIDTH/TitleActivity.DENSITY)));
+        Log.i("Nick",String.valueOf((tWidth)));
     }
 
     // Camera creation and set up
@@ -279,16 +289,16 @@ public class InGameActivity extends AppCompatActivity {
     // Environment initial set up. Populates ArrayLists of objects for each environment.
     private void initialEnvironmentSetUp(){
         // For each environment, set the camera to that environment and then populate ArrayLists
-        GameObject rightBoundary = new GameObject(this, "Boundary", 50, (int)(TitleActivity.HEIGHT/TitleActivity.DENSITY),
+        GameObject rightBoundary = new GameObject(this, "Boundary", 50, (int)(tHeight),
                 R.drawable.boundary, -50,0,true);
-        GameObject leftBoundary = new GameObject(this, "Boundary", 50, (int)(TitleActivity.HEIGHT/TitleActivity.DENSITY),
-                R.drawable.boundary, (TitleActivity.WIDTH/TitleActivity.DENSITY),0,true);
+        GameObject leftBoundary = new GameObject(this, "Boundary", 50, (int)(tHeight),
+                R.drawable.boundary, (tWidth),0,true);
 
         // (Expand ... to see)
         // Test environment
         cameraSetUp("test");
 
-        GameObject topBoundary = new GameObject(this, "Boundary", (int)(TitleActivity.WIDTH/TitleActivity.DENSITY),
+        GameObject topBoundary = new GameObject(this, "Boundary", (int)(tWidth),
                 300, R.drawable.boundary, 0,gameCamera.getTopYPosition(),true);
 
         testEnvironmentBackgroundGameObjects = new ArrayList<GameObject>();
@@ -298,31 +308,31 @@ public class InGameActivity extends AppCompatActivity {
 
 //        for(int i = 0; i < 30; i++){
 //            float ratio = (int) (Math.random() * 6 + 4)/10F;
-//            int xPosition = (int) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY));
+//            int xPosition = (int) (Math.random() * (tWidth));
 //            testEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio),(int)(43* ratio),
 //                    R.drawable.testtree, xPosition, gameCamera.getBottomYPosition() + 6, false));
 //        }
 //
 //        for(int i = 0; i < 20; i++){
 //            float ratio = (int) (Math.random() * 6 + 4)/10F;
-//            int xPosition = (int) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY));
+//            int xPosition = (int) (Math.random() * (tWidth));
 //            testEnvironmentForegroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio),(int)(43* ratio),
 //                    R.drawable.testtree, xPosition, gameCamera.getBottomYPosition() + 6, false));
 //        }
 
         for(int i = 0; i < npcCopyList.size(); i ++) {
             allNPCs.get("Waddle Dee " + String.valueOf(i)).setYPosition((int) (Math.random() * 40) + gameCamera.getTopYPosition());
-            allNPCs.get("Waddle Dee " + String.valueOf(i)).setXPosition((int)(Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY)/14F) * 14);
+            allNPCs.get("Waddle Dee " + String.valueOf(i)).setXPosition((int)(Math.random() * (tWidth)/14F) * 14);
             testEnvironmentCollisionGameObjects.add(allNPCs.get("Waddle Dee " + String.valueOf(i)));
         }
 
-        testEnvironmentCollisionGameObjects.add(new GameObject(this, "Ground", (int)(TitleActivity.WIDTH/TitleActivity.DENSITY),10,
+        testEnvironmentCollisionGameObjects.add(new GameObject(this, "Ground", (int)(tWidth),10,
                 R.drawable.testground, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
-                (int)(TitleActivity.WIDTH/TitleActivity.DENSITY), 300, 0, gameCamera.getBottomYPosition(),0,-294)));
+                (int)(tWidth), 300, 0, gameCamera.getBottomYPosition(),0,-294)));
 
         for(int i = 0; i < 50; i++){
             float ratio = (int) (Math.random() * 6 + 4)/10F;
-            int xPosition = (int) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY));
+            int xPosition = (int) (Math.random() * (tWidth));
             testEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio),(int)(43* ratio),
                     R.drawable.testtree, xPosition, gameCamera.getBottomYPosition() + 6, true,
                     new HitBox(InGameActivity.this, true, (int)(7* ratio),(int)(39* ratio),xPosition
@@ -340,16 +350,29 @@ public class InGameActivity extends AppCompatActivity {
         forestEnvironmentBackgroundGameObjects = new ArrayList<GameObject>();
         forestEnvironmentCollisionGameObjects = new ArrayList<GameObject>();
         forestEnvironmentForegroundGameObjects = new ArrayList<GameObject>();
+        
+        forestClouds = new ArrayList<GameObject>();
 
-        forestEnvironmentCollisionGameObjects.add(new GameObject(this, "Ground", (int)(TitleActivity.WIDTH/TitleActivity.DENSITY),10,
+        forestEnvironmentCollisionGameObjects.add(new GameObject(this, "Ground", (int)(tWidth),10,
                 R.drawable.testground, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
-                (int)(TitleActivity.WIDTH/TitleActivity.DENSITY), 300, 0, gameCamera.getBottomYPosition(),0,-294)));
+                (int)(tWidth), 300, 0, gameCamera.getBottomYPosition(),0,-294)));
         forestEnvironmentCollisionGameObjects.add(rightBoundary);
         forestEnvironmentCollisionGameObjects.add(leftBoundary);
         forestEnvironmentCollisionGameObjects.add(topBoundary);
 
 
-        int tWidth = (int)(TitleActivity.WIDTH/TitleActivity.DENSITY);
+
+        // Clouds
+        for(int i = 0; i < 20; i++) {
+            float cloudRatio = (float)(Math.random() * (1/7F - 1/20F) + 1/20F);
+            float cloudX = (float)(Math.random() * tWidth);
+            float cloudY = (float)(gameCamera.getBottomYPosition() + 2 * (gameCamera.getTopYPosition() - gameCamera.getBottomYPosition())/5F
+                    + Math.random() * (gameCamera.getTopYPosition() - gameCamera.getBottomYPosition()) / 2F);
+            GameObject cloud = new GameObject(InGameActivity.this, "Cloud", (int) (180 * cloudRatio), (int) (94 * cloudRatio),
+                    R.drawable.cloud, cloudX, cloudY, false);
+            forestClouds.add(cloud);
+            forestEnvironmentBackgroundGameObjects.add(cloud);
+        }
 
         float ratio = 4/7F;
         float ratio2 = 2/3F;
@@ -455,6 +478,11 @@ public class InGameActivity extends AppCompatActivity {
                 new HitBox(InGameActivity.this, true, (int)(140 * houseRatio),(int)(100 * houseRatio),tWidth-tWidth/10F,
                         gameCamera.getBottomYPosition()+6 - (int)(31 * houseRatio), (int)(220 * houseRatio), (int)(31 * houseRatio)));
         forestEnvironmentBackgroundGameObjects.add(mushroomHouse);
+
+
+
+
+
         // House Environment
         cameraSetUp("House");
 
@@ -463,15 +491,37 @@ public class InGameActivity extends AppCompatActivity {
         houseEnvironmentForegroundGameObjects = new ArrayList<GameObject>();
 
         // temporary objects:
-        houseEnvironmentCollisionGameObjects.add(new GameObject(this, "Ground", (int)(TitleActivity.WIDTH/TitleActivity.DENSITY),10,
+        houseEnvironmentCollisionGameObjects.add(new GameObject(this, "Ground", (int)(tWidth),10,
                 R.drawable.testground, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
-                (int)(TitleActivity.WIDTH/TitleActivity.DENSITY), 300, 0, gameCamera.getBottomYPosition(),0,-294)));
+                (int)(tWidth), 300, 0, gameCamera.getBottomYPosition(),0,-294)));
         // Cauldron
         float cauldronRatio = 1/40F;
         GameObject cauldron = new GameObject(this, "Cauldron", (int)(1650 * cauldronRatio), (int)(1289 * cauldronRatio), R.drawable.cauldronbase, centerX,
                 gameCamera.getBottomYPosition() + 6, true);
         cauldron.setScaleType(ImageView.ScaleType.FIT_START);
         cauldron.setImageResource(R.drawable.cauldrontop);
+
+        cauldron.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ImageView test = findViewById(R.id.soupTest);
+                ImageView test2 = findViewById(R.id.soupTest2);
+                String[] ingredientNames = new String[]{"Carrot","Mushroom","Radish","Tomato","Plant"};
+
+                Ingredient ingredient1 = ingredientKey.get(ingredientNames[(int)(Math.random() * 5)]);
+                Ingredient ingredient2 = ingredientKey.get(ingredientNames[(int)(Math.random() * 5)]);
+                int amount1 = (int)(Math.random() * 9 + 1);
+                int amount2 = 10 - amount1;
+
+                Soup soup = new Soup(ingredient1,amount1);
+                Soup mixSoup = new Soup(ingredient1,amount1,ingredient2,amount2);
+
+                soup.showSoup(test);
+
+                mixSoup.showSoup(test2);
+            }
+        });
+
         houseEnvironmentCollisionGameObjects.add(cauldron);
 
         // Swamp Environment
@@ -504,7 +554,8 @@ public class InGameActivity extends AppCompatActivity {
         }
 
         try{
-            oHandler.removeCallbacksAndMessages(null);
+            itemHandler.removeCallbacksAndMessages(null);
+            eHandler.removeCallbacksAndMessages(null);
         }
         catch(Exception e){
             Log.i("EnvironmentSetup", "Some handlers not created yet");
@@ -595,6 +646,26 @@ public class InGameActivity extends AppCompatActivity {
                 kirby.stopFall();
                 kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 0);
             }
+            
+            // Forest Clouds moving
+            Runnable movingClouds = new Runnable() {
+                @Override
+                public void run() {
+                    for(GameObject cloud : forestClouds){
+                        if(cloud.getXPosition() > tWidth){
+                            cloud.setXPosition(-cloud.getObjectWidth());
+                        }
+                        else{
+                            float speed = (float)(Math.random() * (1/90F - 1/70F) + 1/90F);
+                            cloud.setXPosition(cloud.getXPosition() + speed);
+                        }
+                    }
+                    eHandler.postDelayed(this,1);
+                }
+            };
+
+            eHandler.postDelayed(movingClouds,0);
+            
         }
         else if(environment.toLowerCase().equals("house")){
             backgroundGameLayout.setBackgroundImage(R.drawable.cloudsbackgroundextended);
@@ -623,7 +694,6 @@ public class InGameActivity extends AppCompatActivity {
     }
 
     private void itemSetup(String environment){
-        int tWidth = (int)(TitleActivity.WIDTH/TitleActivity.DENSITY);
 
         if(environment.toLowerCase().equals("test")){
             for(int i = 0; i < 10; i++){
@@ -631,12 +701,12 @@ public class InGameActivity extends AppCompatActivity {
 
                 Ingredient carrot = new Ingredient(this, "Carrot",(int)(size * 10),(int)(6 * size),
                         R.drawable.carrot,
-                        (float) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY - 10)),
+                        (float) (Math.random() * (tWidth - 10)),
                         (float)(gameCamera.getTopYPosition()) + 70,0,0,0,0);
                 
                 collisionGameLayout.addLayoutObject(carrot);
                 
-                Runnable carrotFall = carrot.fall(oHandler, GameObject.GRAVITY/10F, new GameObject.CollisionListener() {
+                Runnable carrotFall = carrot.fall(itemHandler, GameObject.GRAVITY/10F, new GameObject.CollisionListener() {
                     @Override
                     public void onCollision(GameObject object1, GameObject object2) {
                         if (GameObject.getCollisionType(object1, object2).contains("top")) {
@@ -655,16 +725,16 @@ public class InGameActivity extends AppCompatActivity {
                     }
                 });
 
-                oHandler.postDelayed(carrotFall, 5000);
+                itemHandler.postDelayed(carrotFall, 5000);
 
                 Ingredient mushroom = new Ingredient(this, "Mushroom",(int)(8 * size),(int)(8*size),
                         R.drawable.mushroom,
-                        (float) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY - 10)),
+                        (float) (Math.random() * (tWidth - 10)),
                         (float)(gameCamera.getTopYPosition()) + 70,0,0,0,0);
 
                 collisionGameLayout.addLayoutObject(mushroom);
 
-                Runnable mushroomFall = mushroom.fall(oHandler, GameObject.GRAVITY/10F, new GameObject.CollisionListener() {
+                Runnable mushroomFall = mushroom.fall(itemHandler, GameObject.GRAVITY/10F, new GameObject.CollisionListener() {
                     @Override
                     public void onCollision(GameObject object1, GameObject object2) {
                         if (GameObject.getCollisionType(object1, object2).contains("top")) {
@@ -683,16 +753,16 @@ public class InGameActivity extends AppCompatActivity {
                     }
                 });
 
-                oHandler.postDelayed(mushroomFall, 5000);
+                itemHandler.postDelayed(mushroomFall, 5000);
 
                 Ingredient radish = new Ingredient(this, "Radish",(int)(8 * size),(int)(8* size),
                         R.drawable.radish,
-                        (float) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY - 10)),
+                        (float) (Math.random() * (tWidth - 10)),
                         (float)(gameCamera.getTopYPosition()) + 70,0,0,0,0);
 
                 collisionGameLayout.addLayoutObject(radish);
 
-                Runnable radishFall = radish.fall(oHandler, GameObject.GRAVITY/10F, new GameObject.CollisionListener() {
+                Runnable radishFall = radish.fall(itemHandler, GameObject.GRAVITY/10F, new GameObject.CollisionListener() {
                     @Override
                     public void onCollision(GameObject object1, GameObject object2) {
                         if (GameObject.getCollisionType(object1, object2).contains("top")) {
@@ -711,16 +781,16 @@ public class InGameActivity extends AppCompatActivity {
                     }
                 });
 
-                oHandler.postDelayed(radishFall, 5000);
+                itemHandler.postDelayed(radishFall, 5000);
 
                 Ingredient tomato = new Ingredient(this, "Tomato",(int)(8 * size),(int)(8* size),
                         R.drawable.tomato,
-                        (float) (Math.random() * (TitleActivity.WIDTH/TitleActivity.DENSITY - 10)),
+                        (float) (Math.random() * (tWidth - 10)),
                         (float)(gameCamera.getTopYPosition()) + 70,0,0,0,0);
 
                 collisionGameLayout.addLayoutObject(tomato);
 
-                Runnable tomatoFall = tomato.fall(oHandler, GameObject.GRAVITY/10F, new GameObject.CollisionListener() {
+                Runnable tomatoFall = tomato.fall(itemHandler, GameObject.GRAVITY/10F, new GameObject.CollisionListener() {
                     @Override
                     public void onCollision(GameObject object1, GameObject object2) {
                         if (GameObject.getCollisionType(object1, object2).contains("top")) {
@@ -739,7 +809,7 @@ public class InGameActivity extends AppCompatActivity {
                     }
                 });
 
-                oHandler.postDelayed(tomatoFall, 5000);
+                itemHandler.postDelayed(tomatoFall, 5000);
             }
         }
         else if(environment.toLowerCase().equals("forest")){
@@ -755,9 +825,10 @@ public class InGameActivity extends AppCompatActivity {
                         (float) (Math.random() * (tWidth-tWidth/10F)),
                         (float) (gameCamera.getTopYPosition()) + 70, 0, 0, 0, 0);
 
+
                 collisionGameLayout.addLayoutObject(carrot);
 
-                Runnable carrotFall = carrot.fall(oHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
+                Runnable carrotFall = carrot.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
                     @Override
                     public void onCollision(GameObject object1, GameObject object2) {
                         if (GameObject.getCollisionType(object1, object2).contains("top")) {
@@ -776,7 +847,7 @@ public class InGameActivity extends AppCompatActivity {
                     }
                 });
 
-                oHandler.postDelayed(carrotFall, 5);
+                itemHandler.postDelayed(carrotFall, 5);
             }
 
             for(int i = 0; i < mushroomCount; i++) {
@@ -787,7 +858,7 @@ public class InGameActivity extends AppCompatActivity {
 
                 collisionGameLayout.addLayoutObject(mushroom);
 
-                Runnable mushroomFall = mushroom.fall(oHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
+                Runnable mushroomFall = mushroom.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
                     @Override
                     public void onCollision(GameObject object1, GameObject object2) {
                         if (GameObject.getCollisionType(object1, object2).contains("top")) {
@@ -806,7 +877,7 @@ public class InGameActivity extends AppCompatActivity {
                     }
                 });
 
-                oHandler.postDelayed(mushroomFall, 5);
+                itemHandler.postDelayed(mushroomFall, 5);
             }
 
             for(int i = 0; i < tomatoCount; i++) {
@@ -817,7 +888,7 @@ public class InGameActivity extends AppCompatActivity {
 
                 collisionGameLayout.addLayoutObject(tomato);
 
-                Runnable tomatoFall = tomato.fall(oHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
+                Runnable tomatoFall = tomato.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
                     @Override
                     public void onCollision(GameObject object1, GameObject object2) {
                         if (GameObject.getCollisionType(object1, object2).contains("top")) {
@@ -836,11 +907,34 @@ public class InGameActivity extends AppCompatActivity {
                     }
                 });
 
-                oHandler.postDelayed(tomatoFall, 5);
+                itemHandler.postDelayed(tomatoFall, 5);
             }
 
         }
 
+    }
+
+    // Inventory Saving
+    private void initialInventorySetUp(){
+        userIngredients = new ArrayList<Ingredient>();
+        ingredientKey = new HashMap<String, Ingredient>();
+        ingredientKey.put("Carrot", new Ingredient(this, "Carrot",0,0,
+                R.drawable.carrot,0,0,150,242,149,27));
+        ingredientKey.put("Mushroom", new Ingredient(this, "Mushroom",0,0,
+                R.drawable.mushroom,0,0,150,201, 87, 48));
+        ingredientKey.put("Radish",new Ingredient(this, "Radish",0,0,
+                R.drawable.radish,0,0,150,243, 222, 255));
+        ingredientKey.put("Tomato",new Ingredient(this, "Tomato",0,0,
+                R.drawable.tomato,0,0,150,230, 16, 37));
+        ingredientKey.put("Plant",new Ingredient(this, "Plant",0,0,
+                R.drawable.plant1,0,0,150,113, 214, 79));
+
+        for(int i = 0; i < 15; i++){
+            if(invDrawables[i] != 0) {
+                invImages[i].setImageResource(invDrawables[i]);
+                userIngredients.add(ingredientKey.get(itemNames[i]));
+            }
+        }
     }
 
     // Sets up all characters
@@ -1091,8 +1185,8 @@ public class InGameActivity extends AppCompatActivity {
                 new Character.PositionListener() {
                     @Override
                     public void atPosition(float xPosition, float yPosition) {
-                        if((xPosition + kirby.getObjectWidth()/2F <= TitleActivity.WIDTH/TitleActivity.DENSITY - (gameCamera.getRightXPosition()-gameCamera.getLeftXPosition())/2
-                                + walkSpeed && xPosition + kirby.getObjectWidth()/2F >= TitleActivity.WIDTH/TitleActivity.DENSITY -
+                        if((xPosition + kirby.getObjectWidth()/2F <= tWidth - (gameCamera.getRightXPosition()-gameCamera.getLeftXPosition())/2
+                                + walkSpeed && xPosition + kirby.getObjectWidth()/2F >= tWidth -
                                 (gameCamera.getRightXPosition()-gameCamera.getLeftXPosition())/2-walkSpeed)){
                             if(gameCamera.isFixedPosition()) {
                                 gameCamera.setFixedPosition(false);
@@ -1133,8 +1227,8 @@ public class InGameActivity extends AppCompatActivity {
                 new Character.PositionListener() {
                     @Override
                     public void atPosition(float xPosition, float yPosition) {
-                        if((xPosition + kirby.getObjectWidth()/2F <= TitleActivity.WIDTH/TitleActivity.DENSITY - (gameCamera.getRightXPosition()-gameCamera.getLeftXPosition())/2
-                                + runSpeed && xPosition + kirby.getObjectWidth()/2F >= TitleActivity.WIDTH/TitleActivity.DENSITY -
+                        if((xPosition + kirby.getObjectWidth()/2F <= tWidth - (gameCamera.getRightXPosition()-gameCamera.getLeftXPosition())/2
+                                + runSpeed && xPosition + kirby.getObjectWidth()/2F >= tWidth -
                                 (gameCamera.getRightXPosition()-gameCamera.getLeftXPosition())/2-runSpeed)){
                             if(gameCamera.isFixedPosition()) {
                                 gameCamera.setFixedPosition(false);
@@ -1412,6 +1506,7 @@ public class InGameActivity extends AppCompatActivity {
                         if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))) {
                             if(GameObject.getCollisionType(object1, object2).contains("top")) {
                                 isFloating = false;
+                                jumpCount = 0;
                                 kirby.getUdHandler().removeCallbacksAndMessages(null);
                                 kirby.stopFall();
                                 kirby.stopJump();
@@ -1792,29 +1887,6 @@ public class InGameActivity extends AppCompatActivity {
         }
     }
 
-    // Inventory Saving
-    private void initialInventorySetUp(){
-        userIngredients = new ArrayList<Ingredient>();
-        ingredientKey = new HashMap<String, Ingredient>();
-        ingredientKey.put("Carrot", new Ingredient(this, "Carrot",0,0,
-                R.drawable.carrot,0,0,0,0,0,0));
-        ingredientKey.put("Mushroom", new Ingredient(this, "Mushroom",0,0,
-                R.drawable.mushroom,0,0,0,0,0,0));
-        ingredientKey.put("Radish",new Ingredient(this, "Radish",0,0,
-                R.drawable.radish,0,0,0,0,0,0));
-        ingredientKey.put("Tomato",new Ingredient(this, "Tomato",0,0,
-                R.drawable.tomato,0,0,0,0,0,0));
-        ingredientKey.put("Plant",new Ingredient(this, "Plant",0,0,
-                R.drawable.plant1,0,0,0,0,0,0));
-
-        for(int i = 0; i < 15; i++){
-            if(invDrawables[i] != 0) {
-                invImages[i].setImageResource(invDrawables[i]);
-                userIngredients.add(ingredientKey.get(itemNames[i]));
-            }
-        }
-    }
-
     // Sets up character controls/interactions
     // Majority of in-game logic resides here
     @SuppressLint("ClickableViewAccessibility")
@@ -2076,10 +2148,10 @@ public class InGameActivity extends AppCompatActivity {
                                 environmentSetUp("house");
                             }
                             else if(kirby.isGrounded() && environment.toLowerCase().equals("house")){
-                                kirbyXPosition = TitleActivity.WIDTH/TitleActivity.DENSITY - (TitleActivity.WIDTH/TitleActivity.DENSITY/11F);
+                                kirbyXPosition = tWidth - (tWidth/11F);
                                 kirbyYPosition = gameCamera.getBottomYPosition()+6;
                                 gameCameraFixed = true;
-                                gameCamera.setRightXPosition(TitleActivity.WIDTH/TitleActivity.DENSITY);
+                                gameCamera.setRightXPosition(tWidth);
                                 gameCameraXPosition = gameCamera.getXPosition();
                                 gameCameraYPosition = gameCamera.getYPosition();
                                 negateDayNightCycle(false);
@@ -2152,8 +2224,8 @@ public class InGameActivity extends AppCompatActivity {
 
         if(itemCount < 14) {
             ingredient.setCollected(true);
-            Runnable collectAnimation = ingredient.collected(oHandler);
-            oHandler.postDelayed(collectAnimation, 0);
+            Runnable collectAnimation = ingredient.collected(itemHandler);
+            itemHandler.postDelayed(collectAnimation, 0);
             itemCount++;
             switch(itemName) {
                 case "Carrot":
@@ -2574,7 +2646,8 @@ public class InGameActivity extends AppCompatActivity {
         backgroundGameLayout.removeAllLayoutObjects();
         collisionGameLayout.removeAllLayoutObjects();
         foregroundGameLayout.removeAllLayoutObjects();
-        oHandler.removeCallbacksAndMessages(null);
+        itemHandler.removeCallbacksAndMessages(null);
+        eHandler.removeCallbacksAndMessages(null);
         cHandler.removeCallbacksAndMessages(null);
         rHandler.removeCallbacksAndMessages(null);
 
@@ -2877,8 +2950,8 @@ public class InGameActivity extends AppCompatActivity {
 
         initialCameraSetUp();
         initialCharacterSetUp();
-        initialEnvironmentSetUp();
         initialInventorySetUp();
+        initialEnvironmentSetUp();
         dayNightCycle();
     }
 //
