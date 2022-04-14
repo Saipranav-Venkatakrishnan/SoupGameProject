@@ -167,6 +167,7 @@ public class InGameActivity extends AppCompatActivity {
 
     private String environment;
     private boolean closeToHouse;
+    private boolean isByTutorialWaddleDee;
 
     // Test Environment GameObjects
     private ArrayList<GameObject> testEnvironmentBackgroundGameObjects;
@@ -294,7 +295,6 @@ public class InGameActivity extends AppCompatActivity {
         GameObject leftBoundary = new GameObject(this, "Boundary", 50, (int)(tHeight),
                 R.drawable.boundary, (tWidth),0,true);
 
-        // (Expand ... to see)
         // Test environment
         cameraSetUp("test");
 
@@ -352,6 +352,12 @@ public class InGameActivity extends AppCompatActivity {
         forestEnvironmentForegroundGameObjects = new ArrayList<GameObject>();
         
         forestClouds = new ArrayList<GameObject>();
+
+        // NPC Waddle Dee 0
+        allNPCs.get("Waddle Dee 0").setXPosition(2 * tWidth/21F);
+        allNPCs.get("Waddle Dee 0").setYPosition(gameCamera.getBottomYPosition() + 6);
+        allNPCs.get("Waddle Dee 0").faceDirection("Left");
+        forestEnvironmentCollisionGameObjects.add(allNPCs.get("Waddle Dee 0"));
 
         forestEnvironmentCollisionGameObjects.add(new GameObject(this, "Ground", (int)(tWidth),10,
                 R.drawable.testground, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
@@ -822,7 +828,7 @@ public class InGameActivity extends AppCompatActivity {
             for(int i = 0; i < carrotCount; i++) {
                 Ingredient carrot = new Ingredient(this, "Carrot", 10, 6,
                         R.drawable.carrot,
-                        (float) (Math.random() * (tWidth-tWidth/10F)),
+                        (float) (Math.random() * (tWidth-tWidth/5F) + tWidth/9F),
                         (float) (gameCamera.getTopYPosition()) + 70, 0, 0, 0, 0);
 
 
@@ -853,7 +859,7 @@ public class InGameActivity extends AppCompatActivity {
             for(int i = 0; i < mushroomCount; i++) {
                 Ingredient mushroom = new Ingredient(this, "Mushroom", (int) (8), (int) (8),
                         R.drawable.mushroom,
-                        (float) (Math.random() * (tWidth-tWidth/10F)),
+                        (float) (Math.random() * (tWidth-tWidth/5F) + tWidth/9F),
                         (float) (gameCamera.getTopYPosition()) + 70, 0, 0, 0, 0);
 
                 collisionGameLayout.addLayoutObject(mushroom);
@@ -883,7 +889,7 @@ public class InGameActivity extends AppCompatActivity {
             for(int i = 0; i < tomatoCount; i++) {
                 Ingredient tomato = new Ingredient(this, "Tomato", (int) (8), (int) (8),
                         R.drawable.tomato,
-                        (float) (Math.random() * (tWidth-tWidth/10F)),
+                        (float) (Math.random() * (tWidth-tWidth/5F) + tWidth/9F),
                         (float) (gameCamera.getTopYPosition()) + 70, 0, 0, 0, 0);
 
                 collisionGameLayout.addLayoutObject(tomato);
@@ -1196,6 +1202,7 @@ public class InGameActivity extends AppCompatActivity {
                             }
                         }
                         closeToHouse = false;
+                        isByTutorialWaddleDee = false;
                     }
                 });
 
@@ -1238,6 +1245,7 @@ public class InGameActivity extends AppCompatActivity {
                             }
                         }
                         closeToHouse = false;
+                        isByTutorialWaddleDee = false;
                     }
                 });
 
@@ -1280,6 +1288,7 @@ public class InGameActivity extends AppCompatActivity {
                             }
                         }
                         closeToHouse = false;
+                        isByTutorialWaddleDee = false;
                     }
                 });
 
@@ -1321,6 +1330,7 @@ public class InGameActivity extends AppCompatActivity {
                             }
                         }
                         closeToHouse = false;
+                        isByTutorialWaddleDee = false;
                     }
                 });
 
@@ -1547,6 +1557,7 @@ public class InGameActivity extends AppCompatActivity {
                     }
                 });
 
+
         kirby.getAllActions().put("Left Walk", leftWalk);
         kirby.getAllActions().put("Left Run", leftRun);
         kirby.getAllActions().put("Right Walk", rightWalk);
@@ -1572,14 +1583,13 @@ public class InGameActivity extends AppCompatActivity {
         // Create multiple Waddle Dee
         npcCopyList = new ArrayList<Character>();
         // ~30-40 limit on number of NPCs
-        for(int i = 0; i < 0; i++){
+        for(int i = 0; i < 1; i++){
             npcCopyList.add(null);
         }
 
-        // Fix collision checking order. First: specialCollision
         int x = 0;
         for(Character npc : npcCopyList){
-            float ratio =(float)(Math.random() + .3);
+            float ratio = 1;//(float)(Math.random() + .3);
             int waddleWidth = (int)(14 * ratio);
             int waddleHeight = (int)(12 * ratio);
 
@@ -1692,8 +1702,8 @@ public class InGameActivity extends AppCompatActivity {
                     new GameObject.CollisionListener() {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
-                            if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                                if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))) {
+                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))) {
+                                if(GameObject.getCollisionType(object1, object2).contains("top")) {
                                     tempNPC.getUdHandler().removeCallbacksAndMessages(null);
                                     tempNPC.stopFall();
                                     tempNPC.setGrounded(true);
@@ -1704,9 +1714,9 @@ public class InGameActivity extends AppCompatActivity {
 
                                     tempNPC.setHitBox(tempNPC.getIdleHitBox());
                                     tempNPC.showHitBox();
-                                }
 
-                                Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                                    Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                                }
                             }
                         }
                     },
@@ -1721,8 +1731,8 @@ public class InGameActivity extends AppCompatActivity {
                     new GameObject.CollisionListener() {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
-                            if(GameObject.getCollisionType(object1, object2).contains("bottom")){
-                                if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))) {
+                            if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))){
+                                if(GameObject.getCollisionType(object1, object2).contains("bottom")) {
                                     tempNPC.getUdHandler().removeCallbacksAndMessages(null);
                                     tempNPC.stopJump();
                                     tempNPC.setYPosition(object2.getHitBox().bottomRight().y -
@@ -1730,8 +1740,8 @@ public class InGameActivity extends AppCompatActivity {
                                             tempNPC.getHitBox().getYBottom());
                                     tempNPC.stopFall();
                                     tempNPC.getUdHandler().postDelayed(tempNPC.getAllActions().get("Fall"), 0);
+                                    Log.i("Collision", object1.getObjectName() + " collided with bottom of " + object2.getObjectName());
                                 }
-                                Log.i("Collision", object1.getObjectName() + " collided with bottom of " + object2.getObjectName());
                             }
                         }
                     },
@@ -1755,13 +1765,13 @@ public class InGameActivity extends AppCompatActivity {
                     new GameObject.CollisionListener() {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
-                            if (GameObject.getCollisionType(object1, object2).contains("right")) {
-                                if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))){
+                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))) {
+                                if(GameObject.getCollisionType(object1, object2).contains("right")){
                                     tempNPC.setXPosition(tempNPC.getXPosition() + walkSpeed);
                                     tempNPC.setStopMoving(true);
                                     tempNPC.getLrHandler().postDelayed(tempNPC.getAllActions().get("Right Walk"),0);
+                                    Log.i("Collision", object1.getObjectName() + " collided with the right of " + object2.getObjectName());
                                 }
-                                Log.i("Collision", object1.getObjectName() + " collided with the right of " + object2.getObjectName());
                             }
                         }
                     },
@@ -1786,14 +1796,13 @@ public class InGameActivity extends AppCompatActivity {
                     new GameObject.CollisionListener() {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
-                            if (GameObject.getCollisionType(object1, object2).contains("left")) {
-                                if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))) {
+                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))) {
+                                if(GameObject.getCollisionType(object1, object2).contains("left")) {
                                     tempNPC.setXPosition(tempNPC.getXPosition() - walkSpeed);
                                     tempNPC.setStopMoving(true);
                                     tempNPC.getLrHandler().postDelayed(tempNPC.getAllActions().get("Left Walk"),0);
+                                    Log.i("Collision", object1.getObjectName() + " collided with the left of " + object2.getObjectName());
                                 }
-
-                                Log.i("Collision", object1.getObjectName() + " collided with the left of " + object2.getObjectName());
                             }
                         }
                     },
@@ -1818,12 +1827,11 @@ public class InGameActivity extends AppCompatActivity {
                     new GameObject.CollisionListener() {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
-                            if (GameObject.getCollisionType(object1, object2).contains("right")) {
-                                if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))){
+                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))) {
+                                if(GameObject.getCollisionType(object1, object2).contains("right")){
                                     tempNPC.setXPosition(tempNPC.getXPosition() + runSpeed);
+                                    Log.i("Collision", object1.getObjectName() + " collided with the right of " + object2.getObjectName());
                                 }
-
-                                Log.i("Collision", object1.getObjectName() + " collided with the right of " + object2.getObjectName());
                             }
                         }
                     },
@@ -1848,12 +1856,11 @@ public class InGameActivity extends AppCompatActivity {
                     new GameObject.CollisionListener() {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
-                            if (GameObject.getCollisionType(object1, object2).contains("left")) {
-                                if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))) {
+                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))) {
+                                if(GameObject.getCollisionType(object1, object2).contains("left")) {
                                     tempNPC.setXPosition(tempNPC.getXPosition() - runSpeed);
+                                    Log.i("Collision", object1.getObjectName() + " collided with the left of " + object2.getObjectName());
                                 }
-
-                                Log.i("Collision", object1.getObjectName() + " collided with the left of " + object2.getObjectName());
                             }
                         }
                     },
@@ -2157,6 +2164,9 @@ public class InGameActivity extends AppCompatActivity {
                                 negateDayNightCycle(false);
                                 environmentSetUp("forest");
                             }
+                            else if(kirby.isGrounded() && isByTutorialWaddleDee){
+                                // Tutorial info
+                            }
                         }
 
                         isDown = false;
@@ -2194,26 +2204,32 @@ public class InGameActivity extends AppCompatActivity {
             Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
             return true;
         }
-        else if(object1.isCharacter() && object2.isCharacter() && collisionType.contains("top")) {
-            ((Character) object1).getUdHandler().removeCallbacksAndMessages(null);
-            ((Character) object1).stopFall();
-            ((Character) object1).setYPosition(object2.getHitBox().topLeft().y - ((Character) object1).getHitBox().getYBottom());
-            ((Character) object1).setObjectResource(((Character) object1).getIdleResource());
-            ((Character) object1).setHitBox(((Character) object1).getIdleHitBox());
-            ((Character) object1).showHitBox();
-
-            ((Character) object1).stopJump();
-            if(object1.getObjectName().toLowerCase().equals("kirby")) {
-                isFloating = false;
-                startFloatFinished = false;
-                jumpCount = 0;
-                ((Character) object1).getUdHandler().postDelayed(((Character) object1).getAllActions().get("High Jump"), 0);
-            }
-            else{
-                ((Character) object1).getUdHandler().postDelayed(((Character) object1).getAllActions().get("Jump"), 0);
-            }
+        // Jumping on character is a bit buggy.
+//        else if(object1.isCharacter() && object2.isCharacter() && collisionType.contains("top")) {
+//            ((Character) object1).getUdHandler().removeCallbacksAndMessages(null);
+//            ((Character) object1).stopFall();
+//            ((Character) object1).setYPosition(object2.getHitBox().topLeft().y - ((Character) object1).getHitBox().getYBottom());
+//            ((Character) object1).setObjectResource(((Character) object1).getIdleResource());
+//            ((Character) object1).setHitBox(((Character) object1).getIdleHitBox());
+//            ((Character) object1).showHitBox();
+//
+//            ((Character) object1).stopJump();
+//            if(object1.getObjectName().toLowerCase().equals("kirby")) {
+//                isFloating = false;
+//                startFloatFinished = false;
+//                jumpCount = 0;
+//                ((Character) object1).getUdHandler().postDelayed(((Character) object1).getAllActions().get("High Jump"), 0);
+//            }
+//            else{
+//                ((Character) object1).getUdHandler().postDelayed(((Character) object1).getAllActions().get("Jump"), 0);
+//            }
+//            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
+//            return true;
+//        }
+        else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
+                && object2.equals(allNPCs.get("Waddle Dee 0")) && collisionType.equals("left")){
+            isByTutorialWaddleDee = true;
             Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
-            return true;
         }
 
         return false;

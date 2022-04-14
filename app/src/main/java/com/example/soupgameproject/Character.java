@@ -507,6 +507,17 @@ public class Character extends GameObject{
         return action;
     }
 
+    public void faceDirection(String direction){
+        if(direction.toLowerCase().equals("left")) {
+            setFacingRight(false);
+            setRotationY(180);
+        }
+        else if(direction.toLowerCase().equals("right")){
+            setFacingRight(true);
+            setRotationY(0);
+        }
+    }
+
     // The following three methods stop their associated Character actions. Be sure to removeCallbacks from the Handler when stopping one of these as well.
     public void stopJump(){
         jumpStarted = false;
