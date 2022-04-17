@@ -76,6 +76,7 @@ public class InGameActivity extends AppCompatActivity {
     public static final String KIRBY_YPOSITION = "kirbyYPosition";
 
     public static final String ENVIRONMENT = "environment";
+    public static final String FOREST_CLOUD_COORDINATES = "forestCloudCoordinates";
 
     public static final String INV_DRAWABLES = "invDrawables";
     public static final String ITEM_COUNT = "itemCount";
@@ -96,7 +97,7 @@ public class InGameActivity extends AppCompatActivity {
 
     // Layouts
     private FrameLayout scalingFrameLayout;
-    private ConstraintLayout gameContainerLayout, backgroundLayout, collisionLayout, foregroundLayout;
+    private ConstraintLayout gameContainerLayout, backgroundLayout, collisionLayout, foregroundLayout, userInterfaceLayout;
 
     // GameLayouts (SAVE)
     private GameLayout backgroundGameLayout; //
@@ -179,6 +180,7 @@ public class InGameActivity extends AppCompatActivity {
     private ArrayList<GameObject> forestEnvironmentForegroundGameObjects;
     
     private ArrayList<GameObject> forestClouds;
+    private float[][] forestCloudCoordinates;
 
     private ArrayList<GameObject> houseEnvironmentBackgroundGameObjects;
     private ArrayList<GameObject> houseEnvironmentCollisionGameObjects;
@@ -216,6 +218,7 @@ public class InGameActivity extends AppCompatActivity {
         backgroundLayout = findViewById(R.id.BackgroundLayout);
         collisionLayout = findViewById(R.id.CollisionLayout);
         foregroundLayout = findViewById(R.id.ForegroundLayout);
+        userInterfaceLayout = findViewById(R.id.UserInterfaceLayout);
         leftButton = findViewById(R.id.leftButton);
         rightButton = findViewById(R.id.rightButton);
         jumpButton = findViewById(R.id.jumpButton);
@@ -370,10 +373,19 @@ public class InGameActivity extends AppCompatActivity {
 
         // Clouds
         for(int i = 0; i < 20; i++) {
-            float cloudRatio = (float)(Math.random() * (1/7F - 1/20F) + 1/20F);
-            float cloudX = (float)(Math.random() * tWidth);
-            float cloudY = (float)(gameCamera.getBottomYPosition() + 2 * (gameCamera.getTopYPosition() - gameCamera.getBottomYPosition())/5F
-                    + Math.random() * (gameCamera.getTopYPosition() - gameCamera.getBottomYPosition()) / 2F);
+            float cloudX, cloudY, cloudRatio;
+            if(forestCloudCoordinates == null){
+                cloudX = (float)(Math.random() * tWidth);
+                cloudY = (float)(gameCamera.getBottomYPosition() + 2 * (gameCamera.getTopYPosition() - gameCamera.getBottomYPosition())/5F
+                        + Math.random() * (gameCamera.getTopYPosition() - gameCamera.getBottomYPosition()) / 2F);
+                cloudRatio = (float)(Math.random() * (1/7F - 1/20F) + 1/20F);
+            }
+            else {
+                cloudX = forestCloudCoordinates[i][0];
+                cloudY = forestCloudCoordinates[i][1];
+                cloudRatio = forestCloudCoordinates[i][2];
+            }
+
             GameObject cloud = new GameObject(InGameActivity.this, "Cloud", (int) (180 * cloudRatio), (int) (94 * cloudRatio),
                     R.drawable.cloud, cloudX, cloudY, false);
             forestClouds.add(cloud);
@@ -2728,6 +2740,17 @@ public class InGameActivity extends AppCompatActivity {
         json = gson.toJson(itemNames);
         editor.putString(ITEM_NAMES,json);
 
+        forestCloudCoordinates = new float[20][3];
+        for(int i = 0; i < 20; i++){
+            forestCloudCoordinates[i][0] = forestClouds.get(i).getXPosition();
+            forestCloudCoordinates[i][1] = forestClouds.get(i).getYPosition();
+            forestCloudCoordinates[i][2] = forestClouds.get(i).getObjectWidth()/180F;
+        }
+
+        gson = new Gson();
+        json = gson.toJson(forestCloudCoordinates);
+        editor.putString(FOREST_CLOUD_COORDINATES, json);
+
 
 
         // Saving custom objects not working.
@@ -2835,6 +2858,15 @@ public class InGameActivity extends AppCompatActivity {
         }
         else{
             itemNames = new String[15];
+        }
+
+        gson = new Gson();
+        json = sharedPreferences.getString(FOREST_CLOUD_COORDINATES, "");
+        if(!json.equals("")){
+            forestCloudCoordinates = gson.fromJson(json, float[][].class);
+        }
+        else{
+            forestCloudCoordinates = null;
         }
 
 
