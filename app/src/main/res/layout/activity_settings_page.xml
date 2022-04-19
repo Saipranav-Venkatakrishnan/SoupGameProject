@@ -14,6 +14,45 @@
       android:text="Music?"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.499"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent" />
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.315" />
+
+  <Switch
+      android:id="@+id/ButtonPlacement"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Left/Right"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.747" />
+
+  <TextView
+      android:id="@+id/Music"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Music:"
+      android:textSize="@android:dimen/app_icon_size"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.499"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.13" />
+
+  <TextView
+      android:id="@+id/PlacementOfMovement"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Placement of Left and Right Movement:"
+      android:textSize="29dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.499"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.631" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -32,9 +32,12 @@ import java.util.Random;
 public class SettingsPage extends AppCompatActivity {
 
     private ToggleButton anotherSwitch;
-    public static final String SWITCH = "switch2";
+    private Switch controlSwitch;
+    public static final String SWITCH = "switch1";
+    public static final String SWITCH1 = "ButtonPlacement";
     public static final String SHARED_PREF = "sharedPref";
     public static boolean isOn;
+    public static boolean isRight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,14 @@ public class SettingsPage extends AppCompatActivity {
             }
         });
 
+        controlSwitch = findViewById(R.id.ButtonPlacement);
+        controlSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                isRight = b;
+            }
+        });
+
         loadData();
         updateViews();
     }
@@ -58,6 +69,7 @@ public class SettingsPage extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         editor.putBoolean(SWITCH, anotherSwitch.isChecked());
+        editor.putBoolean(SWITCH1, controlSwitch.isChecked());
 
         editor.commit();
 
@@ -69,11 +81,12 @@ public class SettingsPage extends AppCompatActivity {
     public void loadData(){
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREF, MODE_PRIVATE);
         isOn = sharedPreferences.getBoolean(SWITCH, false);
+        isRight = sharedPreferences.getBoolean(SWITCH1, false);
     }
 
     public void updateViews(){
         anotherSwitch.setChecked(isOn);
-
+        controlSwitch.setChecked(isRight);
     }
 
     protected void onRestart() {

@@ -7,6 +7,8 @@ import static com.example.soupgameproject.SettingsPage.isOn;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -2833,6 +2835,7 @@ public class InGameActivity extends AppCompatActivity {
         gameCameraYPosition = sharedPreferences.getFloat(GAME_CAMERA_YPOSITION, -1);
         gameCameraFixed = sharedPreferences.getBoolean(GAME_CAMERA_FIXED, true);
         isGrounded = sharedPreferences.getBoolean(IS_GROUNDED, false);
+        SettingsPage.isRight = sharedPreferences.getBoolean(SettingsPage.SWITCH1, false);
 
         environment = sharedPreferences.getString(ENVIRONMENT,"Forest");
 
@@ -2994,6 +2997,74 @@ public class InGameActivity extends AppCompatActivity {
         else{
             pauseAudio();
         }
+
+        if(SettingsPage.isRight){
+            LayoutParams lp = new LayoutParams((int)(75*(TitleActivity.DENSITY)),(int)(75*(TitleActivity.DENSITY)));
+            lp.endToEnd =ConstraintSet.PARENT_ID;
+            lp.topToTop =ConstraintSet.PARENT_ID;
+            lp.leftToLeft =ConstraintSet.PARENT_ID;
+            lp.rightToRight =ConstraintSet.PARENT_ID;
+            lp.setMargins((int)(400*TitleActivity.DENSITY),(int)(300*TitleActivity.DENSITY),(int)(50*TitleActivity.DENSITY),0);
+            rightButton.setLayoutParams(lp);
+
+            lp = new LayoutParams((int)(75*(TitleActivity.DENSITY)),(int)(75*(TitleActivity.DENSITY)));
+            lp.endToEnd =ConstraintSet.PARENT_ID;
+            lp.topToTop =ConstraintSet.PARENT_ID;
+            lp.leftToLeft =ConstraintSet.PARENT_ID;
+            lp.rightToRight =ConstraintSet.PARENT_ID;
+            lp.setMargins((int)(400*TitleActivity.DENSITY),(int)(300*TitleActivity.DENSITY),(int)(150*TitleActivity.DENSITY),0);
+            leftButton.setLayoutParams(lp);
+
+            lp = new LayoutParams((int)(75*(TitleActivity.DENSITY)),(int)(75*(TitleActivity.DENSITY)));
+            lp.endToEnd =ConstraintSet.PARENT_ID;
+            lp.topToTop =ConstraintSet.PARENT_ID;
+            lp.leftToLeft =ConstraintSet.PARENT_ID;
+            lp.rightToRight =ConstraintSet.PARENT_ID;
+            lp.setMargins((int)(25*TitleActivity.DENSITY),(int)(300*TitleActivity.DENSITY),(int)(600*TitleActivity.DENSITY),0);
+            jumpButton.setLayoutParams(lp);
+
+            lp = new LayoutParams((int)(75*(TitleActivity.DENSITY)),(int)(75*(TitleActivity.DENSITY)));
+            lp.endToEnd =ConstraintSet.PARENT_ID;
+            lp.topToTop =ConstraintSet.PARENT_ID;
+            lp.leftToLeft =ConstraintSet.PARENT_ID;
+            lp.rightToRight =ConstraintSet.PARENT_ID;
+            lp.setMargins((int)(100*TitleActivity.DENSITY),(int)(300*TitleActivity.DENSITY),(int)(525*TitleActivity.DENSITY),0);
+            actionButton.setLayoutParams(lp);
+        }
+        else{
+            LayoutParams lp = new LayoutParams((int)(75*(TitleActivity.DENSITY)),(int)(75*(TitleActivity.DENSITY)));
+            lp.endToEnd =ConstraintSet.PARENT_ID;
+            lp.topToTop =ConstraintSet.PARENT_ID;
+            lp.leftToLeft =ConstraintSet.PARENT_ID;
+            lp.rightToRight =ConstraintSet.PARENT_ID;
+            lp.setMargins((int)(400*TitleActivity.DENSITY),(int)(300*TitleActivity.DENSITY),(int)(50*TitleActivity.DENSITY),0);
+            jumpButton.setLayoutParams(lp);
+
+            lp = new LayoutParams((int)(75*(TitleActivity.DENSITY)),(int)(75*(TitleActivity.DENSITY)));
+            lp.endToEnd =ConstraintSet.PARENT_ID;
+            lp.topToTop =ConstraintSet.PARENT_ID;
+            lp.leftToLeft =ConstraintSet.PARENT_ID;
+            lp.rightToRight =ConstraintSet.PARENT_ID;
+            lp.setMargins((int)(400*TitleActivity.DENSITY),(int)(300*TitleActivity.DENSITY),(int)(150*TitleActivity.DENSITY),0);
+            actionButton.setLayoutParams(lp);
+
+            lp = new LayoutParams((int)(75*(TitleActivity.DENSITY)),(int)(75*(TitleActivity.DENSITY)));
+            lp.endToEnd =ConstraintSet.PARENT_ID;
+            lp.topToTop =ConstraintSet.PARENT_ID;
+            lp.leftToLeft =ConstraintSet.PARENT_ID;
+            lp.rightToRight =ConstraintSet.PARENT_ID;
+            lp.setMargins((int)(25*TitleActivity.DENSITY),(int)(300*TitleActivity.DENSITY),(int)(600*TitleActivity.DENSITY),0);
+            leftButton.setLayoutParams(lp);
+
+            lp = new LayoutParams((int)(75*(TitleActivity.DENSITY)),(int)(75*(TitleActivity.DENSITY)));
+            lp.endToEnd =ConstraintSet.PARENT_ID;
+            lp.topToTop =ConstraintSet.PARENT_ID;
+            lp.leftToLeft =ConstraintSet.PARENT_ID;
+            lp.rightToRight =ConstraintSet.PARENT_ID;
+            lp.setMargins((int)(125*TitleActivity.DENSITY),(int)(300*TitleActivity.DENSITY),(int)(500*TitleActivity.DENSITY),0);
+            rightButton.setLayoutParams(lp);
+        }
+
          Log.i("SetUp","Initial Set Up");
 
         initialCameraSetUp();
