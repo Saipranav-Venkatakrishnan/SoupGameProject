@@ -84,6 +84,11 @@ public class SettingsPage extends AppCompatActivity {
         isRight = sharedPreferences.getBoolean(SWITCH1, false);
     }
 
+    public void gameActivityPage(View view) {
+        Intent intent = new Intent(this, InGameActivity.class);
+        startActivity(intent);
+    }
+
     public void updateViews(){
         anotherSwitch.setChecked(isOn);
         controlSwitch.setChecked(isRight);

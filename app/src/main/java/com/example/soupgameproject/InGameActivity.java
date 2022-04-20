@@ -1185,6 +1185,8 @@ public class InGameActivity extends AppCompatActivity {
                 (int)(kirby.getObjectHeight() * 20/39F), 0, 0, kirby.getObjectWidth() * 20/59F,
                 0));
 
+
+
         // Actions Set Up
         Runnable leftWalk = kirby.walk(kirby.getLrHandler(), R.drawable.kirbywalk,"left", walkSpeed, kirbyWalkHitBoxes,
                 new GameObject.CollisionListener() {
@@ -3122,6 +3124,7 @@ public class InGameActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Intent intent = getIntent();
         loadData();
         updateViews();
 
