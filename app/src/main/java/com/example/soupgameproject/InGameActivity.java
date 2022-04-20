@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -209,6 +210,12 @@ public class InGameActivity extends AppCompatActivity {
 
     private HashMap<String,Ingredient> ingredientKey;
 
+    // Dialogue Box variables
+    private ConstraintLayout dialogueBoxLayout;
+    private TextView dialogueNameTextView;
+    private ImageView dialoguePortraitImageView;
+    private TextView dialogueTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -225,6 +232,10 @@ public class InGameActivity extends AppCompatActivity {
         rightButton = findViewById(R.id.rightButton);
         jumpButton = findViewById(R.id.jumpButton);
         actionButton = findViewById(R.id.actionButton);
+        dialogueBoxLayout = findViewById(R.id.DialogueBoxLayout);
+        dialogueNameTextView = findViewById(R.id.characterNameTextView);
+        dialoguePortraitImageView = findViewById(R.id.characterPortrait);
+        dialogueTextView = findViewById(R.id.characterDialogueTextView);
 
         // Set up Handlers
         cHandler = new Handler();
@@ -2122,6 +2133,17 @@ public class InGameActivity extends AppCompatActivity {
             private Handler thHandler = new Handler();
             private boolean isClick = true;
 
+            DialogueBox tutorial = new DialogueBox(InGameActivity.this, dialogueBoxLayout, dialogueNameTextView, "Waddle Dee",
+                    dialogueTextView, "Our project is a 2D side scrolling game where the user plays as Kirby and " +
+                    "roams various areas to collect ingredients to make soup. The two areas that are currently planned for " +
+                    "the game are a forest area and a swamp area. In the forest area, there will be a mushroom house that" +
+                    " Kirby can go inside of. In here, there will be a cauldron where users can use the ingredients they’ve" +
+                    " collected to make a variety of soups. Ingredients can be viewed in an inventory pop-up and the soups " +
+                    "the user makes can be viewed in a catalog page that describes the soup. The goal of the game is to create" +
+                    " all the different soups that can be made by mixing and matching the ingredients found in the forest area " +
+                    "as well as those found in the swamp area.", 10, dialoguePortraitImageView, R.drawable.waddledee1);
+
+
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 switch(motionEvent.getAction()) {
@@ -2180,6 +2202,21 @@ public class InGameActivity extends AppCompatActivity {
                             }
                             else if(kirby.isGrounded() && isByTutorialWaddleDee){
                                 // Tutorial info
+                                if(!tutorial.isPlaying()){
+                                    tutorial.getTextHandler().postDelayed(tutorial.getPlayDialogue(),0);
+                                    tutorial.showDialogBox();
+
+                                    // Work on closing dialog box at the right time.
+//                                    tutorial.getTextHandler().postDelayed(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            if(!tutorial.isPlaying()) {
+//                                                DialogueBox.hideDialogBox();
+//                                                tutorial.resetDialogue();
+//                                            }
+//                                        }
+//                                    }, 5000);
+                                }
                             }
                         }
 
@@ -3004,7 +3041,7 @@ public class InGameActivity extends AppCompatActivity {
             lp.topToTop =ConstraintSet.PARENT_ID;
             lp.leftToLeft =ConstraintSet.PARENT_ID;
             lp.rightToRight =ConstraintSet.PARENT_ID;
-            lp.setMargins((int)(400*TitleActivity.DENSITY),(int)(300*TitleActivity.DENSITY),(int)(50*TitleActivity.DENSITY),0);
+            lp.setMargins((int)(400*TitleActivity.DENSITY),(int)(285*TitleActivity.DENSITY),(int)(50*TitleActivity.DENSITY),0);
             rightButton.setLayoutParams(lp);
 
             lp = new LayoutParams((int)(75*(TitleActivity.DENSITY)),(int)(75*(TitleActivity.DENSITY)));
@@ -3012,7 +3049,7 @@ public class InGameActivity extends AppCompatActivity {
             lp.topToTop =ConstraintSet.PARENT_ID;
             lp.leftToLeft =ConstraintSet.PARENT_ID;
             lp.rightToRight =ConstraintSet.PARENT_ID;
-            lp.setMargins((int)(400*TitleActivity.DENSITY),(int)(300*TitleActivity.DENSITY),(int)(150*TitleActivity.DENSITY),0);
+            lp.setMargins((int)(400*TitleActivity.DENSITY),(int)(285*TitleActivity.DENSITY),(int)(150*TitleActivity.DENSITY),0);
             leftButton.setLayoutParams(lp);
 
             lp = new LayoutParams((int)(75*(TitleActivity.DENSITY)),(int)(75*(TitleActivity.DENSITY)));
@@ -3020,15 +3057,15 @@ public class InGameActivity extends AppCompatActivity {
             lp.topToTop =ConstraintSet.PARENT_ID;
             lp.leftToLeft =ConstraintSet.PARENT_ID;
             lp.rightToRight =ConstraintSet.PARENT_ID;
-            lp.setMargins((int)(25*TitleActivity.DENSITY),(int)(300*TitleActivity.DENSITY),(int)(600*TitleActivity.DENSITY),0);
+            lp.setMargins((int)(25*TitleActivity.DENSITY),(int)(285*TitleActivity.DENSITY),(int)(600*TitleActivity.DENSITY),0);
             jumpButton.setLayoutParams(lp);
 
-            lp = new LayoutParams((int)(75*(TitleActivity.DENSITY)),(int)(75*(TitleActivity.DENSITY)));
+            lp = new LayoutParams((int)(60*(TitleActivity.DENSITY)),(int)(60*(TitleActivity.DENSITY)));
             lp.endToEnd =ConstraintSet.PARENT_ID;
             lp.topToTop =ConstraintSet.PARENT_ID;
             lp.leftToLeft =ConstraintSet.PARENT_ID;
             lp.rightToRight =ConstraintSet.PARENT_ID;
-            lp.setMargins((int)(100*TitleActivity.DENSITY),(int)(300*TitleActivity.DENSITY),(int)(525*TitleActivity.DENSITY),0);
+            lp.setMargins((int)(100*TitleActivity.DENSITY),(int)(290*TitleActivity.DENSITY),(int)(525*TitleActivity.DENSITY),0);
             actionButton.setLayoutParams(lp);
         }
         else{
@@ -3037,15 +3074,15 @@ public class InGameActivity extends AppCompatActivity {
             lp.topToTop =ConstraintSet.PARENT_ID;
             lp.leftToLeft =ConstraintSet.PARENT_ID;
             lp.rightToRight =ConstraintSet.PARENT_ID;
-            lp.setMargins((int)(400*TitleActivity.DENSITY),(int)(300*TitleActivity.DENSITY),(int)(50*TitleActivity.DENSITY),0);
+            lp.setMargins((int)(400*TitleActivity.DENSITY),(int)(285*TitleActivity.DENSITY),(int)(50*TitleActivity.DENSITY),0);
             jumpButton.setLayoutParams(lp);
 
-            lp = new LayoutParams((int)(75*(TitleActivity.DENSITY)),(int)(75*(TitleActivity.DENSITY)));
+            lp = new LayoutParams((int)(60*(TitleActivity.DENSITY)),(int)(60*(TitleActivity.DENSITY)));
             lp.endToEnd =ConstraintSet.PARENT_ID;
             lp.topToTop =ConstraintSet.PARENT_ID;
             lp.leftToLeft =ConstraintSet.PARENT_ID;
             lp.rightToRight =ConstraintSet.PARENT_ID;
-            lp.setMargins((int)(400*TitleActivity.DENSITY),(int)(300*TitleActivity.DENSITY),(int)(150*TitleActivity.DENSITY),0);
+            lp.setMargins((int)(400*TitleActivity.DENSITY),(int)(290*TitleActivity.DENSITY),(int)(150*TitleActivity.DENSITY),0);
             actionButton.setLayoutParams(lp);
 
             lp = new LayoutParams((int)(75*(TitleActivity.DENSITY)),(int)(75*(TitleActivity.DENSITY)));
@@ -3053,7 +3090,7 @@ public class InGameActivity extends AppCompatActivity {
             lp.topToTop =ConstraintSet.PARENT_ID;
             lp.leftToLeft =ConstraintSet.PARENT_ID;
             lp.rightToRight =ConstraintSet.PARENT_ID;
-            lp.setMargins((int)(25*TitleActivity.DENSITY),(int)(300*TitleActivity.DENSITY),(int)(600*TitleActivity.DENSITY),0);
+            lp.setMargins((int)(25*TitleActivity.DENSITY),(int)(285*TitleActivity.DENSITY),(int)(600*TitleActivity.DENSITY),0);
             leftButton.setLayoutParams(lp);
 
             lp = new LayoutParams((int)(75*(TitleActivity.DENSITY)),(int)(75*(TitleActivity.DENSITY)));
@@ -3061,7 +3098,7 @@ public class InGameActivity extends AppCompatActivity {
             lp.topToTop =ConstraintSet.PARENT_ID;
             lp.leftToLeft =ConstraintSet.PARENT_ID;
             lp.rightToRight =ConstraintSet.PARENT_ID;
-            lp.setMargins((int)(125*TitleActivity.DENSITY),(int)(300*TitleActivity.DENSITY),(int)(500*TitleActivity.DENSITY),0);
+            lp.setMargins((int)(125*TitleActivity.DENSITY),(int)(285*TitleActivity.DENSITY),(int)(500*TitleActivity.DENSITY),0);
             rightButton.setLayoutParams(lp);
         }
 
