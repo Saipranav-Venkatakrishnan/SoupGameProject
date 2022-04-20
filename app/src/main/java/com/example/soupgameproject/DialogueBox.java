@@ -21,6 +21,7 @@ public class DialogueBox extends ConstraintLayout {
     private ImageView portraitImageView;
     private TextView nameTextView;
     private Handler textHandler;
+    private Handler delayClose;
     private boolean isPlaying;
     private int start;
     private int end;
@@ -39,6 +40,7 @@ public class DialogueBox extends ConstraintLayout {
         this.portraitImageView = portraitImageView;
         this.nameTextView = nameTextView;
         textHandler = new Handler();
+        delayClose = new Handler();
         isPlaying = false;
         start = 0;
         end = 0;
@@ -52,6 +54,7 @@ public class DialogueBox extends ConstraintLayout {
                     setStart(0);
                     setEnd(0);
                     isPlaying = false;
+                    delayStopDialog(3000);
                     return;
                 }
                 else if(dialogue.substring(getStart(),getEnd() + findNextSpace()).length() + 3 > 130){
@@ -60,9 +63,11 @@ public class DialogueBox extends ConstraintLayout {
                     setStart(end);
                     setEnd(end);
                     isPlaying = false;
+                    delayStopDialog(3000);
                 }
                 else {
                     isPlaying = true;
+                    delayClose.removeCallbacksAndMessages(null);
                     dialogueTextView.setText(dialogue.substring(getStart(), getEnd()));
                 }
 
@@ -89,6 +94,17 @@ public class DialogueBox extends ConstraintLayout {
         start = 0;
         end = 0;
         isPlaying = false;
+    }
+    private void delayStopDialog(int time){
+        delayClose.removeCallbacksAndMessages(null);
+
+        delayClose.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                hideDialogBox();
+                resetDialogue();
+            }
+        }, time);
     }
     
     private int findNextSpace(){
