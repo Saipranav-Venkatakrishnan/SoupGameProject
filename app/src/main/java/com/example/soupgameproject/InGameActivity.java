@@ -85,6 +85,9 @@ public class InGameActivity extends AppCompatActivity {
     public static final String ITEM_COUNT = "itemCount";
     public static final String ITEM_NAMES = "itemNames";
 
+    public static float kirbyPreviousXPos;
+    public static float kirbyPreviousYPos;
+
 
 
     // General Screen Size Variables in DP
@@ -653,7 +656,7 @@ public class InGameActivity extends AppCompatActivity {
                 }
             },2000);
 
-            kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
+            kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),1000);
 
             setLightingTemporarily(255,255,255,255,255,255);
         }
@@ -675,7 +678,7 @@ public class InGameActivity extends AppCompatActivity {
                 kirby.setGrounded(false);
                 kirby.getUdHandler().removeCallbacksAndMessages(null);
                 kirby.stopFall();
-                kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 0);
+                kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 1000);
             }
             
             // Forest Clouds moving
@@ -715,7 +718,7 @@ public class InGameActivity extends AppCompatActivity {
                 kirby.setGrounded(false);
                 kirby.getUdHandler().removeCallbacksAndMessages(null);
                 kirby.stopFall();
-                kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 0);
+                kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 1000);
             }
         }
         else if(environment.toLowerCase().equals("swamp")){
@@ -1230,6 +1233,15 @@ public class InGameActivity extends AppCompatActivity {
                         }
                         closeToHouse = false;
                         isByTutorialWaddleDee = false;
+//                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
+//                            kirbyPreviousXPos = xPosition;
+//                            kirbyPreviousYPos = yPosition;
+//                        }
+//                        if(Math.abs(xPosition - kirbyPreviousXPos) > walkSpeed  * 10){
+//                            Log.i("MovementLogging", "Left Walk");
+//                            kirbyPreviousXPos = xPosition;
+//                            kirbyPreviousYPos = yPosition;
+//                        }
                     }
                 });
 
@@ -1273,6 +1285,15 @@ public class InGameActivity extends AppCompatActivity {
                         }
                         closeToHouse = false;
                         isByTutorialWaddleDee = false;
+//                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
+//                            kirbyPreviousXPos = xPosition;
+//                            kirbyPreviousYPos = yPosition;
+//                        }
+//                        if(Math.abs(xPosition - kirbyPreviousXPos) > walkSpeed  * 10){
+//                            Log.i("MovementLogging", "Left Run");
+//                            kirbyPreviousXPos = xPosition;
+//                            kirbyPreviousYPos = yPosition;
+//                        }
                     }
                 });
 
@@ -1316,6 +1337,15 @@ public class InGameActivity extends AppCompatActivity {
                         }
                         closeToHouse = false;
                         isByTutorialWaddleDee = false;
+//                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
+//                            kirbyPreviousXPos = xPosition;
+//                            kirbyPreviousYPos = yPosition;
+//                        }
+//                        if(Math.abs(xPosition - kirbyPreviousXPos) > walkSpeed  * 10){
+//                            Log.i("MovementLogging", "Right Walk");
+//                            kirbyPreviousXPos = xPosition;
+//                            kirbyPreviousYPos = yPosition;
+//                        }
                     }
                 });
 
@@ -1358,6 +1388,15 @@ public class InGameActivity extends AppCompatActivity {
                         }
                         closeToHouse = false;
                         isByTutorialWaddleDee = false;
+//                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
+//                            kirbyPreviousXPos = xPosition;
+//                            kirbyPreviousYPos = yPosition;
+//                        }
+//                        if(Math.abs(xPosition - kirbyPreviousXPos) > walkSpeed  * 10){
+//                            Log.i("MovementLogging", "Right Run");
+//                            kirbyPreviousXPos = xPosition;
+//                            kirbyPreviousYPos = yPosition;
+//                        }
                     }
                 });
 
@@ -1390,7 +1429,6 @@ public class InGameActivity extends AppCompatActivity {
                 new Character.PositionListener() {
                     @Override
                     public void atPosition(float xPosition, float yPosition) {
-
                     }
                 });
 
@@ -1421,7 +1459,15 @@ public class InGameActivity extends AppCompatActivity {
                 new Character.PositionListener() {
                     @Override
                     public void atPosition(float xPosition, float yPosition) {
-
+                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
+                            kirbyPreviousXPos = xPosition;
+                            kirbyPreviousYPos = yPosition;
+                        }
+                        if(Math.abs(xPosition - kirbyPreviousXPos) > walkSpeed  * 10){
+                            Log.i("MovementLogging", "Fall");
+                            kirbyPreviousXPos = xPosition;
+                            kirbyPreviousYPos = yPosition;
+                        }
                     }
                 });
 
@@ -1454,7 +1500,15 @@ public class InGameActivity extends AppCompatActivity {
                 new Character.PositionListener() {
                     @Override
                     public void atPosition(float xPosition, float yPosition) {
-
+                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
+                            kirbyPreviousXPos = xPosition;
+                            kirbyPreviousYPos = yPosition;
+                        }
+                        if(Math.abs(xPosition - kirbyPreviousXPos) > walkSpeed  * 10){
+                            Log.i("MovementLogging", "High Jump");
+                            kirbyPreviousXPos = xPosition;
+                            kirbyPreviousYPos = yPosition;
+                        }
                     }
                 });
 
@@ -1482,7 +1536,15 @@ public class InGameActivity extends AppCompatActivity {
                 new Character.PositionListener() {
                     @Override
                     public void atPosition(float xPosition, float yPosition) {
-
+                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
+                            kirbyPreviousXPos = xPosition;
+                            kirbyPreviousYPos = yPosition;
+                        }
+                        if(Math.abs(xPosition - kirbyPreviousXPos) > walkSpeed  * 10){
+                            Log.i("MovementLogging", "Flip");
+                            kirbyPreviousXPos = xPosition;
+                            kirbyPreviousYPos = yPosition;
+                        }
                     }
                 });
 
@@ -1533,6 +1595,15 @@ public class InGameActivity extends AppCompatActivity {
                 new Character.PositionListener() {
                     @Override
                     public void atPosition(float xPosition, float yPosition) {
+                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
+                            kirbyPreviousXPos = xPosition;
+                            kirbyPreviousYPos = yPosition;
+                        }
+                        if(Math.abs(xPosition - kirbyPreviousXPos) > walkSpeed  * 10){
+                            Log.i("MovementLogging", "Float Jump");
+                            kirbyPreviousXPos = xPosition;
+                            kirbyPreviousYPos = yPosition;
+                        }
                     }
                 });
 
@@ -1561,7 +1632,15 @@ public class InGameActivity extends AppCompatActivity {
                 new Character.PositionListener() {
                     @Override
                     public void atPosition(float xPosition, float yPosition) {
-
+                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
+                            kirbyPreviousXPos = xPosition;
+                            kirbyPreviousYPos = yPosition;
+                        }
+                        if(Math.abs(xPosition - kirbyPreviousXPos) > walkSpeed  * 10){
+                            Log.i("MovementLogging", "Float Fall");
+                            kirbyPreviousXPos = xPosition;
+                            kirbyPreviousYPos = yPosition;
+                        }
                     }
                 });
 
@@ -1946,10 +2025,12 @@ public class InGameActivity extends AppCompatActivity {
                         if(isDoubleClick){
                             cHandler.postDelayed(leftRunCamera,0);
                             kirby.getLrHandler().postDelayed(kirby.getAllActions().get("Left Run"),0);
+                            Log.i("MovementCheck", "Running Left");
                         }
                         else{
                             cHandler.postDelayed(leftWalkCamera,0);
                             kirby.getLrHandler().postDelayed(kirby.getAllActions().get("Left Walk"),0);
+                            Log.i("MovementCheck", "Walking Left");
                         }
                         
                         isDown = true;
@@ -1957,7 +2038,7 @@ public class InGameActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         view.performClick();
                         if (!isDown) return true;
-
+                        Log.i("MovementCheck", "Still");
                         kirby.getLrHandler().removeCallbacks(kirby.getAllActions().get("Left Walk"));
                         cHandler.removeCallbacks(leftWalkCamera);
 
@@ -2007,10 +2088,12 @@ public class InGameActivity extends AppCompatActivity {
                         if(isDoubleClick){
                             cHandler.postDelayed(rightRunCamera,0);
                             kirby.getLrHandler().postDelayed(kirby.getAllActions().get("Right Run"),0);
+                            Log.i("MovementCheck", "Running Right");
                         }
                         else{
                             cHandler.postDelayed(rightWalkCamera,0);
                             kirby.getLrHandler().postDelayed(kirby.getAllActions().get("Right Walk"),0);
+                            Log.i("MovementCheck", "Running Left");
                         }
 
                         isDown = true;
@@ -2018,7 +2101,7 @@ public class InGameActivity extends AppCompatActivity {
                     case MotionEvent.ACTION_UP:
                         view.performClick();
                         if (!isDown) return true;
-
+                        Log.i("MovementCheck", "Still");
                         kirby.getLrHandler().removeCallbacks(kirby.getAllActions().get("Right Walk"));
                         cHandler.removeCallbacks(rightWalkCamera);
 
@@ -2078,6 +2161,7 @@ public class InGameActivity extends AppCompatActivity {
                                     kirby.getAHandler().removeCallbacksAndMessages(null);
                                     kirby.stopJump();
                                     kirby.getUdHandler().postDelayed(kirby.getAllActions().get("High Jump"), 0);
+                                    Log.i("MovementCheck", "Big Jump");
                                 }
                             }
                         }, 150);
@@ -2097,6 +2181,7 @@ public class InGameActivity extends AppCompatActivity {
                                 kirby.getAHandler().removeCallbacksAndMessages(null);
                                 kirby.stopJump();
                                 kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Jump"),0);
+                                Log.i("MovementCheck", "Short Jump");
                             }
                             else {
                                 if(!isFloating && jumpCount < 6) {
@@ -2108,6 +2193,7 @@ public class InGameActivity extends AppCompatActivity {
                                     kirby.stopFall();
                                     kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Start Float"), 0);
                                     isFloating = true;
+                                    Log.i("MovementCheck", "Start Float");
                                 }
                                 else if(startFloatFinished && jumpCount < 6){
                                     jumpCount++;
@@ -2116,6 +2202,7 @@ public class InGameActivity extends AppCompatActivity {
                                     kirby.getAHandler().removeCallbacksAndMessages(null);
                                     kirby.stopJump();
                                     kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Float Jump"),0);
+                                    Log.i("MovementCheck", "Float Jump");
                                 }
                             }
                         }
