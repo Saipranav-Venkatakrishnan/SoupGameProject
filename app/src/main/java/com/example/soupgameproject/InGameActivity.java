@@ -79,6 +79,7 @@ public class InGameActivity extends AppCompatActivity {
     public static final String KIRBY_YPOSITION = "kirbyYPosition";
 
     public static final String ENVIRONMENT = "environment";
+    public static final String ITEMS_ARE_SET = "itemsAreSet";
     public static final String FOREST_CLOUD_COORDINATES = "forestCloudCoordinates";
 
     public static final String INV_DRAWABLES = "invDrawables";
@@ -106,8 +107,8 @@ public class InGameActivity extends AppCompatActivity {
     private ConstraintLayout gameContainerLayout, backgroundLayout, collisionLayout, foregroundLayout, userInterfaceLayout;
 
     // GameLayouts (SAVE)
-    private GameLayout backgroundGameLayout; //
     @SuppressLint("StaticFieldLeak")
+    public static GameLayout backgroundGameLayout; //
     public static GameLayout collisionGameLayout; //
     private GameLayout foregroundGameLayout; //
 
@@ -175,6 +176,7 @@ public class InGameActivity extends AppCompatActivity {
     private String environment;
     private boolean closeToHouse;
     private boolean isByTutorialWaddleDee;
+    private boolean itemsAreSet;
 
     // Test Environment GameObjects
     private ArrayList<GameObject> testEnvironmentBackgroundGameObjects;
@@ -670,7 +672,7 @@ public class InGameActivity extends AppCompatActivity {
             kirby.setXPosition(kirbyXPosition);
             kirby.setYPosition(kirbyYPosition);
 
-            itemSetup(environment);
+           // itemSetup(environment);
             collisionGameLayout.addLayoutObject(kirby);
             collisionGameLayout.addLayoutObjects(forestEnvironmentCollisionGameObjects);
 
@@ -860,7 +862,7 @@ public class InGameActivity extends AppCompatActivity {
                         (float) (gameCamera.getTopYPosition()) + 70, 0, 0, 0, 0);
 
 
-                collisionGameLayout.addLayoutObject(carrot);
+                backgroundGameLayout.addLayoutObject(carrot);
 
                 Runnable carrotFall = carrot.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
                     @Override
@@ -890,7 +892,7 @@ public class InGameActivity extends AppCompatActivity {
                         (float) (Math.random() * (tWidth-tWidth/5F) + tWidth/9F),
                         (float) (gameCamera.getTopYPosition()) + 70, 0, 0, 0, 0);
 
-                collisionGameLayout.addLayoutObject(mushroom);
+                backgroundGameLayout.addLayoutObject(mushroom);
 
                 Runnable mushroomFall = mushroom.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
                     @Override
@@ -920,7 +922,7 @@ public class InGameActivity extends AppCompatActivity {
                         (float) (Math.random() * (tWidth-tWidth/5F) + tWidth/9F),
                         (float) (gameCamera.getTopYPosition()) + 70, 0, 0, 0, 0);
 
-                collisionGameLayout.addLayoutObject(tomato);
+                backgroundGameLayout.addLayoutObject(tomato);
 
                 Runnable tomatoFall = tomato.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
                     @Override
@@ -2230,7 +2232,7 @@ public class InGameActivity extends AppCompatActivity {
                     " collected to make a variety of soups. Ingredients can be viewed in an inventory pop-up and the soups " +
                     "the user makes can be viewed in a catalog page that describes the soup. The goal of the game is to create" +
                     " all the different soups that can be made by mixing and matching the ingredients found in the forest area " +
-                    "as well as those found in the swamp area.", 10, dialoguePortraitImageView, R.drawable.waddledee1);
+                    "as well as those found in the swamp area.", 10, dialoguePortraitImageView, R.drawable.waddledeeportrait);
 
 
             @Override
@@ -2492,6 +2494,11 @@ public class InGameActivity extends AppCompatActivity {
                         timeOfDay = "Noon";
                     }
 
+                    if(!itemsAreSet) {
+                        itemSetup(environment);
+                        itemsAreSet = true;
+                    }
+
                     //rHandler.postDelayed(this,3667);
                 }
                 else if(timeOfDay.toLowerCase().equals("noon")) {
@@ -2514,7 +2521,7 @@ public class InGameActivity extends AppCompatActivity {
                         oB = 255;
                     }
 
-                    //rHandler.postDelayed(this,3667);
+                   // rHandler.postDelayed(this,3667);
                 }
                 else if(timeOfDay.toLowerCase().equals("sunset")){
                     if(toColor(255,70,70,1,40,40,40,1)){
@@ -2526,13 +2533,13 @@ public class InGameActivity extends AppCompatActivity {
                     if(toColor(50,50,70,1,35,35,35,1)){
                         timeOfDay = "Sunrise1";
                     }
-                    //rHandler.postDelayed(this,690);
+                //    rHandler.postDelayed(this,690);
                 }
                 else if(timeOfDay.toLowerCase().equals("sunrise1")){
                     if(toColor(254,108,184,2,100,100,100,1)){
                         timeOfDay = "Sunrise2";
                     }
-                    //rHandler.postDelayed(this,625);
+                  //  rHandler.postDelayed(this,625);
                 }
                 else if(timeOfDay.toLowerCase().equals("sunrise2")){
                     if(toColor(255,255,255,1,255,255,255,1)){
@@ -2541,8 +2548,9 @@ public class InGameActivity extends AppCompatActivity {
                         bB = 190;
                         oB = 190;
                         timeOfDay = "Morning";
+                        itemsAreSet = false;
                     }
-                    //rHandler.postDelayed(this,231);
+                   // rHandler.postDelayed(this,231);
                 }
                 // Testing purposes
                 rHandler.postDelayed(this,100);
@@ -2843,6 +2851,7 @@ public class InGameActivity extends AppCompatActivity {
         editor.putBoolean(NEGATE_DAY_NIGHT, negateDayNight);
 
         editor.putString(ENVIRONMENT, environment);
+        editor.putBoolean(ITEMS_ARE_SET, itemsAreSet);
 
         gameCameraXPosition = gameCamera.getXPosition();
         gameCameraYPosition = gameCamera.getYPosition();
@@ -2964,6 +2973,8 @@ public class InGameActivity extends AppCompatActivity {
         SettingsPage.isRight = sharedPreferences.getBoolean(SettingsPage.SWITCH1, false);
 
         environment = sharedPreferences.getString(ENVIRONMENT,"Forest");
+
+        itemsAreSet = sharedPreferences.getBoolean(ITEMS_ARE_SET, false);
 
         kirbyXPosition = sharedPreferences.getFloat(KIRBY_XPOSITION, 0);
 

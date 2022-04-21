@@ -42,7 +42,7 @@ public class Ingredient extends GameObject{
                     i-=1/10F;
                 }
                 else{
-                    InGameActivity.collisionGameLayout.removeLayoutObject(Ingredient.this);
+                    InGameActivity.backgroundGameLayout.removeLayoutObject(Ingredient.this);
                     setAlpha(1F);
                     handler.removeCallbacks(this);
                 }

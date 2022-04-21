@@ -178,8 +178,8 @@
             android:layout_width="400dp"
             android:layout_height="100dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/boundary"
             android:visibility="invisible"
+            android:background="@drawable/dialogboxbackground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -191,7 +191,8 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="15dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/portraitborder" />
 
             <TextView
                 android:id="@+id/characterNameTextView"
@@ -200,6 +201,7 @@
                 android:layout_marginBottom="70dp"
                 android:fontFamily="monospace"
                 android:text="Name"
+                android:textColor="@color/black"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="@+id/characterPortrait"
                 app:layout_constraintEnd_toEndOf="@+id/characterPortrait"
@@ -211,8 +213,10 @@
                 android:layout_height="70dp"
                 android:layout_marginStart="90dp"
                 android:layout_marginTop="15dp"
+                android:background="@drawable/dialogboxtextbackground"
                 android:fontFamily="monospace"
                 android:text="Dialogue"
+                android:textColor="@color/black"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
