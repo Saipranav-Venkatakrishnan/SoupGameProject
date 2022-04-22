@@ -86,6 +86,9 @@ public class InGameActivity extends AppCompatActivity {
     public static final String ITEM_COUNT = "itemCount";
     public static final String ITEM_NAMES = "itemNames";
 
+    public static final String ALL_CURRENT_ITEM_NAMES = "allCurrentItemNames";
+    public static final String ALL_CURRENT_ITEM_LOCATIONS = "allCurrentItemLocations";
+
     public static float kirbyPreviousXPos;
     public static float kirbyPreviousYPos;
 
@@ -215,6 +218,10 @@ public class InGameActivity extends AppCompatActivity {
 
     private HashMap<String,Ingredient> ingredientKey;
 
+    private ArrayList<Ingredient> allCurrentItems;
+    private ArrayList<String> allCurrentItemNames;
+    private float[] allCurrentItemLocations;
+
     // Dialogue Box variables
     private ConstraintLayout dialogueBoxLayout;
     private TextView dialogueNameTextView;
@@ -247,6 +254,8 @@ public class InGameActivity extends AppCompatActivity {
         itemHandler = new Handler();
         eHandler = new Handler();
         npcHandler = new Handler();
+
+        rHandler = new Handler();
 
         controllerSetUp();
 
@@ -729,7 +738,70 @@ public class InGameActivity extends AppCompatActivity {
 
     }
 
+    private void initialItemSetUp(){
+        allCurrentItems = new ArrayList<>();
+
+        for(int i = 0; i < allCurrentItemNames.size(); i++){
+            Ingredient ingredient;
+            if(allCurrentItemNames.get(i).toLowerCase().equals("carrot")){
+                ingredient = new Ingredient(this, "Carrot", 10, 6,
+                        R.drawable.carrot, allCurrentItemLocations[2 * i],
+                        allCurrentItemLocations[2 * i + 1], 150,242,149,27);
+            }
+            else if(allCurrentItemNames.get(i).toLowerCase().equals("mushroom")){
+                ingredient = new Ingredient(this, "Mushroom", 8, 8,
+                        R.drawable.mushroom, allCurrentItemLocations[2 * i],
+                        allCurrentItemLocations[2 * i + 1], 150,201, 87, 48);
+            }
+            else if(allCurrentItemNames.get(i).toLowerCase().equals("radish")){
+                ingredient = new Ingredient(this, "Radish", 8, 8,
+                        R.drawable.radish, allCurrentItemLocations[2 * i],
+                        allCurrentItemLocations[2 * i + 1], 150,243, 222, 255);
+            }
+            else if(allCurrentItemNames.get(i).toLowerCase().equals("tomato")){
+                ingredient = new Ingredient(this, "Tomato", 8, 8,
+                        R.drawable.tomato, allCurrentItemLocations[2 * i],
+                        allCurrentItemLocations[2 * i + 1], 150,230, 16, 37);
+            }
+            else if(allCurrentItemNames.get(i).toLowerCase().equals("plant")){
+                ingredient = new Ingredient(this, "Plant", 8, 8,
+                        R.drawable.plant1, allCurrentItemLocations[2 * i],
+                        allCurrentItemLocations[2 * i + 1], 150,113, 214, 79);
+            }
+            else{
+                ingredient = null;
+            }
+
+            Runnable fall = ingredient.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
+                @Override
+                public void onCollision(GameObject object1, GameObject object2) {
+                    if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                        if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
+                            object1.stopFall();
+
+                            object1.setYPosition(object2.getHitBox().topLeft().y);
+
+                            object1.getHitBox().setYPosition(object1.getYPosition());
+                            object1.setHitBox(object1.getHitBox());
+                            object1.showHitBox();
+                        }
+
+                        Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                    }
+                }
+            });
+
+            backgroundGameLayout.addLayoutObject(ingredient);
+            allCurrentItems.add(ingredient);
+
+            itemHandler.postDelayed(fall, 5);
+
+        }
+    }
+
     private void itemSetup(String environment){
+
+        allCurrentItems = new ArrayList<Ingredient>();
 
         if(environment.toLowerCase().equals("test")){
             for(int i = 0; i < 10; i++){
@@ -859,10 +931,11 @@ public class InGameActivity extends AppCompatActivity {
                 Ingredient carrot = new Ingredient(this, "Carrot", 10, 6,
                         R.drawable.carrot,
                         (float) (Math.random() * (tWidth-tWidth/5F) + tWidth/9F),
-                        (float) (gameCamera.getTopYPosition()) + 70, 0, 0, 0, 0);
+                        (float) (gameCamera.getTopYPosition()) + 70, 150,242,149,27);
 
 
                 backgroundGameLayout.addLayoutObject(carrot);
+                allCurrentItems.add(carrot);
 
                 Runnable carrotFall = carrot.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
                     @Override
@@ -890,9 +963,10 @@ public class InGameActivity extends AppCompatActivity {
                 Ingredient mushroom = new Ingredient(this, "Mushroom", (int) (8), (int) (8),
                         R.drawable.mushroom,
                         (float) (Math.random() * (tWidth-tWidth/5F) + tWidth/9F),
-                        (float) (gameCamera.getTopYPosition()) + 70, 0, 0, 0, 0);
+                        (float) (gameCamera.getTopYPosition()) + 70, 150,201, 87, 48);
 
                 backgroundGameLayout.addLayoutObject(mushroom);
+                allCurrentItems.add(mushroom);
 
                 Runnable mushroomFall = mushroom.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
                     @Override
@@ -920,9 +994,10 @@ public class InGameActivity extends AppCompatActivity {
                 Ingredient tomato = new Ingredient(this, "Tomato", (int) (8), (int) (8),
                         R.drawable.tomato,
                         (float) (Math.random() * (tWidth-tWidth/5F) + tWidth/9F),
-                        (float) (gameCamera.getTopYPosition()) + 70, 0, 0, 0, 0);
+                        (float) (gameCamera.getTopYPosition()) + 70, 150,230, 16, 37);
 
                 backgroundGameLayout.addLayoutObject(tomato);
+                allCurrentItems.add(tomato);
 
                 Runnable tomatoFall = tomato.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
                     @Override
@@ -948,6 +1023,16 @@ public class InGameActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    private void removeAllItems(){
+        if(allCurrentItems != null) {
+            for (Ingredient item : allCurrentItems) {
+                itemHandler.postDelayed(item.collected(itemHandler), 0);
+            }
+
+            allCurrentItems = new ArrayList<Ingredient>();
+        }
     }
 
     // Inventory Saving
@@ -2384,6 +2469,7 @@ public class InGameActivity extends AppCompatActivity {
             ingredient.setCollected(true);
             Runnable collectAnimation = ingredient.collected(itemHandler);
             itemHandler.postDelayed(collectAnimation, 0);
+            allCurrentItems.remove(ingredient);
             itemCount++;
             switch(itemName) {
                 case "Carrot":
@@ -2475,8 +2561,6 @@ public class InGameActivity extends AppCompatActivity {
 
     // uncomment postDelayed for correct timing of cycle
     public void dayNightCycle(){
-        rHandler = new Handler();
-
         Runnable lighting = new Runnable() {
 
             @Override
@@ -2549,6 +2633,7 @@ public class InGameActivity extends AppCompatActivity {
                         oB = 190;
                         timeOfDay = "Morning";
                         itemsAreSet = false;
+                        removeAllItems();
                     }
                    // rHandler.postDelayed(this,231);
                 }
@@ -2888,6 +2973,24 @@ public class InGameActivity extends AppCompatActivity {
         json = gson.toJson(forestCloudCoordinates);
         editor.putString(FOREST_CLOUD_COORDINATES, json);
 
+        int i = 0;
+        allCurrentItemLocations = new float[200];
+        allCurrentItemNames = new ArrayList<String>();
+        for(Ingredient item : allCurrentItems){
+            allCurrentItemNames.add(item.getName());
+            allCurrentItemLocations[2 * i] = item.getXPosition();
+            allCurrentItemLocations[2 * i + 1] = item.getYPosition();
+            i++;
+        }
+
+        gson = new Gson();
+        json = gson.toJson(allCurrentItemNames);
+        editor.putString(ALL_CURRENT_ITEM_NAMES, json);
+
+        gson = new Gson();
+        json = gson.toJson(allCurrentItemLocations);
+        editor.putString(ALL_CURRENT_ITEM_LOCATIONS, json);
+
 
 
         // Saving custom objects not working.
@@ -3009,6 +3112,23 @@ public class InGameActivity extends AppCompatActivity {
             forestCloudCoordinates = null;
         }
 
+        gson = new Gson();
+        json = sharedPreferences.getString(ALL_CURRENT_ITEM_NAMES, "");
+        if(!json.equals("")){
+            allCurrentItemNames = gson.fromJson(json, ArrayList.class);
+        }
+        else{
+            allCurrentItemNames = new ArrayList<String>();
+        }
+
+        gson = new Gson();
+        json = sharedPreferences.getString(ALL_CURRENT_ITEM_LOCATIONS, "");
+        if(!json.equals("")){
+            allCurrentItemLocations = gson.fromJson(json, float[].class);
+        }
+        else{
+            allCurrentItemLocations = new float[200];
+        }
 
         // Since saving custom objects isn't working. Don't load in custom objects.
 //        Gson gson = new Gson();
@@ -3208,6 +3328,7 @@ public class InGameActivity extends AppCompatActivity {
         initialCharacterSetUp();
         initialInventorySetUp();
         initialEnvironmentSetUp();
+        initialItemSetUp();
         dayNightCycle();
     }
 //
