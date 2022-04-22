@@ -667,7 +667,7 @@ public class InGameActivity extends AppCompatActivity {
                 }
             },2000);
 
-            kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),1000);
+            kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),200);
 
             setLightingTemporarily(255,255,255,255,255,255);
         }
@@ -689,7 +689,7 @@ public class InGameActivity extends AppCompatActivity {
                 kirby.setGrounded(false);
                 kirby.getUdHandler().removeCallbacksAndMessages(null);
                 kirby.stopFall();
-                kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 1000);
+                kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 200);
             }
             
             // Forest Clouds moving
@@ -729,7 +729,7 @@ public class InGameActivity extends AppCompatActivity {
                 kirby.setGrounded(false);
                 kirby.getUdHandler().removeCallbacksAndMessages(null);
                 kirby.stopFall();
-                kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 1000);
+                kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 200);
             }
         }
         else if(environment.toLowerCase().equals("swamp")){
@@ -3050,6 +3050,7 @@ public class InGameActivity extends AppCompatActivity {
         editor.apply();
 
         Toast.makeText(this, "Data Saved", Toast.LENGTH_SHORT).show();
+        Log.i("Save", "Saved data");
     }
 
     public void loadData(){
@@ -3322,7 +3323,7 @@ public class InGameActivity extends AppCompatActivity {
             rightButton.setLayoutParams(lp);
         }
 
-         Log.i("SetUp","Initial Set Up");
+        Log.i("SetUp","Initial Set Up");
 
         initialCameraSetUp();
         initialCharacterSetUp();
