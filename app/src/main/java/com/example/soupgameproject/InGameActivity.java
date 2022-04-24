@@ -2340,7 +2340,13 @@ public class InGameActivity extends AppCompatActivity {
                     " collected to make a variety of soups. Ingredients can be viewed in an inventory pop-up and the soups " +
                     "the user makes can be viewed in a catalog page that describes the soup. The goal of the game is to create" +
                     " all the different soups that can be made by mixing and matching the ingredients found in the forest area " +
-                    "as well as those found in the swamp area.", 10, dialoguePortraitImageView, R.drawable.waddledeeportrait);
+                    "as well as those found in the swamp area.", 10, dialoguePortraitImageView, R.drawable.waddledeeportrait,
+                    new DialogueBox.DialogueListener() {
+                        @Override
+                        public void onComplete() {
+                            Log.i("Dialogue", "Dialogue complete.");
+                        }
+                    });
 
 
             @Override
@@ -2402,19 +2408,15 @@ public class InGameActivity extends AppCompatActivity {
                             else if(kirby.isGrounded() && isByTutorialWaddleDee){
                                 // Tutorial info
                                 if(!tutorial.isPlaying()){
-                                    tutorial.getTextHandler().postDelayed(tutorial.getPlayDialogue(),0);
-                                    tutorial.showDialogBox();
-
-                                    // Work on closing dialog box at the right time.
-//                                    tutorial.getTextHandler().postDelayed(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            if(!tutorial.isPlaying()) {
-//                                                DialogueBox.hideDialogBox();
-//                                                tutorial.resetDialogue();
-//                                            }
-//                                        }
-//                                    }, 5000);
+                                    if(!tutorial.isDone()) {
+                                        tutorial.getTextHandler().postDelayed(tutorial.getPlayDialogue(), 0);
+                                        tutorial.showDialogBox();
+                                    }
+                                    else{
+                                        DialogueBox.hideDialogBox();
+                                        tutorial.resetDialogue();
+                                        tutorial.getDialogueListener().onComplete();
+                                    }
                                 }
                             }
                         }
@@ -2521,6 +2523,45 @@ public class InGameActivity extends AppCompatActivity {
             itemNames[itemCount] = itemName;
             userIngredients.add(ingredientKey.get(itemName));
 
+        }
+        else{
+            //Toast.makeText(this, "Max Items Collected", Toast.LENGTH_SHORT).show();
+            Log.i("Items","Max items collected");
+        }
+    }
+
+    // For when Kirby is gifted ingredients from NPCs
+    private void receiveIngredient(Ingredient ingredient){
+        String itemName = ingredient.getName();
+
+        if(itemCount < 14) {
+            ingredient.setCollected(true);
+            itemCount++;
+            switch(itemName) {
+                case "Carrot":
+                    invDrawables[itemCount] = R.drawable.carrot;
+                    break;
+
+                case "Tomato":
+                    invDrawables[itemCount] = R.drawable.tomato;
+                    break;
+
+                case "Mushroom":
+                    invDrawables[itemCount] = R.drawable.mushroom;
+                    break;
+
+                case "Radish":
+                    invDrawables[itemCount] = R.drawable.radish;
+                    break;
+
+                case "Plant":
+                    invDrawables[itemCount] = R.drawable.plant1;
+                    break;
+            }
+
+            invImages[itemCount].setImageResource(invDrawables[itemCount]);
+            itemNames[itemCount] = itemName;
+            userIngredients.add(ingredientKey.get(itemName));
         }
         else{
             //Toast.makeText(this, "Max Items Collected", Toast.LENGTH_SHORT).show();

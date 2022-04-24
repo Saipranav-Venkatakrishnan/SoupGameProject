@@ -23,13 +23,16 @@ public class DialogueBox extends ConstraintLayout {
     private Handler textHandler;
     private Handler delayClose;
     private boolean isPlaying;
+    private boolean isDone;
     private int start;
     private int end;
     private Runnable playDialogue;
+    private DialogueListener dialogueListener;
 
 
     public DialogueBox(Context context, ConstraintLayout dialogueBoxLayout, TextView nameTextView, String name,
-                       TextView dialogueTextView, String dialogue, int dialogueSpeed, ImageView portraitImageView, int characterImage){
+                       TextView dialogueTextView, String dialogue, int dialogueSpeed, ImageView portraitImageView, int characterImage,
+                       DialogueListener dialogueListener){
         super(context);
         this.dialogueBoxLayout = dialogueBoxLayout;
         this.dialogue = dialogue;
@@ -42,8 +45,10 @@ public class DialogueBox extends ConstraintLayout {
         textHandler = new Handler();
         delayClose = new Handler();
         isPlaying = false;
+        isDone = false;
         start = 0;
         end = 0;
+        this.dialogueListener = dialogueListener;
 
         playDialogue = new Runnable() {
 
@@ -54,6 +59,7 @@ public class DialogueBox extends ConstraintLayout {
                     setStart(0);
                     setEnd(0);
                     isPlaying = false;
+                    isDone = true;
                     delayStopDialog(3000);
                     return;
                 }
@@ -93,6 +99,7 @@ public class DialogueBox extends ConstraintLayout {
     public void resetDialogue(){
         start = 0;
         end = 0;
+        isDone = false;
         isPlaying = false;
     }
     private void delayStopDialog(int time){
@@ -101,6 +108,9 @@ public class DialogueBox extends ConstraintLayout {
         delayClose.postDelayed(new Runnable() {
             @Override
             public void run() {
+                if(isDone){
+                    dialogueListener.onComplete();
+                }
                 hideDialogBox();
                 resetDialogue();
             }
@@ -157,5 +167,21 @@ public class DialogueBox extends ConstraintLayout {
 
     public int getDialogueSpeed() {
         return dialogueSpeed;
+    }
+
+    public boolean isDone() {
+        return isDone;
+    }
+
+    public void setDone(boolean done) {
+        isDone = done;
+    }
+
+    public DialogueListener getDialogueListener() {
+        return dialogueListener;
+    }
+
+    public interface DialogueListener{
+        void onComplete();
     }
 }
