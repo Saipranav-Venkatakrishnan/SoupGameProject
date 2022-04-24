@@ -798,6 +798,8 @@ public class InGameActivity extends AppCompatActivity {
             itemHandler.postDelayed(fall, 5);
 
         }
+
+        updateItems();
     }
 
     private void itemSetup(String environment){
@@ -1024,6 +1026,8 @@ public class InGameActivity extends AppCompatActivity {
 
         }
 
+        updateItems();
+
     }
 
     private void removeAllItems(){
@@ -1033,6 +1037,18 @@ public class InGameActivity extends AppCompatActivity {
             }
 
             allCurrentItems = new ArrayList<Ingredient>();
+        }
+    }
+
+    private void updateItems(){
+        int i = 0;
+        allCurrentItemLocations = new float[200];
+        allCurrentItemNames = new ArrayList<String>();
+        for(Ingredient item : allCurrentItems){
+            allCurrentItemNames.add(item.getName());
+            allCurrentItemLocations[2 * i] = item.getXPosition();
+            allCurrentItemLocations[2 * i + 1] = item.getYPosition();
+            i++;
         }
     }
 
@@ -2477,6 +2493,7 @@ public class InGameActivity extends AppCompatActivity {
             Runnable collectAnimation = ingredient.collected(itemHandler);
             itemHandler.postDelayed(collectAnimation, 0);
             allCurrentItems.remove(ingredient);
+            updateItems();
             itemCount++;
             switch(itemName) {
                 case "Carrot":
@@ -2503,6 +2520,7 @@ public class InGameActivity extends AppCompatActivity {
             invImages[itemCount].setImageResource(invDrawables[itemCount]);
             itemNames[itemCount] = itemName;
             userIngredients.add(ingredientKey.get(itemName));
+
         }
         else{
             //Toast.makeText(this, "Max Items Collected", Toast.LENGTH_SHORT).show();
@@ -2980,15 +2998,7 @@ public class InGameActivity extends AppCompatActivity {
         json = gson.toJson(forestCloudCoordinates);
         editor.putString(FOREST_CLOUD_COORDINATES, json);
 
-        int i = 0;
-        allCurrentItemLocations = new float[200];
-        allCurrentItemNames = new ArrayList<String>();
-        for(Ingredient item : allCurrentItems){
-            allCurrentItemNames.add(item.getName());
-            allCurrentItemLocations[2 * i] = item.getXPosition();
-            allCurrentItemLocations[2 * i + 1] = item.getYPosition();
-            i++;
-        }
+        updateItems();
 
         gson = new Gson();
         json = gson.toJson(allCurrentItemNames);
@@ -2997,6 +3007,7 @@ public class InGameActivity extends AppCompatActivity {
         gson = new Gson();
         json = gson.toJson(allCurrentItemLocations);
         editor.putString(ALL_CURRENT_ITEM_LOCATIONS, json);
+
 
 
 
