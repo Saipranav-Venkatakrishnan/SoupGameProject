@@ -2130,15 +2130,20 @@ public class InGameActivity extends AppCompatActivity {
                             cHandler.postDelayed(leftRunCamera,0);
                             kirby.getLrHandler().postDelayed(kirby.getAllActions().get("Left Run"),0);
                             Log.i("MovementCheck", "Running Left");
-                            playSoundEffect(R.raw.morse);
-                            soundEffectPlayer.setVolume(100, 100);
+                            if(kirby.isGrounded()){
+                                playSoundEffect(R.raw.runningongrass, true);
+                                soundEffectPlayer.setVolume(100, 100);
+                            }
+
                         }
                         else{
                             cHandler.postDelayed(leftWalkCamera,0);
                             kirby.getLrHandler().postDelayed(kirby.getAllActions().get("Left Walk"),0);
                             Log.i("MovementCheck", "Walking Left");
-                            playSoundEffect(R.raw.runningongrass);
-                            soundEffectPlayer.setVolume(50, 50);
+                            if(kirby.isGrounded()){
+                                playSoundEffect(R.raw.runningongrass, true);
+                                soundEffectPlayer.setVolume(25, 25);
+                            }
                         }
                         
                         isDown = true;
@@ -2198,12 +2203,20 @@ public class InGameActivity extends AppCompatActivity {
                             cHandler.postDelayed(rightRunCamera,0);
                             kirby.getLrHandler().postDelayed(kirby.getAllActions().get("Right Run"),0);
                             Log.i("MovementCheck", "Running Right");
+                            if(kirby.isGrounded()){
+                                playSoundEffect(R.raw.runningongrass, true);
+                                soundEffectPlayer.setVolume(100, 100);
+                            }
 
                         }
                         else{
                             cHandler.postDelayed(rightWalkCamera,0);
                             kirby.getLrHandler().postDelayed(kirby.getAllActions().get("Right Walk"),0);
                             Log.i("MovementCheck", "Walking Right");
+                            if(kirby.isGrounded()){
+                                playSoundEffect(R.raw.runningongrass, true);
+                                soundEffectPlayer.setVolume(25, 25);
+                            }
                         }
 
                         isDown = true;
@@ -2212,6 +2225,7 @@ public class InGameActivity extends AppCompatActivity {
                         view.performClick();
                         if (!isDown) return true;
                         Log.i("MovementCheck", "Still");
+                        pauseSoundEffect();
                         kirby.getLrHandler().removeCallbacks(kirby.getAllActions().get("Right Walk"));
                         cHandler.removeCallbacks(rightWalkCamera);
 
@@ -2272,6 +2286,8 @@ public class InGameActivity extends AppCompatActivity {
                                     kirby.stopJump();
                                     kirby.getUdHandler().postDelayed(kirby.getAllActions().get("High Jump"), 0);
                                     Log.i("MovementCheck", "Big Jump");
+                                    playSoundEffect(R.raw.jump, false);
+                                    soundEffectPlayer.setVolume(100, 100);
                                 }
                             }
                         }, 150);
@@ -2292,6 +2308,8 @@ public class InGameActivity extends AppCompatActivity {
                                 kirby.stopJump();
                                 kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Jump"),0);
                                 Log.i("MovementCheck", "Short Jump");
+                                playSoundEffect(R.raw.jump, false);
+                                soundEffectPlayer.setVolume(25, 25);
                             }
                             else {
                                 if(!isFloating && jumpCount < 6) {
@@ -2304,6 +2322,8 @@ public class InGameActivity extends AppCompatActivity {
                                     kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Start Float"), 0);
                                     isFloating = true;
                                     Log.i("MovementCheck", "Start Float");
+                                    playSoundEffect(R.raw.jump, false);
+                                    soundEffectPlayer.setVolume(25, 25);
                                 }
                                 else if(startFloatFinished && jumpCount < 6){
                                     jumpCount++;
@@ -2313,6 +2333,8 @@ public class InGameActivity extends AppCompatActivity {
                                     kirby.stopJump();
                                     kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Float Jump"),0);
                                     Log.i("MovementCheck", "Float Jump");
+                                    playSoundEffect(R.raw.jump, false);
+                                    soundEffectPlayer.setVolume(25, 25);
                                 }
                             }
                         }
@@ -2862,6 +2884,7 @@ public class InGameActivity extends AppCompatActivity {
 
             mediaPlayer = MediaPlayer.create(this, R.raw.kirbythemesong);
             mediaPlayer.start();
+            mediaPlayer.setVolume(25,25);
 //            mediaPlayer.setLooping(true);
 
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -3430,7 +3453,7 @@ public class InGameActivity extends AppCompatActivity {
     }
 
 
-    public void playSoundEffect(int rawSound){
+    public void playSoundEffect(int rawSound, boolean shouldLoop){
         if(soundEffectPlayer == null){
             // initializing media player
             soundEffectPlayer = new MediaPlayer();
@@ -3460,11 +3483,42 @@ public class InGameActivity extends AppCompatActivity {
 
             soundEffectPlayer = MediaPlayer.create(this, rawSound);
             soundEffectPlayer.start();
-            soundEffectPlayer.setLooping(true);
+            soundEffectPlayer.setLooping(shouldLoop);
 
             // below line is use to display a toast message.
 //            Toast.makeText(this, "Audio started playing..", Toast.LENGTH_SHORT).show();
 //            Log.i("Sai", "Playing is: " + soundEffectPlayer.isPlaying());
+        }
+        else if(soundEffectPlayer != null){
+            pauseSoundEffect();
+            soundEffectPlayer = new MediaPlayer();
+
+            // below line is use to set the audio
+            // stream type for our media player.
+//            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+            // below line is use to set our
+//            // url to our media player.
+//            try {
+//                mediaPlayer.setDataSource(audioUrl);
+//                // below line is use to prepare
+//                // and start our media player.
+//                mediaPlayer.prepareAsync();
+//                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//                    @Override
+//                    public void onPrepared(MediaPlayer mediaPlayer) {
+//                        mediaPlayer.start();
+//                    }
+//                });
+//
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+
+            soundEffectPlayer = MediaPlayer.create(this, rawSound);
+            soundEffectPlayer.start();
+            soundEffectPlayer.setLooping(shouldLoop);
         }
         else{
             Toast.makeText(this, "Audio is already playing", Toast.LENGTH_SHORT).show();
