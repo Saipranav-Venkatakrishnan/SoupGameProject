@@ -178,7 +178,7 @@
             android:layout_width="410dp"
             android:layout_height="110dp"
             android:layout_marginTop="5dp"
-
+            android:visibility="invisible"
             android:background="@drawable/boundary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
