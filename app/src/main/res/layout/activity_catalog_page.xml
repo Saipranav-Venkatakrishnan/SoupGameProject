@@ -15,11 +15,10 @@
             android:id="@+id/closeBttn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="closeScreen"
             android:text="Close" />
 
-        <include
-            android:id="@+id/includedLayoutFirst"
-            layout="@layout/catalog_base" />
+
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
