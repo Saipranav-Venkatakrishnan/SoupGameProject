@@ -150,4 +150,20 @@ public class Soup{
         imageView.setBackgroundTintMode(PorterDuff.Mode.SRC_ATOP);
         imageView.setBackgroundTintList(ColorStateList.valueOf(bowlColor));
     }
+
+    public int getStarRank() {
+        return starRank;
+    }
+
+    public void setStarRank(int starRank) {
+        this.starRank = starRank;
+    }
+
+    public String getSoupName() {
+        return soupName;
+    }
+
+    public void setSoupName(String soupName) {
+        this.soupName = soupName;
+    }
 }

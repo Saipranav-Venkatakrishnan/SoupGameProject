@@ -22,9 +22,12 @@ public class CatalogPage extends AppCompatActivity {
         setContentView(R.layout.activity_catalog_page);
 
         cards = findViewById(R.id.cards);
+
+        createCard(new Soup(new Ingredient(this, "Carrot",0,0,
+                R.drawable.carrot,0,0,150,242,149,27),3));
     }
 
-    public void createCard() {
+    public void createCard(Soup soup) {
         CardView newCard = new CardView(CatalogPage.this);
         getLayoutInflater().inflate(R.layout.catalog_base, newCard);
 
@@ -33,7 +36,9 @@ public class CatalogPage extends AppCompatActivity {
         TextView desc = newCard.findViewById(R.id.descTxt);
         RatingBar stars = newCard.findViewById(R.id.ratingBar);
 
-        // img.setImageResource();
+        soup.showSoup(img);
+        name.setText(soup.getSoupName());
+        stars.setNumStars(soup.getStarRank());
 
         cards.addView(newCard);
     }

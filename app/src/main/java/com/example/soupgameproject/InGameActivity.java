@@ -227,6 +227,10 @@ public class InGameActivity extends AppCompatActivity {
     private ArrayList<String> allCurrentItemNames;
     private float[] allCurrentItemLocations;
 
+    private ConstraintLayout layout;
+
+    private int[] inventoryItemClickCounter;
+
     // Dialogue Box variables
     private ConstraintLayout dialogueBoxLayout;
     private TextView dialogueNameTextView;
@@ -254,6 +258,10 @@ public class InGameActivity extends AppCompatActivity {
         dialogueNameTextView = findViewById(R.id.characterNameTextView);
         dialoguePortraitImageView = findViewById(R.id.characterPortrait);
         dialogueTextView = findViewById(R.id.characterDialogueTextView);
+
+        layout = (ConstraintLayout) this.findViewById(R.id.inventoryLayout);
+
+
 
         // Set up Handlers
         cHandler = new Handler();
@@ -555,22 +563,23 @@ public class InGameActivity extends AppCompatActivity {
         cauldron.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ImageView test = findViewById(R.id.soupTest);
-                ImageView test2 = findViewById(R.id.soupTest2);
-                String[] ingredientNames = new String[]{"Carrot","Mushroom","Radish","Tomato","Plant"};
-
-                Ingredient ingredient1 = ingredientKey.get(ingredientNames[(int)(Math.random() * 5)]);
-                Ingredient ingredient2 = ingredientKey.get(ingredientNames[(int)(Math.random() * 5)]);
-                int amount1 = (int)(Math.random() * 9 + 1);
-                int amount2 = 10 - amount1;
-
-                Soup soup = new Soup(ingredient1,amount1);
-                Soup mixSoup = new Soup(ingredient1,amount1,ingredient2,amount2);
-
-                soup.showSoup(test);
-
-                mixSoup.showSoup(test2);
-
+                // Soup testing
+//                ImageView test = findViewById(R.id.soupTest);
+//                ImageView test2 = findViewById(R.id.soupTest2);
+//                String[] ingredientNames = new String[]{"Carrot","Mushroom","Radish","Tomato","Plant"};
+//
+//                Ingredient ingredient1 = ingredientKey.get(ingredientNames[(int)(Math.random() * 5)]);
+//                Ingredient ingredient2 = ingredientKey.get(ingredientNames[(int)(Math.random() * 5)]);
+//                int amount1 = (int)(Math.random() * 9 + 1);
+//                int amount2 = 10 - amount1;
+//
+//                Soup soup = new Soup(ingredient1,amount1);
+//                Soup mixSoup = new Soup(ingredient1,amount1,ingredient2,amount2);
+//
+//                soup.showSoup(test);
+//
+//                mixSoup.showSoup(test2);
+                makeSoup();
             }
         });
 
@@ -587,6 +596,7 @@ public class InGameActivity extends AppCompatActivity {
         // After populating all ArrayLists, set up the first environment the player will be in (which will be the forest)
         environmentSetUp(environment);
     }
+
 
     // Sets up a brand new chosen in-game environment. Use to change environments
     private void environmentSetUp(String environment){
@@ -2836,8 +2846,36 @@ public class InGameActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    // Soup making method
+    private void makeSoup(){
+        inventoryItemClickCounter = new int[15];
+
+        layout.setVisibility(View.VISIBLE);
+
+        for (int i = 0; i < invImages.length; i++) {
+            invImages[i] = (ImageView) findViewById(invRes[i]);
+            invImages[i].setImageResource(invDrawables[i]);
+            invImages[i].setVisibility(View.VISIBLE);
+
+            int itemNumber = i;
+            invImages[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    inventoryItemClickCounter[itemNumber]++;
+                    if(inventoryItemClickCounter[itemNumber] % 2 == 1){
+                        // select item
+                    }
+                    else{
+                        // deselect item
+                    }
+                }
+            });
+        }
+
+
+    }
+
     public void inventoryPage(View v) {
-        ConstraintLayout layout = (ConstraintLayout) this.findViewById(R.id.inventoryLayout);
         if(layout.getVisibility() == View.INVISIBLE) {
             layout.setVisibility(View.VISIBLE);
         }
