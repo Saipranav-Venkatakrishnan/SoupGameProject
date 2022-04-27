@@ -24,8 +24,8 @@ public class Soup{
     private int totalAmountOfIngredients;
     
     // Subject to change
-    private static final int minIngredients = 3;
-    private static final int maxIngredients = 10;
+    public static final int minIngredients = 3;
+    public static final int maxIngredients = 10;
 
     // Basic Soup Constructor
     // 1 ingredient
