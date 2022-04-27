@@ -2887,6 +2887,7 @@ public class InGameActivity extends AppCompatActivity {
             invImages[i] = (ImageView) findViewById(invRes[i]);
             invImages[i].setImageResource(invDrawables[i]);
             invImages[i].setVisibility(View.VISIBLE);
+            invImages[i].setOnClickListener(null);
         }
     }
 
