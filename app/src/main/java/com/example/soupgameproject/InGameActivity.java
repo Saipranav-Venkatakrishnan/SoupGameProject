@@ -16,7 +16,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,6 +34,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.gson.Gson;
 
 import org.xmlpull.v1.XmlPullParserException;
@@ -2848,6 +2851,10 @@ public class InGameActivity extends AppCompatActivity {
 
     // Soup making method
     private void makeSoup(){
+        Button makeBttn = findViewById(R.id.makeSoupBttn);
+        makeBttn.setVisibility(View.VISIBLE);
+        makeBttn.setClickable(false);
+
         inventoryItemClickCounter = new int[15];
 
         layout.setVisibility(View.VISIBLE);
@@ -2864,14 +2871,37 @@ public class InGameActivity extends AppCompatActivity {
                     inventoryItemClickCounter[itemNumber]++;
                     if(inventoryItemClickCounter[itemNumber] % 2 == 1){
                         // select item
+                        int numSelected = 0;
+                        for(int i = 0; i < inventoryItemClickCounter.length; i++) {
+                            if(inventoryItemClickCounter[i] % 2 == 1) {
+                                numSelected++;
+                            }
+                        }
+                        if(numSelected >= 3) {
+                            makeBttn.setClickable(true);
+                        }
+
+                        invImages[itemNumber].setImageTintMode(PorterDuff.Mode.SRC_OVER);
+                        invImages[itemNumber].setImageTintList(ColorStateList.valueOf(Color.argb(100, 100, 100, 100)));
                     }
                     else{
                         // deselect item
+                        int numSelected = 0;
+                        for(int i = 0; i < inventoryItemClickCounter.length; i++) {
+                            if(inventoryItemClickCounter[i] % 2 == 1) {
+                                numSelected++;
+                            }
+                        }
+                        if(numSelected < 3) {
+                            makeBttn.setClickable(false);
+                        }
+
+                        invImages[itemNumber].setImageTintMode(PorterDuff.Mode.OVERLAY);
+                        invImages[itemNumber].setImageTintList(ColorStateList.valueOf(Color.argb(0, 100, 100, 100)));
                     }
                 }
             });
         }
-
 
     }
 
