@@ -42,7 +42,7 @@ public class CatalogPage extends AppCompatActivity {
 
         soup.showSoup(img);
         name.setText(soup.getSoupName());
-        stars.setNumStars(soup.getStarRank());
+        stars.setRating(soup.getStarRank());
 
         cards.addView(newCard);
     }
