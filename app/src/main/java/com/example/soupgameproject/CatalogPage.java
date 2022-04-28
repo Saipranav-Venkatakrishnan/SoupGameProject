@@ -6,10 +6,13 @@ import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 public class CatalogPage extends AppCompatActivity {
 
@@ -23,8 +26,9 @@ public class CatalogPage extends AppCompatActivity {
 
         cards = findViewById(R.id.cards);
 
-        createCard(new Soup(new Ingredient(this, "Carrot",0,0,
-                R.drawable.carrot,0,0,150,242,149,27),3));
+        for(Soup soup: InGameActivity.userSoups){
+            createCard(soup);
+        }
     }
 
     public void createCard(Soup soup) {

@@ -91,14 +91,17 @@ public class InGameActivity extends AppCompatActivity {
     public static final String FOREST_CLOUD_COORDINATES = "forestCloudCoordinates";
 
     public static final String INV_DRAWABLES = "invDrawables";
-    public static final String ITEM_COUNT = "itemCount";
     public static final String ITEM_NAMES = "itemNames";
 
     public static final String ALL_CURRENT_ITEM_NAMES = "allCurrentItemNames";
     public static final String ALL_CURRENT_ITEM_LOCATIONS = "allCurrentItemLocations";
 
+    public static final String SOUP_INGREDIENTS = "soupIngredients";
+    public static final String SOUP_RANKS = "soupRanks";
+
     public static float kirbyPreviousXPos;
     public static float kirbyPreviousYPos;
+
 
 
 
@@ -218,11 +221,10 @@ public class InGameActivity extends AppCompatActivity {
     private ImageView[] invImages;
     private int[] invRes = new int[] {R.id.iv1, R.id.iv2, R.id.iv3, R.id.iv4, R.id.iv5, R.id.iv6, R.id.iv7, R.id.iv8, R.id.iv9, R.id.iv10, R.id.iv11, R.id.iv12, R.id.iv13, R.id.iv14, R.id.iv15};
     private int[] invDrawables;
-    private int itemCount;
 
     private String[] itemNames;
 
-    private ArrayList<Ingredient> userIngredients;
+    private Ingredient[] userIngredients;
 
     private HashMap<String,Ingredient> ingredientKey;
 
@@ -233,6 +235,17 @@ public class InGameActivity extends AppCompatActivity {
     private ConstraintLayout layout;
 
     private int[] inventoryItemClickCounter;
+
+    private ArrayList<Ingredient> selectedIngredients;
+    private ArrayList<Integer> selectedIngredientsIndex;
+
+    public static ArrayList<Soup> userSoups = new ArrayList<Soup>();
+    // for recreating/saving soups
+    private ArrayList<String> soupIngredients;
+    private int[] soupRanks;
+
+    private Button makeBttn;
+
 
     // Dialogue Box variables
     private ConstraintLayout dialogueBoxLayout;
@@ -261,6 +274,7 @@ public class InGameActivity extends AppCompatActivity {
         dialogueNameTextView = findViewById(R.id.characterNameTextView);
         dialoguePortraitImageView = findViewById(R.id.characterPortrait);
         dialogueTextView = findViewById(R.id.characterDialogueTextView);
+        makeBttn = findViewById(R.id.makeSoupBttn);
 
         layout = (ConstraintLayout) this.findViewById(R.id.inventoryLayout);
 
@@ -855,7 +869,7 @@ public class InGameActivity extends AppCompatActivity {
                     }
                 });
 
-                itemHandler.postDelayed(carrotFall, 5000);
+                itemHandler.postDelayed(carrotFall, 0);
 
                 Ingredient mushroom = new Ingredient(this, "Mushroom",(int)(8 * size),(int)(8*size),
                         R.drawable.mushroom,
@@ -883,7 +897,7 @@ public class InGameActivity extends AppCompatActivity {
                     }
                 });
 
-                itemHandler.postDelayed(mushroomFall, 5000);
+                itemHandler.postDelayed(mushroomFall, 0);
 
                 Ingredient radish = new Ingredient(this, "Radish",(int)(8 * size),(int)(8* size),
                         R.drawable.radish,
@@ -911,7 +925,7 @@ public class InGameActivity extends AppCompatActivity {
                     }
                 });
 
-                itemHandler.postDelayed(radishFall, 5000);
+                itemHandler.postDelayed(radishFall, 0);
 
                 Ingredient tomato = new Ingredient(this, "Tomato",(int)(8 * size),(int)(8* size),
                         R.drawable.tomato,
@@ -939,8 +953,9 @@ public class InGameActivity extends AppCompatActivity {
                     }
                 });
 
-                itemHandler.postDelayed(tomatoFall, 5000);
+                itemHandler.postDelayed(tomatoFall, 0);
             }
+            Log.i("EnvironmentSetup","Test Items");
         }
         else if(environment.toLowerCase().equals("forest")){
             // Make better randomizer later
@@ -1043,6 +1058,11 @@ public class InGameActivity extends AppCompatActivity {
                 itemHandler.postDelayed(tomatoFall, 5);
             }
 
+            Log.i("EnvironmentSetup","Forest Items");
+
+        }
+        else if(environment.toLowerCase().equals("house")){
+            Log.i("EnvironmentSetup","There should be no items...");
         }
 
         updateItems();
@@ -1073,7 +1093,7 @@ public class InGameActivity extends AppCompatActivity {
 
     // Inventory Saving
     private void initialInventorySetUp(){
-        userIngredients = new ArrayList<Ingredient>();
+        userIngredients = new Ingredient[15];
         ingredientKey = new HashMap<String, Ingredient>();
         ingredientKey.put("Carrot", new Ingredient(this, "Carrot",0,0,
                 R.drawable.carrot,0,0,150,242,149,27));
@@ -1089,8 +1109,25 @@ public class InGameActivity extends AppCompatActivity {
         for(int i = 0; i < 15; i++){
             if(invDrawables[i] != 0) {
                 invImages[i].setImageResource(invDrawables[i]);
-                userIngredients.add(ingredientKey.get(itemNames[i]));
+                userIngredients[i] = ingredientKey.get(itemNames[i]);
             }
+        }
+    }
+
+    private void initialSoupSetUp(){
+        userSoups = new ArrayList<Soup>();
+        for(int i = 0; i < soupIngredients.size(); i++){
+            ArrayList<Ingredient> ingredientList = new ArrayList<Ingredient>();
+            int start = 0;
+            for(int j = 0; j < soupIngredients.get(i).length(); j++){
+                if(soupIngredients.get(i).substring(j,j+1).equals("/")){
+                    String ingredientName = soupIngredients.get(i).substring(start,j);
+                    Log.i("SoupMaking",ingredientName);
+                    ingredientList.add(ingredientKey.get(ingredientName));
+                    start = j+1;
+                }
+            }
+            userSoups.add(new Soup(ingredientList, soupRanks[i]));
         }
     }
 
@@ -2531,13 +2568,20 @@ public class InGameActivity extends AppCompatActivity {
     private void collectIngredient(Ingredient ingredient){
         String itemName = ingredient.getName();
 
-        if(itemCount < 14) {
+        int itemCount = -1;
+        for(int i = 0; i < 15; i++){
+            if(userIngredients[i] == null){
+                itemCount = i;
+                break;
+            }
+        }
+
+        if(itemCount !=-1) {
             ingredient.setCollected(true);
             Runnable collectAnimation = ingredient.collected(itemHandler);
             itemHandler.postDelayed(collectAnimation, 0);
             allCurrentItems.remove(ingredient);
             updateItems();
-            itemCount++;
             switch(itemName) {
                 case "Carrot":
                     invDrawables[itemCount] = R.drawable.carrot;
@@ -2562,7 +2606,7 @@ public class InGameActivity extends AppCompatActivity {
 
             invImages[itemCount].setImageResource(invDrawables[itemCount]);
             itemNames[itemCount] = itemName;
-            userIngredients.add(ingredientKey.get(itemName));
+            userIngredients[itemCount] = ingredientKey.get(itemName);
 
         }
         else{
@@ -2571,43 +2615,14 @@ public class InGameActivity extends AppCompatActivity {
         }
     }
 
-    // For when Kirby is gifted ingredients from NPCs
-    private void receiveIngredient(Ingredient ingredient){
-        String itemName = ingredient.getName();
-
-        if(itemCount < 14) {
-            ingredient.setCollected(true);
-            itemCount++;
-            switch(itemName) {
-                case "Carrot":
-                    invDrawables[itemCount] = R.drawable.carrot;
-                    break;
-
-                case "Tomato":
-                    invDrawables[itemCount] = R.drawable.tomato;
-                    break;
-
-                case "Mushroom":
-                    invDrawables[itemCount] = R.drawable.mushroom;
-                    break;
-
-                case "Radish":
-                    invDrawables[itemCount] = R.drawable.radish;
-                    break;
-
-                case "Plant":
-                    invDrawables[itemCount] = R.drawable.plant1;
-                    break;
-            }
-
-            invImages[itemCount].setImageResource(invDrawables[itemCount]);
-            itemNames[itemCount] = itemName;
-            userIngredients.add(ingredientKey.get(itemName));
-        }
-        else{
-            //Toast.makeText(this, "Max Items Collected", Toast.LENGTH_SHORT).show();
-            Log.i("Items","Max items collected");
-        }
+    private void removeIngredientFromInventory(int index){
+        invDrawables[index] = android.R.color.transparent;
+        invImages[index].setImageResource(invDrawables[index]);
+        invImages[index].setImageTintMode(PorterDuff.Mode.OVERLAY);
+        invImages[index].setImageTintList(ColorStateList.valueOf(Color.argb(0, 100, 100, 100)));
+        invImages[index].setOnClickListener(null);
+        itemNames[index] = "";
+        userIngredients[index] = null;
     }
 
     // This method helps to find the scale for the game camera to zoom to
@@ -2816,9 +2831,6 @@ public class InGameActivity extends AppCompatActivity {
         GameLayout.darkenObjectLighting(Color.argb(255, or, og, ob));
     }
 
-
-
-
     // The following code was from https://developer.android.com/training/system-ui/immersive to create a fullscreen (has changed)
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -2851,7 +2863,9 @@ public class InGameActivity extends AppCompatActivity {
 
     // Soup making method
     private void makeSoup(){
-        Button makeBttn = findViewById(R.id.makeSoupBttn);
+        selectedIngredients = new ArrayList<Ingredient>();
+        selectedIngredientsIndex = new ArrayList<Integer>();
+
         makeBttn.setVisibility(View.VISIBLE);
         makeBttn.setClickable(false);
 
@@ -2865,44 +2879,69 @@ public class InGameActivity extends AppCompatActivity {
             invImages[i].setVisibility(View.VISIBLE);
 
             int itemNumber = i;
-            invImages[i].setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    inventoryItemClickCounter[itemNumber]++;
-                    if(inventoryItemClickCounter[itemNumber] % 2 == 1){
-                        // select item
-                        int numSelected = 0;
-                        for(int i = 0; i < inventoryItemClickCounter.length; i++) {
-                            if(inventoryItemClickCounter[i] % 2 == 1) {
-                                numSelected++;
+            if(userIngredients[itemNumber] != null) {
+                invImages[i].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        inventoryItemClickCounter[itemNumber]++;
+                        if (inventoryItemClickCounter[itemNumber] % 2 == 1) {
+                            // select item
+                            int numSelected = 0;
+                            for (int i = 0; i < inventoryItemClickCounter.length; i++) {
+                                if (inventoryItemClickCounter[i] % 2 == 1) {
+                                    numSelected++;
+                                }
                             }
-                        }
-                        if(numSelected >= 3) {
-                            makeBttn.setClickable(true);
-                        }
-
-                        invImages[itemNumber].setImageTintMode(PorterDuff.Mode.SRC_OVER);
-                        invImages[itemNumber].setImageTintList(ColorStateList.valueOf(Color.argb(100, 100, 100, 100)));
-                    }
-                    else{
-                        // deselect item
-                        int numSelected = 0;
-                        for(int i = 0; i < inventoryItemClickCounter.length; i++) {
-                            if(inventoryItemClickCounter[i] % 2 == 1) {
-                                numSelected++;
+                            if (numSelected >= 3) {
+                                makeBttn.setClickable(true);
                             }
-                        }
-                        if(numSelected < 3) {
-                            makeBttn.setClickable(false);
-                        }
 
-                        invImages[itemNumber].setImageTintMode(PorterDuff.Mode.OVERLAY);
-                        invImages[itemNumber].setImageTintList(ColorStateList.valueOf(Color.argb(0, 100, 100, 100)));
+                            invImages[itemNumber].setImageTintMode(PorterDuff.Mode.SRC_OVER);
+                            invImages[itemNumber].setImageTintList(ColorStateList.valueOf(Color.argb(100, 100, 100, 100)));
+                            selectedIngredients.add(userIngredients[itemNumber]);
+                            selectedIngredientsIndex.add(itemNumber);
+
+                        } else {
+                            // deselect item
+                            int numSelected = 0;
+                            for (int i = 0; i < inventoryItemClickCounter.length; i++) {
+                                if (inventoryItemClickCounter[i] % 2 == 1) {
+                                    numSelected++;
+                                }
+                            }
+                            if (numSelected < 3) {
+                                makeBttn.setClickable(false);
+                            }
+
+                            invImages[itemNumber].setImageTintMode(PorterDuff.Mode.OVERLAY);
+                            invImages[itemNumber].setImageTintList(ColorStateList.valueOf(Color.argb(0, 100, 100, 100)));
+                            selectedIngredients.remove(userIngredients[itemNumber]);
+                            selectedIngredientsIndex.remove((Integer) itemNumber);
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
+    }
+
+    public void createSoup(View view){
+        Soup createdSoup = new Soup(selectedIngredients);
+        boolean alreadyHave = false;
+        for(Soup soup : userSoups){
+            if (createdSoup.getSoupName().equals(soup.getSoupName())) {
+                alreadyHave = true;
+                break;
+            }
+        }
+
+        if(!alreadyHave){
+            userSoups.add(createdSoup);
+        }
+        // Whatever happens when soup is made:
+        for(int i : selectedIngredientsIndex){
+            removeIngredientFromInventory(i);
+        }
     }
 
     public void inventoryPage(View v) {
@@ -2922,8 +2961,8 @@ public class InGameActivity extends AppCompatActivity {
     }
 
     public void closeInventory(View v) {
-        ConstraintLayout layout = (ConstraintLayout) this.findViewById(R.id.inventoryLayout);
         layout.setVisibility(View.INVISIBLE);
+        makeBttn.setVisibility(View.INVISIBLE);
     }
 
     public void playAudio() {
@@ -3116,7 +3155,6 @@ public class InGameActivity extends AppCompatActivity {
         editor.putFloat(KIRBY_XPOSITION, kirbyXPosition);
         editor.putFloat(KIRBY_YPOSITION, kirbyYPosition);
 
-        editor.putInt(ITEM_COUNT, itemCount);
 
         gson = new Gson();
         json = gson.toJson(invDrawables);
@@ -3146,6 +3184,26 @@ public class InGameActivity extends AppCompatActivity {
         gson = new Gson();
         json = gson.toJson(allCurrentItemLocations);
         editor.putString(ALL_CURRENT_ITEM_LOCATIONS, json);
+
+//        int i = 0;
+//        for(Soup soup : userSoups){
+//            String temp = "";
+//            for(Ingredient ingredient : soup.getIngredients()){
+//                temp += ingredient.getName() + "/";
+//            }
+//            String ingredientList = temp.substring(0,temp.length()-1);
+//            soupIngredients.add(ingredientList);
+//            soupRanks[i] = soup.getStarRank();
+//            i++;
+//        }
+//
+//        gson = new Gson();
+//        json = gson.toJson(soupIngredients);
+//        editor.putString(SOUP_INGREDIENTS, json);
+//
+//        gson = new Gson();
+//        json = gson.toJson(soupRanks);
+//        editor.putString(SOUP_RANKS, json);
 
 
 
@@ -3241,7 +3299,6 @@ public class InGameActivity extends AppCompatActivity {
 
         kirbyYPosition = sharedPreferences.getFloat(KIRBY_YPOSITION, TitleActivity.HEIGHT/(2 * TitleActivity.DENSITY));
 
-        itemCount = sharedPreferences.getInt(ITEM_COUNT, -1);
 
         Gson gson = new Gson();
         String json = sharedPreferences.getString(INV_DRAWABLES, "");
@@ -3287,6 +3344,24 @@ public class InGameActivity extends AppCompatActivity {
         else{
             allCurrentItemLocations = new float[200];
         }
+
+//        gson = new Gson();
+//        json = sharedPreferences.getString(SOUP_INGREDIENTS, "");
+//        if(!json.equals("")){
+//            soupIngredients = gson.fromJson(json, ArrayList.class);
+//        }
+//        else{
+//            soupIngredients = new ArrayList<String>();
+//        }
+//
+//        gson = new Gson();
+//        json = sharedPreferences.getString(SOUP_RANKS, "");
+//        if(!json.equals("")){
+//            soupRanks = gson.fromJson(json, int[].class);
+//        }
+//        else{
+//            soupRanks = new int[500];
+//        }
 
         // Since saving custom objects isn't working. Don't load in custom objects.
 //        Gson gson = new Gson();
@@ -3485,6 +3560,7 @@ public class InGameActivity extends AppCompatActivity {
         initialCameraSetUp();
         initialCharacterSetUp();
         initialInventorySetUp();
+       // initialSoupSetUp();
         initialEnvironmentSetUp();
         initialItemSetUp();
         dayNightCycle();
