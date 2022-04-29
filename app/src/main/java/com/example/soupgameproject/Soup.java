@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.util.Log;
 import android.widget.ImageView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
@@ -151,6 +152,7 @@ public class Soup{
         
         soupColor = Color.argb(a, r, g, b);
     }
+
 
     // Subject to change
     private void soupNameHandler(){

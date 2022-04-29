@@ -99,6 +99,8 @@ public class InGameActivity extends AppCompatActivity {
     public static final String SOUP_INGREDIENTS = "soupIngredients";
     public static final String SOUP_RANKS = "soupRanks";
 
+    public static final String TEST_SAVE = "testSave";
+
     public static float kirbyPreviousXPos;
     public static float kirbyPreviousYPos;
 
@@ -3185,27 +3187,35 @@ public class InGameActivity extends AppCompatActivity {
         json = gson.toJson(allCurrentItemLocations);
         editor.putString(ALL_CURRENT_ITEM_LOCATIONS, json);
 
-//        int i = 0;
-//        for(Soup soup : userSoups){
-//            String temp = "";
-//            for(Ingredient ingredient : soup.getIngredients()){
-//                temp += ingredient.getName() + "/";
-//            }
-//            String ingredientList = temp.substring(0,temp.length()-1);
-//            soupIngredients.add(ingredientList);
-//            soupRanks[i] = soup.getStarRank();
-//            i++;
-//        }
-//
-//        gson = new Gson();
-//        json = gson.toJson(soupIngredients);
-//        editor.putString(SOUP_INGREDIENTS, json);
-//
-//        gson = new Gson();
-//        json = gson.toJson(soupRanks);
-//        editor.putString(SOUP_RANKS, json);
 
+//        gson = new Gson();
+//        json = gson.toJson(new Ingredient(this, "Test", 120, 120,
+//        R.drawable.carrot, 1, 1, 1, 1, 1, 1));
+//        editor.putString(TEST_SAVE, json);
 
+        int i = 0;
+        for(Soup soup : userSoups){
+            String temp = "";
+            for(Ingredient ingredient : soup.getIngredients()){
+                temp += ingredient.getName() + "/";
+            }
+            String ingredientList = temp.substring(0,temp.length());
+            soupIngredients.add(ingredientList);
+            soupRanks[i] = soup.getStarRank();
+            i++;
+        }
+
+        gson = new Gson();
+        json = gson.toJson(soupIngredients);
+        editor.putString(SOUP_INGREDIENTS, json);
+
+        Log.i("SoupCreation", "Ingredients: " + String.valueOf(soupIngredients.size()));
+
+        gson = new Gson();
+        json = gson.toJson(soupRanks);
+        editor.putString(SOUP_RANKS, json);
+
+        Log.i("SoupCreation", "Ranks: " + String.valueOf(soupRanks.length));
 
 
         // Saving custom objects not working.
@@ -3345,23 +3355,23 @@ public class InGameActivity extends AppCompatActivity {
             allCurrentItemLocations = new float[200];
         }
 
-//        gson = new Gson();
-//        json = sharedPreferences.getString(SOUP_INGREDIENTS, "");
-//        if(!json.equals("")){
-//            soupIngredients = gson.fromJson(json, ArrayList.class);
-//        }
-//        else{
-//            soupIngredients = new ArrayList<String>();
-//        }
-//
-//        gson = new Gson();
-//        json = sharedPreferences.getString(SOUP_RANKS, "");
-//        if(!json.equals("")){
-//            soupRanks = gson.fromJson(json, int[].class);
-//        }
-//        else{
-//            soupRanks = new int[500];
-//        }
+        gson = new Gson();
+        json = sharedPreferences.getString(SOUP_INGREDIENTS, "");
+        if(!json.equals("")){
+            soupIngredients = gson.fromJson(json, ArrayList.class);
+        }
+        else{
+            soupIngredients = new ArrayList<String>();
+        }
+
+        gson = new Gson();
+        json = sharedPreferences.getString(SOUP_RANKS, "");
+        if(!json.equals("")){
+            soupRanks = gson.fromJson(json, int[].class);
+        }
+        else{
+            soupRanks = new int[500];
+        }
 
         // Since saving custom objects isn't working. Don't load in custom objects.
 //        Gson gson = new Gson();
@@ -3560,7 +3570,7 @@ public class InGameActivity extends AppCompatActivity {
         initialCameraSetUp();
         initialCharacterSetUp();
         initialInventorySetUp();
-       // initialSoupSetUp();
+        initialSoupSetUp();
         initialEnvironmentSetUp();
         initialItemSetUp();
         dayNightCycle();
@@ -3588,7 +3598,7 @@ public class InGameActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
 
-        saveData();
+//        saveData();
 
         Log.i("Sai", "Stop");
 
