@@ -3275,7 +3275,7 @@ public class InGameActivity extends AppCompatActivity {
         editor.apply();
 
         Toast.makeText(this, "Data Saved", Toast.LENGTH_SHORT).show();
-        Log.i("Save", "Saved data");
+        Log.i("Sai", "Saved data");
     }
 
     public void loadData(){
