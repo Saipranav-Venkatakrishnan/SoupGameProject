@@ -3193,6 +3193,8 @@ public class InGameActivity extends AppCompatActivity {
 //        R.drawable.carrot, 1, 1, 1, 1, 1, 1));
 //        editor.putString(TEST_SAVE, json);
 
+        soupIngredients = new ArrayList<String>();
+        soupRanks = new int[500];
         int i = 0;
         for(Soup soup : userSoups){
             String temp = "";
