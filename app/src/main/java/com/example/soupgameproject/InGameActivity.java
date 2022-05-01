@@ -94,8 +94,8 @@ public class InGameActivity extends AppCompatActivity {
     public static final String INV_DRAWABLES = "invDrawables";
     public static final String ITEM_NAMES = "itemNames";
 
-    public static final String ALL_CURRENT_ITEM_NAMES = "allCurrentItemNames";
-    public static final String ALL_CURRENT_ITEM_LOCATIONS = "allCurrentItemLocations";
+    public static final String ALL_FOREST_CURRENT_ITEM_NAMES = "allForestCurrentItemNames";
+    public static final String ALL_FOREST_CURRENT_ITEM_LOCATIONS = "allForestCurrentItemLocations";
 
     public static final String SOUP_INGREDIENTS = "soupIngredients";
     public static final String SOUP_RANKS = "soupRanks";
@@ -231,9 +231,9 @@ public class InGameActivity extends AppCompatActivity {
 
     private HashMap<String,Ingredient> ingredientKey;
 
-    private ArrayList<Ingredient> allCurrentItems;
-    private ArrayList<String> allCurrentItemNames;
-    private float[] allCurrentItemLocations;
+    private ArrayList<Ingredient> allForestCurrentItems;
+    private ArrayList<String> allForestCurrentItemNames;
+    private float[] allForestCurrentItemLocations;
 
     private ConstraintLayout layout;
 
@@ -772,66 +772,71 @@ public class InGameActivity extends AppCompatActivity {
         else if(environment.toLowerCase().equals("swamp")){
 
         }
+        
+        initialItemSetUp();
 
     }
 
     private void initialItemSetUp(){
-        allCurrentItems = new ArrayList<>();
+        allForestCurrentItems = new ArrayList<>();
 
-        for(int i = 0; i < allCurrentItemNames.size(); i++){
+        for(int i = 0; i < allForestCurrentItemNames.size(); i++){
             Ingredient ingredient;
-            if(allCurrentItemNames.get(i).toLowerCase().equals("carrot")){
+            if(allForestCurrentItemNames.get(i).toLowerCase().equals("carrot")){
                 ingredient = new Ingredient(this, "Carrot", 10, 6,
-                        R.drawable.carrot, allCurrentItemLocations[2 * i],
-                        allCurrentItemLocations[2 * i + 1], 150,242,149,27);
+                        R.drawable.carrot, allForestCurrentItemLocations[2 * i],
+                        allForestCurrentItemLocations[2 * i + 1], 150,242,149,27);
             }
-            else if(allCurrentItemNames.get(i).toLowerCase().equals("mushroom")){
+            else if(allForestCurrentItemNames.get(i).toLowerCase().equals("mushroom")){
                 ingredient = new Ingredient(this, "Mushroom", 8, 8,
-                        R.drawable.mushroom, allCurrentItemLocations[2 * i],
-                        allCurrentItemLocations[2 * i + 1], 150,201, 87, 48);
+                        R.drawable.mushroom, allForestCurrentItemLocations[2 * i],
+                        allForestCurrentItemLocations[2 * i + 1], 150,201, 87, 48);
             }
-            else if(allCurrentItemNames.get(i).toLowerCase().equals("radish")){
+            else if(allForestCurrentItemNames.get(i).toLowerCase().equals("radish")){
                 ingredient = new Ingredient(this, "Radish", 8, 8,
-                        R.drawable.radish, allCurrentItemLocations[2 * i],
-                        allCurrentItemLocations[2 * i + 1], 150,243, 222, 255);
+                        R.drawable.radish, allForestCurrentItemLocations[2 * i],
+                        allForestCurrentItemLocations[2 * i + 1], 150,243, 222, 255);
             }
-            else if(allCurrentItemNames.get(i).toLowerCase().equals("tomato")){
+            else if(allForestCurrentItemNames.get(i).toLowerCase().equals("tomato")){
                 ingredient = new Ingredient(this, "Tomato", 8, 8,
-                        R.drawable.tomato, allCurrentItemLocations[2 * i],
-                        allCurrentItemLocations[2 * i + 1], 150,230, 16, 37);
+                        R.drawable.tomato, allForestCurrentItemLocations[2 * i],
+                        allForestCurrentItemLocations[2 * i + 1], 150,230, 16, 37);
             }
-            else if(allCurrentItemNames.get(i).toLowerCase().equals("plant")){
+            else if(allForestCurrentItemNames.get(i).toLowerCase().equals("plant")){
                 ingredient = new Ingredient(this, "Plant", 8, 8,
-                        R.drawable.plant1, allCurrentItemLocations[2 * i],
-                        allCurrentItemLocations[2 * i + 1], 150,113, 214, 79);
+                        R.drawable.plant1, allForestCurrentItemLocations[2 * i],
+                        allForestCurrentItemLocations[2 * i + 1], 150,113, 214, 79);
             }
             else{
                 ingredient = null;
             }
 
-            Runnable fall = ingredient.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
-                @Override
-                public void onCollision(GameObject object1, GameObject object2) {
-                    if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                        if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
-                            object1.stopFall();
+            allForestCurrentItems.add(ingredient);
 
-                            object1.setYPosition(object2.getHitBox().topLeft().y);
+            if(environment.toLowerCase().equals("forest")) {
+                Runnable fall = ingredient.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
+                                object1.stopFall();
 
-                            object1.getHitBox().setYPosition(object1.getYPosition());
-                            object1.setHitBox(object1.getHitBox());
-                            object1.showHitBox();
+                                object1.setYPosition(object2.getHitBox().topLeft().y);
+
+                                object1.getHitBox().setYPosition(object1.getYPosition());
+                                object1.setHitBox(object1.getHitBox());
+                                object1.showHitBox();
+                            }
+
+                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
                         }
-
-                        Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
                     }
-                }
-            });
+                });
 
-            backgroundGameLayout.addLayoutObject(ingredient);
-            allCurrentItems.add(ingredient);
+                backgroundGameLayout.addLayoutObject(ingredient);
 
-            itemHandler.postDelayed(fall, 5);
+                itemHandler.postDelayed(fall, 5);
+            }
 
         }
 
@@ -839,8 +844,6 @@ public class InGameActivity extends AppCompatActivity {
     }
 
     private void itemSetup(String environment){
-
-        allCurrentItems = new ArrayList<Ingredient>();
 
         if(environment.toLowerCase().equals("test")){
             for(int i = 0; i < 10; i++){
@@ -961,6 +964,7 @@ public class InGameActivity extends AppCompatActivity {
             Log.i("EnvironmentSetup","Test Items");
         }
         else if(environment.toLowerCase().equals("forest")){
+            allForestCurrentItems = new ArrayList<Ingredient>();
             // Make better randomizer later
             int totalItemCount = 20;
             int carrotCount = (int)(Math.random() * totalItemCount) + 1;
@@ -975,7 +979,7 @@ public class InGameActivity extends AppCompatActivity {
 
 
                 backgroundGameLayout.addLayoutObject(carrot);
-                allCurrentItems.add(carrot);
+                allForestCurrentItems.add(carrot);
 
                 Runnable carrotFall = carrot.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
                     @Override
@@ -1006,7 +1010,7 @@ public class InGameActivity extends AppCompatActivity {
                         (float) (gameCamera.getTopYPosition()) + 70, 150,201, 87, 48);
 
                 backgroundGameLayout.addLayoutObject(mushroom);
-                allCurrentItems.add(mushroom);
+                allForestCurrentItems.add(mushroom);
 
                 Runnable mushroomFall = mushroom.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
                     @Override
@@ -1037,7 +1041,7 @@ public class InGameActivity extends AppCompatActivity {
                         (float) (gameCamera.getTopYPosition()) + 70, 150,230, 16, 37);
 
                 backgroundGameLayout.addLayoutObject(tomato);
-                allCurrentItems.add(tomato);
+                allForestCurrentItems.add(tomato);
 
                 Runnable tomatoFall = tomato.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
                     @Override
@@ -1073,23 +1077,25 @@ public class InGameActivity extends AppCompatActivity {
     }
 
     private void removeAllItems(){
-        if(allCurrentItems != null) {
-            for (Ingredient item : allCurrentItems) {
-                itemHandler.postDelayed(item.collected(itemHandler), 0);
-            }
+        if(environment.toLowerCase().equals("forest")) {
+            if (allForestCurrentItems != null) {
+                for (Ingredient item : allForestCurrentItems) {
+                    itemHandler.postDelayed(item.collected(itemHandler), 0);
+                }
 
-            allCurrentItems = new ArrayList<Ingredient>();
+                allForestCurrentItems = new ArrayList<Ingredient>();
+            }
         }
     }
 
     private void updateItems(){
         int i = 0;
-        allCurrentItemLocations = new float[200];
-        allCurrentItemNames = new ArrayList<String>();
-        for(Ingredient item : allCurrentItems){
-            allCurrentItemNames.add(item.getName());
-            allCurrentItemLocations[2 * i] = item.getXPosition();
-            allCurrentItemLocations[2 * i + 1] = item.getYPosition();
+        allForestCurrentItemLocations = new float[200];
+        allForestCurrentItemNames = new ArrayList<String>();
+        for(Ingredient item : allForestCurrentItems){
+            allForestCurrentItemNames.add(item.getName());
+            allForestCurrentItemLocations[2 * i] = item.getXPosition();
+            allForestCurrentItemLocations[2 * i + 1] = item.getYPosition();
             i++;
         }
     }
@@ -2582,7 +2588,12 @@ public class InGameActivity extends AppCompatActivity {
             ingredient.setCollected(true);
             Runnable collectAnimation = ingredient.collected(itemHandler);
             itemHandler.postDelayed(collectAnimation, 0);
-            allCurrentItems.remove(ingredient);
+            if(environment.toLowerCase().equals("forest")) {
+                allForestCurrentItems.remove(ingredient);
+            }
+            else if(environment.toLowerCase().equals("swamp")){
+                //allSwampCurrentItems.remove(ingredient);
+            }
             updateItems();
             switch(itemName) {
                 case "Carrot":
@@ -2610,11 +2621,22 @@ public class InGameActivity extends AppCompatActivity {
             itemNames[itemCount] = itemName;
             userIngredients[itemCount] = ingredientKey.get(itemName);
 
+            int count = 0;
+            for(int i = 0; i < 15; i++){
+                if(userIngredients[i] != null){
+                    count++;
+                }
+            }
+
+            if(count == 15){
+                Log.i("Items","Max items collected");
+            }
+
         }
-        else{
-            //Toast.makeText(this, "Max Items Collected", Toast.LENGTH_SHORT).show();
-            Log.i("Items","Max items collected");
-        }
+//        else{
+//            //Toast.makeText(this, "Max Items Collected", Toast.LENGTH_SHORT).show();
+//            Log.i("Items","Max items collected");
+//        }
     }
 
     private void removeIngredientFromInventory(int index){
@@ -2930,10 +2952,14 @@ public class InGameActivity extends AppCompatActivity {
     public void createSoup(View view){
         Soup createdSoup = new Soup(selectedIngredients);
         boolean alreadyHave = false;
-        for(Soup soup : userSoups){
-            if (createdSoup.getSoupName().equals(soup.getSoupName())) {
+        for(int i = 0; i < userSoups.size(); i++){
+            if (createdSoup.getSoupName().equals(userSoups.get(i).getSoupName())) {
+                if(createdSoup.getStarRank() > userSoups.get(i).getStarRank()) {
+                    userSoups.set(i, createdSoup);
+                }
                 alreadyHave = true;
                 break;
+
             }
         }
 
@@ -2954,17 +2980,73 @@ public class InGameActivity extends AppCompatActivity {
             closeInventory(v);
         }
 
+        selectedIngredients = new ArrayList<Ingredient>();
+        selectedIngredientsIndex = new ArrayList<Integer>();
+        inventoryItemClickCounter = new int[15];
+
         for (int i = 0; i < invImages.length; i++) {
             invImages[i] = (ImageView) findViewById(invRes[i]);
             invImages[i].setImageResource(invDrawables[i]);
             invImages[i].setVisibility(View.VISIBLE);
-            invImages[i].setOnClickListener(null);
+
+            int itemNumber = i;
+            if(userIngredients[itemNumber] != null) {
+                invImages[i].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // how do we want users to remove items?
+//                        inventoryItemClickCounter[itemNumber]++;
+//                        if (inventoryItemClickCounter[itemNumber] % 2 == 1) {
+//                            // select item
+//                            int numSelected = 0;
+//                            for (int i = 0; i < inventoryItemClickCounter.length; i++) {
+//                                if (inventoryItemClickCounter[i] % 2 == 1) {
+//                                    numSelected++;
+//                                }
+//                            }
+//                            if (numSelected >= 3) {
+//                                makeBttn.setClickable(true);
+//                            }
+//
+//                            invImages[itemNumber].setImageTintMode(PorterDuff.Mode.SRC_OVER);
+//                            invImages[itemNumber].setImageTintList(ColorStateList.valueOf(Color.argb(100, 100, 100, 100)));
+//                            selectedIngredients.add(userIngredients[itemNumber]);
+//                            selectedIngredientsIndex.add(itemNumber);
+//
+//                        } else {
+//                            // deselect item
+//                            int numSelected = 0;
+//                            for (int i = 0; i < inventoryItemClickCounter.length; i++) {
+//                                if (inventoryItemClickCounter[i] % 2 == 1) {
+//                                    numSelected++;
+//                                }
+//                            }
+//                            if (numSelected < 3) {
+//                                makeBttn.setClickable(false);
+//                            }
+//
+//                            invImages[itemNumber].setImageTintMode(PorterDuff.Mode.OVERLAY);
+//                            invImages[itemNumber].setImageTintList(ColorStateList.valueOf(Color.argb(0, 100, 100, 100)));
+//                            selectedIngredients.remove(userIngredients[itemNumber]);
+//                            selectedIngredientsIndex.remove((Integer) itemNumber);
+//                        }
+                    }
+                });
+            }
+            else {
+                invImages[i].setOnClickListener(null);
+            }
         }
     }
 
     public void closeInventory(View v) {
         layout.setVisibility(View.INVISIBLE);
         makeBttn.setVisibility(View.INVISIBLE);
+
+        for (int i = 0; i < invImages.length; i++) {
+            invImages[i].setImageTintMode(PorterDuff.Mode.OVERLAY);
+            invImages[i].setImageTintList(ColorStateList.valueOf(Color.argb(0, 100, 100, 100)));
+        }
     }
 
     public void playAudio() {
@@ -3180,12 +3262,12 @@ public class InGameActivity extends AppCompatActivity {
         updateItems();
 
         gson = new Gson();
-        json = gson.toJson(allCurrentItemNames);
-        editor.putString(ALL_CURRENT_ITEM_NAMES, json);
+        json = gson.toJson(allForestCurrentItemNames);
+        editor.putString(ALL_FOREST_CURRENT_ITEM_NAMES, json);
 
         gson = new Gson();
-        json = gson.toJson(allCurrentItemLocations);
-        editor.putString(ALL_CURRENT_ITEM_LOCATIONS, json);
+        json = gson.toJson(allForestCurrentItemLocations);
+        editor.putString(ALL_FOREST_CURRENT_ITEM_LOCATIONS, json);
 
 
 //        gson = new Gson();
@@ -3340,21 +3422,21 @@ public class InGameActivity extends AppCompatActivity {
         }
 
         gson = new Gson();
-        json = sharedPreferences.getString(ALL_CURRENT_ITEM_NAMES, "");
+        json = sharedPreferences.getString(ALL_FOREST_CURRENT_ITEM_NAMES, "");
         if(!json.equals("")){
-            allCurrentItemNames = gson.fromJson(json, ArrayList.class);
+            allForestCurrentItemNames = gson.fromJson(json, ArrayList.class);
         }
         else{
-            allCurrentItemNames = new ArrayList<String>();
+            allForestCurrentItemNames = new ArrayList<String>();
         }
 
         gson = new Gson();
-        json = sharedPreferences.getString(ALL_CURRENT_ITEM_LOCATIONS, "");
+        json = sharedPreferences.getString(ALL_FOREST_CURRENT_ITEM_LOCATIONS, "");
         if(!json.equals("")){
-            allCurrentItemLocations = gson.fromJson(json, float[].class);
+            allForestCurrentItemLocations = gson.fromJson(json, float[].class);
         }
         else{
-            allCurrentItemLocations = new float[200];
+            allForestCurrentItemLocations = new float[200];
         }
 
         gson = new Gson();
@@ -3574,7 +3656,6 @@ public class InGameActivity extends AppCompatActivity {
         initialInventorySetUp();
         initialSoupSetUp();
         initialEnvironmentSetUp();
-        initialItemSetUp();
         dayNightCycle();
     }
 //
