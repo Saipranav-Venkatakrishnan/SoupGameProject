@@ -630,6 +630,7 @@ public class InGameActivity extends AppCompatActivity {
             backgroundGameLayout = null;
             collisionGameLayout = null;
             foregroundGameLayout = null;
+            GameLayout.allLayouts = new ArrayList<GameLayout>();
         }
         catch(Exception e){
             Log.i("EnvironmentSetup","GameLayouts not created yet");
@@ -772,12 +773,11 @@ public class InGameActivity extends AppCompatActivity {
         else if(environment.toLowerCase().equals("swamp")){
 
         }
-        
-        initialItemSetUp();
 
     }
 
     private void initialItemSetUp(){
+        Log.i("ItemGeneration","Initial item set up");
         allForestCurrentItems = new ArrayList<>();
 
         for(int i = 0; i < allForestCurrentItemNames.size(); i++){
@@ -1098,6 +1098,8 @@ public class InGameActivity extends AppCompatActivity {
             allForestCurrentItemLocations[2 * i + 1] = item.getYPosition();
             i++;
         }
+
+        Log.i("ItemGeneration","Items: " + String.valueOf(allForestCurrentItems.size()) + " Names: " + String.valueOf(allForestCurrentItemNames.size()));
     }
 
     // Inventory Saving
@@ -2784,7 +2786,7 @@ public class InGameActivity extends AppCompatActivity {
                    // rHandler.postDelayed(this,231);
                 }
                 // Testing purposes
-                rHandler.postDelayed(this,100);
+                rHandler.postDelayed(this,10);
             }
 
             // rates must lead to color values being equal to the desired color.
@@ -3656,6 +3658,7 @@ public class InGameActivity extends AppCompatActivity {
         initialInventorySetUp();
         initialSoupSetUp();
         initialEnvironmentSetUp();
+        initialItemSetUp();
         dayNightCycle();
     }
 //
