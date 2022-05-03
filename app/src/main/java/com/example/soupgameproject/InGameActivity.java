@@ -1378,6 +1378,15 @@ public class InGameActivity extends AppCompatActivity {
                             kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 0);
                         }
                     }
+
+                    @Override
+                    public void isGrounded() {
+                        if(walkEffectPlayer == null || !walkEffectPlayer.isPlaying()){
+                            playWalkEffect(R.raw.runningongrass, true);
+                            walkEffectPlayer.setVolume(25, 25);
+                        }
+
+                    }
                 },
                 new Character.PositionListener() {
                     @Override
@@ -1428,6 +1437,14 @@ public class InGameActivity extends AppCompatActivity {
                             kirby.getUdHandler().removeCallbacksAndMessages(null);
                             kirby.stopFall();
                             kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 0);
+                        }
+                    }
+
+                    @Override
+                    public void isGrounded() {
+                        if(walkEffectPlayer == null || !walkEffectPlayer.isPlaying()){
+                            playWalkEffect(R.raw.runningongrass, true);
+                            walkEffectPlayer.setVolume(25, 25);
                         }
                     }
                 },
@@ -1483,6 +1500,14 @@ public class InGameActivity extends AppCompatActivity {
                             kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 0);
                         }
                     }
+
+                    @Override
+                    public void isGrounded() {
+                        if(walkEffectPlayer == null || !walkEffectPlayer.isPlaying()){
+                            playWalkEffect(R.raw.runningongrass, true);
+                            walkEffectPlayer.setVolume(25, 25);
+                        }
+                    }
                 },
                 new Character.PositionListener() {
                     @Override
@@ -1532,6 +1557,14 @@ public class InGameActivity extends AppCompatActivity {
                             kirby.getUdHandler().removeCallbacksAndMessages(null);
                             kirby.stopFall();
                             kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 0);
+                        }
+                    }
+
+                    @Override
+                    public void isGrounded() {
+                        if(walkEffectPlayer == null || !walkEffectPlayer.isPlaying()){
+                            playWalkEffect(R.raw.runningongrass, true);
+                            walkEffectPlayer.setVolume(25, 25);
                         }
                     }
                 },
@@ -2051,6 +2084,11 @@ public class InGameActivity extends AppCompatActivity {
                                 tempNPC.getUdHandler().postDelayed(tempNPC.getAllActions().get("Fall"), 0);
                             }
                         }
+
+                        @Override
+                        public void isGrounded() {
+
+                        }
                     },
                     new Character.PositionListener() {
                         @Override
@@ -2082,6 +2120,11 @@ public class InGameActivity extends AppCompatActivity {
                                 tempNPC.getUdHandler().postDelayed(tempNPC.getAllActions().get("Fall"), 0);
                             }
                         }
+
+                        @Override
+                        public void isGrounded() {
+
+                        }
                     },
                     new Character.PositionListener() {
                         @Override
@@ -2111,6 +2154,11 @@ public class InGameActivity extends AppCompatActivity {
                                 tempNPC.getUdHandler().postDelayed(tempNPC.getAllActions().get("Fall"), 0);
                             }
                         }
+
+                        @Override
+                        public void isGrounded() {
+
+                        }
                     },
                     new Character.PositionListener() {
                         @Override
@@ -2139,6 +2187,11 @@ public class InGameActivity extends AppCompatActivity {
                                 tempNPC.stopFall();
                                 tempNPC.getUdHandler().postDelayed(tempNPC.getAllActions().get("Fall"), 0);
                             }
+                        }
+
+                        @Override
+                        public void isGrounded() {
+
                         }
                     },
                     new Character.PositionListener() {
@@ -2188,8 +2241,8 @@ public class InGameActivity extends AppCompatActivity {
                             kirby.getLrHandler().postDelayed(kirby.getAllActions().get("Left Run"),0);
                             Log.i("MovementCheck", "Running Left");
 //                            if(kirby.isGrounded()){
-                                playWalkEffect(R.raw.runningongrass, true);
-                                walkEffectPlayer.setVolume(100, 100);
+//                                playWalkEffect(R.raw.runningongrass, true);
+//                                walkEffectPlayer.setVolume(100, 100);
 //                            }
 
                         }
@@ -2198,8 +2251,8 @@ public class InGameActivity extends AppCompatActivity {
                             kirby.getLrHandler().postDelayed(kirby.getAllActions().get("Left Walk"),0);
                             Log.i("MovementCheck", "Walking Left");
 //                            if(kirby.isGrounded()){
-                                playWalkEffect(R.raw.runningongrass, true);
-                                walkEffectPlayer.setVolume(25, 25);
+//                                playWalkEffect(R.raw.runningongrass, true);
+//                                walkEffectPlayer.setVolume(25, 25);
 //                            }
                         }
                         
@@ -2261,8 +2314,8 @@ public class InGameActivity extends AppCompatActivity {
                             kirby.getLrHandler().postDelayed(kirby.getAllActions().get("Right Run"),0);
                             Log.i("MovementCheck", "Running Right");
 //                            if(kirby.isGrounded()){
-                                playWalkEffect(R.raw.runningongrass, true);
-                                walkEffectPlayer.setVolume(100, 100);
+//                                playWalkEffect(R.raw.runningongrass, true);
+//                                walkEffectPlayer.setVolume(100, 100);
 //                            }
 
                         }
@@ -2271,8 +2324,8 @@ public class InGameActivity extends AppCompatActivity {
                             kirby.getLrHandler().postDelayed(kirby.getAllActions().get("Right Walk"),0);
                             Log.i("MovementCheck", "Walking Right");
 //                            if(kirby.isGrounded()){
-                                playWalkEffect(R.raw.runningongrass, true);
-                                walkEffectPlayer.setVolume(25, 25);
+//                                playWalkEffect(R.raw.runningongrass, true);
+//                                walkEffectPlayer.setVolume(25, 25);
 //                            }
                         }
 
