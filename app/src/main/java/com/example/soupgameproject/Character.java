@@ -136,6 +136,7 @@ public class Character extends GameObject{
                     hitBoxes.get(i).setYPosition(getYPosition());
                     setHitBox(hitBoxes.get(i));
                     showHitBox();
+                    notGroundedListener.isGrounded();
                 }
 
                 // Collision Handling
@@ -614,6 +615,7 @@ public class Character extends GameObject{
 
     public interface NotGroundedListener{
         void notGrounded();
+        void isGrounded();
     }
 
     public interface PositionListener{
