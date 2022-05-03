@@ -3038,6 +3038,8 @@ public class InGameActivity extends AppCompatActivity {
         for(int i : selectedIngredientsIndex){
             removeIngredientFromInventory(i);
         }
+        selectedIngredients = new ArrayList<Ingredient>();
+        selectedIngredientsIndex = new ArrayList<Integer>();
     }
 
     public void closeInventory(View v) {
