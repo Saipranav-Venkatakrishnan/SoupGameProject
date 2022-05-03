@@ -1383,7 +1383,7 @@ public class InGameActivity extends AppCompatActivity {
                     public void isGrounded() {
                         if(walkEffectPlayer == null || !walkEffectPlayer.isPlaying()){
                             playWalkEffect(R.raw.runningongrass, true);
-                            walkEffectPlayer.setVolume(25, 25);
+                            walkEffectPlayer.setVolume(1f, 1f);
                         }
 
                     }
@@ -1444,7 +1444,7 @@ public class InGameActivity extends AppCompatActivity {
                     public void isGrounded() {
                         if(walkEffectPlayer == null || !walkEffectPlayer.isPlaying()){
                             playWalkEffect(R.raw.runningongrass, true);
-                            walkEffectPlayer.setVolume(25, 25);
+                            walkEffectPlayer.setVolume(1f, 1f);
                         }
                     }
                 },
@@ -1505,7 +1505,7 @@ public class InGameActivity extends AppCompatActivity {
                     public void isGrounded() {
                         if(walkEffectPlayer == null || !walkEffectPlayer.isPlaying()){
                             playWalkEffect(R.raw.runningongrass, true);
-                            walkEffectPlayer.setVolume(25, 25);
+                            walkEffectPlayer.setVolume(1f, 1f);
                         }
                     }
                 },
@@ -1564,7 +1564,7 @@ public class InGameActivity extends AppCompatActivity {
                     public void isGrounded() {
                         if(walkEffectPlayer == null || !walkEffectPlayer.isPlaying()){
                             playWalkEffect(R.raw.runningongrass, true);
-                            walkEffectPlayer.setVolume(25, 25);
+                            walkEffectPlayer.setVolume(1f, 1f);
                         }
                     }
                 },
@@ -3162,7 +3162,7 @@ public class InGameActivity extends AppCompatActivity {
 
             mediaPlayer = MediaPlayer.create(this, R.raw.kirbythemesong);
             mediaPlayer.start();
-            mediaPlayer.setVolume(25,25);
+            mediaPlayer.setVolume(.25f,.25f);
 //            mediaPlayer.setLooping(true);
 
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
