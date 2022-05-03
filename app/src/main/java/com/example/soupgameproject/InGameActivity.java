@@ -2187,20 +2187,20 @@ public class InGameActivity extends AppCompatActivity {
                             cHandler.postDelayed(leftRunCamera,0);
                             kirby.getLrHandler().postDelayed(kirby.getAllActions().get("Left Run"),0);
                             Log.i("MovementCheck", "Running Left");
-                            if(kirby.isGrounded()){
+//                            if(kirby.isGrounded()){
                                 playWalkEffect(R.raw.runningongrass, true);
                                 walkEffectPlayer.setVolume(100, 100);
-                            }
+//                            }
 
                         }
                         else{
                             cHandler.postDelayed(leftWalkCamera,0);
                             kirby.getLrHandler().postDelayed(kirby.getAllActions().get("Left Walk"),0);
                             Log.i("MovementCheck", "Walking Left");
-                            if(kirby.isGrounded()){
+//                            if(kirby.isGrounded()){
                                 playWalkEffect(R.raw.runningongrass, true);
                                 walkEffectPlayer.setVolume(25, 25);
-                            }
+//                            }
                         }
                         
                         isDown = true;
@@ -2260,20 +2260,20 @@ public class InGameActivity extends AppCompatActivity {
                             cHandler.postDelayed(rightRunCamera,0);
                             kirby.getLrHandler().postDelayed(kirby.getAllActions().get("Right Run"),0);
                             Log.i("MovementCheck", "Running Right");
-                            if(kirby.isGrounded()){
+//                            if(kirby.isGrounded()){
                                 playWalkEffect(R.raw.runningongrass, true);
                                 walkEffectPlayer.setVolume(100, 100);
-                            }
+//                            }
 
                         }
                         else{
                             cHandler.postDelayed(rightWalkCamera,0);
                             kirby.getLrHandler().postDelayed(kirby.getAllActions().get("Right Walk"),0);
                             Log.i("MovementCheck", "Walking Right");
-                            if(kirby.isGrounded()){
+//                            if(kirby.isGrounded()){
                                 playWalkEffect(R.raw.runningongrass, true);
                                 walkEffectPlayer.setVolume(25, 25);
-                            }
+//                            }
                         }
 
                         isDown = true;
