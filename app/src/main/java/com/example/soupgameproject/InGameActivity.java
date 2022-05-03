@@ -2962,6 +2962,29 @@ public class InGameActivity extends AppCompatActivity {
         for(int i : selectedIngredientsIndex){
             removeIngredientFromInventory(i);
         }
+        closeInventory(view);
+
+        DialogueBox soupMessage = new DialogueBox(InGameActivity.this, dialogueBoxLayout, dialogueNameTextView, "Soup!",
+                dialogueTextView, "Yay!! You made a new soup! Check out your catalog for more details!", 20, dialoguePortraitImageView, R.drawable.soupbase,
+                new DialogueBox.DialogueListener() {
+                    @Override
+                    public void onComplete() {
+                        Log.i("Soup Dialogue", "Dialogue complete.");
+                    }
+                });
+
+        if(!soupMessage.isPlaying()){
+            if(!soupMessage.isDone()) {
+                soupMessage.getTextHandler().postDelayed(soupMessage.getPlayDialogue(), 0);
+                createdSoup.showSoup(dialoguePortraitImageView);
+                soupMessage.showDialogBox();
+            }
+            else{
+                DialogueBox.hideDialogBox();
+                soupMessage.resetDialogue();
+                soupMessage.getDialogueListener().onComplete();
+            }
+        }
     }
 
     public void inventoryPage(View v) {
