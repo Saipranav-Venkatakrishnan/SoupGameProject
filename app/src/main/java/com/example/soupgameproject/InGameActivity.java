@@ -1,45 +1,33 @@
 package com.example.soupgameproject;
 
 import static com.example.soupgameproject.SettingsPage.SHARED_PREF;
-import static com.example.soupgameproject.SettingsPage.SWITCH;
 import static com.example.soupgameproject.SettingsPage.isOn;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintLayout.LayoutParams;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.gson.Gson;
 
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -248,6 +236,7 @@ public class InGameActivity extends AppCompatActivity {
     private int[] soupRanks;
 
     private Button makeBttn;
+    private Button removeBttn;
 
 
     // Dialogue Box variables
@@ -278,6 +267,7 @@ public class InGameActivity extends AppCompatActivity {
         dialoguePortraitImageView = findViewById(R.id.characterPortrait);
         dialogueTextView = findViewById(R.id.characterDialogueTextView);
         makeBttn = findViewById(R.id.makeSoupBttn);
+        removeBttn = findViewById(R.id.removeItemBttn);
 
         layout = (ConstraintLayout) this.findViewById(R.id.inventoryLayout);
 
@@ -2977,6 +2967,8 @@ public class InGameActivity extends AppCompatActivity {
     public void inventoryPage(View v) {
         if(layout.getVisibility() == View.INVISIBLE) {
             layout.setVisibility(View.VISIBLE);
+            removeBttn.setVisibility(View.VISIBLE);
+            removeBttn.setClickable(false);
         }
         else{
             closeInventory(v);
@@ -2996,42 +2988,43 @@ public class InGameActivity extends AppCompatActivity {
                 invImages[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        // how do we want users to remove items?
-//                        inventoryItemClickCounter[itemNumber]++;
-//                        if (inventoryItemClickCounter[itemNumber] % 2 == 1) {
-//                            // select item
-//                            int numSelected = 0;
-//                            for (int i = 0; i < inventoryItemClickCounter.length; i++) {
-//                                if (inventoryItemClickCounter[i] % 2 == 1) {
-//                                    numSelected++;
-//                                }
-//                            }
-//                            if (numSelected >= 3) {
-//                                makeBttn.setClickable(true);
-//                            }
-//
-//                            invImages[itemNumber].setImageTintMode(PorterDuff.Mode.SRC_OVER);
-//                            invImages[itemNumber].setImageTintList(ColorStateList.valueOf(Color.argb(100, 100, 100, 100)));
-//                            selectedIngredients.add(userIngredients[itemNumber]);
-//                            selectedIngredientsIndex.add(itemNumber);
-//
-//                        } else {
-//                            // deselect item
-//                            int numSelected = 0;
-//                            for (int i = 0; i < inventoryItemClickCounter.length; i++) {
-//                                if (inventoryItemClickCounter[i] % 2 == 1) {
-//                                    numSelected++;
-//                                }
-//                            }
-//                            if (numSelected < 3) {
-//                                makeBttn.setClickable(false);
-//                            }
-//
-//                            invImages[itemNumber].setImageTintMode(PorterDuff.Mode.OVERLAY);
-//                            invImages[itemNumber].setImageTintList(ColorStateList.valueOf(Color.argb(0, 100, 100, 100)));
-//                            selectedIngredients.remove(userIngredients[itemNumber]);
-//                            selectedIngredientsIndex.remove((Integer) itemNumber);
-//                        }
+                        // users can remove items
+                        inventoryItemClickCounter[itemNumber]++;
+                        if (inventoryItemClickCounter[itemNumber] % 2 == 1) {
+                            // select item
+                            int numSelected = 0;
+                            for (int i = 0; i < inventoryItemClickCounter.length; i++) {
+                                if (inventoryItemClickCounter[i] % 2 == 1) {
+                                    numSelected++;
+                                }
+                            }
+                            if (numSelected > 0) {
+                                removeBttn.setClickable(true);
+                            }
+
+                            invImages[itemNumber].setImageTintMode(PorterDuff.Mode.SRC_OVER);
+                            invImages[itemNumber].setImageTintList(ColorStateList.valueOf(Color.argb(100, 100, 100, 100)));
+                            selectedIngredients.add(userIngredients[itemNumber]);
+                            selectedIngredientsIndex.add(itemNumber);
+
+                        } else {
+                            // deselect item
+                            int numSelected = 0;
+                            for (int i = 0; i < inventoryItemClickCounter.length; i++) {
+                                if (inventoryItemClickCounter[i] % 2 == 1) {
+                                    numSelected++;
+                                }
+                            }
+                            // hmmmmm
+                            if (numSelected < 1) {
+                                removeBttn.setClickable(false);
+                            }
+
+                            invImages[itemNumber].setImageTintMode(PorterDuff.Mode.OVERLAY);
+                            invImages[itemNumber].setImageTintList(ColorStateList.valueOf(Color.argb(0, 100, 100, 100)));
+                            selectedIngredients.remove(userIngredients[itemNumber]);
+                            selectedIngredientsIndex.remove((Integer) itemNumber);
+                        }
                     }
                 });
             }
@@ -3041,9 +3034,16 @@ public class InGameActivity extends AppCompatActivity {
         }
     }
 
+    public void removeItem(View view) {
+        for(int i : selectedIngredientsIndex){
+            removeIngredientFromInventory(i);
+        }
+    }
+
     public void closeInventory(View v) {
         layout.setVisibility(View.INVISIBLE);
         makeBttn.setVisibility(View.INVISIBLE);
+        removeBttn.setVisibility(View.INVISIBLE);
 
         for (int i = 0; i < invImages.length; i++) {
             invImages[i].setImageTintMode(PorterDuff.Mode.OVERLAY);
