@@ -37,12 +37,13 @@ public class CatalogPage extends AppCompatActivity {
 
         TextView name = newCard.findViewById(R.id.nameTxt);
         ImageView img = newCard.findViewById(R.id.soupImg);
-        TextView desc = newCard.findViewById(R.id.descTxt);
+        TextView ingredients = newCard.findViewById(R.id.ingredientsList);
         RatingBar stars = newCard.findViewById(R.id.ratingBar);
 
         soup.showSoup(img);
         name.setText(soup.getSoupName());
         stars.setRating(soup.getStarRank());
+        ingredients.setText("");
 
         cards.addView(newCard);
     }

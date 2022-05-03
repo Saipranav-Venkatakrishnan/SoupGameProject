@@ -46,8 +46,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="45dp"
             android:layout_marginTop="10dp"
-            android:text="Description"
+            android:text="Ingredients:"
             android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/soupImg"
             app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
 
@@ -61,13 +62,22 @@
             android:numStars="3"
             android:progressBackgroundTint="@color/nonActiveBox"
             android:progressTint="@color/activeBox"
-            android:scaleX="0.6"
-            android:scaleY="0.6"
-            android:secondaryProgressTint="@color/activeBox"
-            android:stepSize="0.5"
+            android:progressTintMode="src_atop"
+            android:stepSize="1"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
             android:transformPivotX="0dp"
             app:layout_constraintStart_toEndOf="@+id/soupImg"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/ingredientsList"
+            android:layout_width="143dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="45dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toEndOf="@+id/soupImg"
+            app:layout_constraintTop_toBottomOf="@+id/descTxt" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
