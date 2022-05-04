@@ -53,6 +53,16 @@
             app:layout_constraintStart_toEndOf="@+id/soupImg"
             app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
 
+        <TextView
+            android:id="@+id/ingredientsList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="45dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/soupImg"
+            app:layout_constraintTop_toBottomOf="@+id/descTxt" />
         <RatingBar
             android:id="@+id/ratingBar"
             android:layout_width="wrap_content"
@@ -61,24 +71,17 @@
             android:layout_marginTop="44dp"
             android:isIndicator="true"
             android:numStars="3"
-            android:progressBackgroundTint="@color/nonActiveBox"
-            android:progressTint="@color/activeBox"
-            android:rating="2"
             android:stepSize="1"
+            android:progressBackgroundTint="@color/nonActiveBox"
+            android:progressTint="@color/starsColor"
+            android:secondaryProgressTint="@color/starsColor"
             android:scaleX="0.8"
             android:scaleY="0.8"
             android:transformPivotX="0dp"
             app:layout_constraintStart_toEndOf="@+id/soupImg"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/ingredientsList"
-            android:layout_width="143dp"
-            android:layout_height="52dp"
-            android:layout_marginStart="45dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintStart_toEndOf="@+id/soupImg"
-            app:layout_constraintTop_toBottomOf="@+id/descTxt" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

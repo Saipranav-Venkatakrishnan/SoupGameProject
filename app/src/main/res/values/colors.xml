@@ -11,5 +11,6 @@
     <color name="activeBox">#85FF0000</color>
     <color name="nonActiveBox">#809F9F9F</color>
 
+    <color name="starsColor">#fac823</color>
 
 </resources>
