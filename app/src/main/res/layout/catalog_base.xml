@@ -11,6 +11,7 @@
     app:cardCornerRadius="20dp"
     app:cardMaxElevation="12dp"
     android:layout_margin="10dp"
+    android:layout_gravity="center"
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -62,7 +63,7 @@
             android:numStars="3"
             android:progressBackgroundTint="@color/nonActiveBox"
             android:progressTint="@color/activeBox"
-            android:progressTintMode="src_atop"
+            android:rating="2"
             android:stepSize="1"
             android:scaleX="0.8"
             android:scaleY="0.8"
