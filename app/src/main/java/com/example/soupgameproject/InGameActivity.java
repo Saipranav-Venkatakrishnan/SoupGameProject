@@ -3759,8 +3759,8 @@ public class InGameActivity extends AppCompatActivity {
 //
     protected void onRestart() {
         super.onRestart();
-         loadData();
-         updateViews();
+//         loadData();
+//         updateViews();
 
         Log.i("Sai", "Restart");
     }
