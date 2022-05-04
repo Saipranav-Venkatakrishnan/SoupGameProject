@@ -20,6 +20,7 @@ public class Soup{
     private static final int soupResource = R.drawable.souptop;
     private int soupColor;
     private int bowlColor;
+    private String desc;
     
     private ArrayList<Ingredient> ingredients;
     // private ArrayList<Integer> amountOfIngredient;
@@ -90,6 +91,7 @@ public class Soup{
 
         soupColorHandler();
         bowlColorHandler();
+        soupDescHandler();
     }
 
     // recreate soup with specified rank
@@ -101,6 +103,7 @@ public class Soup{
 
         bowlColorHandler();
         soupColorHandler();
+        soupDescHandler();
     }
 
     // Special Soup Constructor
@@ -153,7 +156,6 @@ public class Soup{
         soupColor = Color.argb(a, r, g, b);
     }
 
-
     // Subject to change
     private void soupNameHandler(){
         String[] names = new String[]{"Carrot", "Mushroom", "Radish", "Tomato", "Plant"};
@@ -173,8 +175,8 @@ public class Soup{
             names[j+1] = temp;
         }
 
-        Log.i("SoupMaking",names[0] + ", " + names[1] + ", " + names[2]+ ", " + names[3]+ ", " + names[4]);
-        Log.i("SoupMaking",counts[0] + ", " + counts[1] + ", " + counts[2]+ ", " + counts[3]+ ", " + counts[4]);
+//        Log.i("SoupMaking",names[0] + ", " + names[1] + ", " + names[2]+ ", " + names[3]+ ", " + names[4]);
+//        Log.i("SoupMaking",counts[0] + ", " + counts[1] + ", " + counts[2]+ ", " + counts[3]+ ", " + counts[4]);
         String tempName = "";
 
         if(counts[2] == 0) {
@@ -192,6 +194,37 @@ public class Soup{
         }
 
         this.soupName = tempName;
+    }
+
+    private void soupDescHandler(){
+        desc = "This soup was made using ";
+        String[] names = new String[]{"Carrot", "Mushroom", "Radish", "Tomato", "Plant"};
+        int[] counts = countIngredients();
+
+        // sort
+        for (int i = 1; i < counts.length; i++) {
+            int current = counts[i];
+            String temp = names[i];
+            int j = i - 1;
+            while(j >= 0 && current < counts[j]) {
+                counts[j+1] = counts[j];
+                names[j+1] = names[j];
+                j--;
+            }
+            counts[j+1] = current;
+            names[j+1] = temp;
+        }
+
+        for(int i = 0; i < counts.length; i++){
+            if(counts[i] > 1){
+                desc += String.valueOf(counts[i]) + " " + names[i] + "s, ";
+            }
+            else if(counts[i] > 0){
+                desc += String.valueOf(counts[i]) + " " + names[i] + ", ";
+            }
+        }
+
+        Log.i("SoupDesc", desc);
     }
 
     private int[] countIngredients(){
@@ -273,5 +306,9 @@ public class Soup{
 
     public ArrayList<Ingredient> getIngredients() {
         return ingredients;
+    }
+
+    public String getDesc(){
+        return desc;
     }
 }

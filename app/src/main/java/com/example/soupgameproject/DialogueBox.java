@@ -21,7 +21,7 @@ public class DialogueBox extends ConstraintLayout {
     private ImageView portraitImageView;
     private TextView nameTextView;
     private Handler textHandler;
-    private Handler delayClose;
+    private static Handler delayClose = new Handler();
     private boolean isPlaying;
     private boolean isDone;
     private int start;
@@ -31,7 +31,7 @@ public class DialogueBox extends ConstraintLayout {
 
 
     public DialogueBox(Context context, ConstraintLayout dialogueBoxLayout, TextView nameTextView, String name,
-                       TextView dialogueTextView, String dialogue, int dialogueSpeed, ImageView portraitImageView, int characterImage,
+                       TextView dialogueTextView, String dialogue, int dialogueSpeed, int displayDuration, ImageView portraitImageView, int characterImage,
                        DialogueListener dialogueListener){
         super(context);
         this.dialogueBoxLayout = dialogueBoxLayout;
@@ -43,7 +43,6 @@ public class DialogueBox extends ConstraintLayout {
         this.portraitImageView = portraitImageView;
         this.nameTextView = nameTextView;
         textHandler = new Handler();
-        delayClose = new Handler();
         isPlaying = false;
         isDone = false;
         start = 0;
@@ -60,7 +59,7 @@ public class DialogueBox extends ConstraintLayout {
                     setEnd(0);
                     isPlaying = false;
                     isDone = true;
-                    delayStopDialog(3000);
+                    delayStopDialog(displayDuration);
                     return;
                 }
                 else if(dialogue.substring(getStart(),getEnd() + findNextSpace()).length() + 3 > 130){
@@ -69,7 +68,7 @@ public class DialogueBox extends ConstraintLayout {
                     setStart(end);
                     setEnd(end);
                     isPlaying = false;
-                    delayStopDialog(3000);
+                    delayStopDialog(displayDuration);
                 }
                 else {
                     isPlaying = true;
@@ -87,6 +86,7 @@ public class DialogueBox extends ConstraintLayout {
     }
 
     public void showDialogBox(){
+        delayClose.removeCallbacksAndMessages(null);
         dialogueBoxLayout.setVisibility(VISIBLE);
         nameTextView.setText(name);
         portraitImageView.setBackgroundResource(characterImage);

@@ -160,7 +160,7 @@ public class InGameActivity extends AppCompatActivity {
 
 
     private ArrayList<Character> npcCopyList;
-    
+
     // Day/Night cycle variables
     // (SAVE)
     private String timeOfDay; //
@@ -191,7 +191,7 @@ public class InGameActivity extends AppCompatActivity {
     private ArrayList<GameObject> forestEnvironmentBackgroundGameObjects;
     private ArrayList<GameObject> forestEnvironmentCollisionGameObjects;
     private ArrayList<GameObject> forestEnvironmentForegroundGameObjects;
-    
+
     private ArrayList<GameObject> forestClouds;
     private float[][] forestCloudCoordinates;
 
@@ -404,7 +404,7 @@ public class InGameActivity extends AppCompatActivity {
         forestEnvironmentBackgroundGameObjects = new ArrayList<GameObject>();
         forestEnvironmentCollisionGameObjects = new ArrayList<GameObject>();
         forestEnvironmentForegroundGameObjects = new ArrayList<GameObject>();
-        
+
         forestClouds = new ArrayList<GameObject>();
 
         // NPC Waddle Dee 0
@@ -719,7 +719,7 @@ public class InGameActivity extends AppCompatActivity {
                 kirby.stopFall();
                 kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 200);
             }
-            
+
             // Forest Clouds moving
             Runnable movingClouds = new Runnable() {
                 @Override
@@ -738,7 +738,7 @@ public class InGameActivity extends AppCompatActivity {
             };
 
             eHandler.postDelayed(movingClouds,0);
-            
+
         }
         else if(environment.toLowerCase().equals("house")){
             backgroundGameLayout.setBackgroundImage(R.drawable.cloudsbackgroundextended);
@@ -763,6 +763,8 @@ public class InGameActivity extends AppCompatActivity {
         else if(environment.toLowerCase().equals("swamp")){
 
         }
+
+//        initialItemSetUp();
 
     }
 
@@ -843,9 +845,9 @@ public class InGameActivity extends AppCompatActivity {
                         R.drawable.carrot,
                         (float) (Math.random() * (tWidth - 10)),
                         (float)(gameCamera.getTopYPosition()) + 70,0,0,0,0);
-                
+
                 collisionGameLayout.addLayoutObject(carrot);
-                
+
                 Runnable carrotFall = carrot.fall(itemHandler, GameObject.GRAVITY/10F, new GameObject.CollisionListener() {
                     @Override
                     public void onCollision(GameObject object1, GameObject object2) {
@@ -854,7 +856,7 @@ public class InGameActivity extends AppCompatActivity {
                                 object1.stopFall();
 
                                 object1.setYPosition(object2.getHitBox().topLeft().y);
-                                
+
                                 object1.getHitBox().setYPosition(object1.getYPosition());
                                 object1.setHitBox(object1.getHitBox());
                                 object1.showHitBox();
@@ -1069,7 +1071,10 @@ public class InGameActivity extends AppCompatActivity {
     private void removeAllItems(){
         if(environment.toLowerCase().equals("forest")) {
             if (allForestCurrentItems != null) {
+                int i = 0;
                 for (Ingredient item : allForestCurrentItems) {
+                    i++;
+                    Log.i("ItemGeneration", String.valueOf(i) + ": " + item.getName());
                     itemHandler.postDelayed(item.collected(itemHandler), 0);
                 }
 
@@ -1331,7 +1336,7 @@ public class InGameActivity extends AppCompatActivity {
         kirbyStartFloatHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(kirby.getObjectWidth() * 23/59F),
                 (int)(kirby.getObjectHeight() * 23/39F), 0, 0, kirby.getObjectWidth() * 18/59F,
                 0));
-        
+
         // Stop Float Hit Boxes
         kirbyStopFloatHitBoxes.add(new HitBox(InGameActivity.this, true, (int)(kirby.getObjectWidth() * 23/59F),
                 (int)(kirby.getObjectHeight() * 23/39F), 0, 0, kirby.getObjectWidth() * 18/59F,
@@ -2220,7 +2225,7 @@ public class InGameActivity extends AppCompatActivity {
     private void controllerSetUp(){
 
         leftButton.setOnTouchListener(new View.OnTouchListener() {
-            
+
             private boolean isDown = false;
 
             private Handler dcHandler = new Handler();
@@ -2235,7 +2240,7 @@ public class InGameActivity extends AppCompatActivity {
                         kirby.getLrHandler().removeCallbacksAndMessages(null);
                         cHandler.removeCallbacksAndMessages(null);
                         kirby.getAHandler().removeCallbacksAndMessages(null);
-                        
+
                         if(isDoubleClick){
                             cHandler.postDelayed(leftRunCamera,0);
                             kirby.getLrHandler().postDelayed(kirby.getAllActions().get("Left Run"),0);
@@ -2255,7 +2260,7 @@ public class InGameActivity extends AppCompatActivity {
 //                                walkEffectPlayer.setVolume(25, 25);
 //                            }
                         }
-                        
+
                         isDown = true;
                         break;
                     case MotionEvent.ACTION_UP:
@@ -2268,17 +2273,17 @@ public class InGameActivity extends AppCompatActivity {
 
                         kirby.getLrHandler().removeCallbacks(kirby.getAllActions().get("Left Run"));
                         cHandler.removeCallbacks(leftRunCamera);
-                        
+
                         if(kirby.isGrounded()) {
                             kirby.setObjectResource(kirby.getIdleResource());
                             kirby.setHitBox(kirby.getIdleHitBox());
                             kirby.showHitBox();
                         }
-                        
+
                         isDown = false;
 
                         isDoubleClick = true;
-                        
+
                         dcHandler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -2471,7 +2476,7 @@ public class InGameActivity extends AppCompatActivity {
                     " collected to make a variety of soups. Ingredients can be viewed in an inventory pop-up and the soups " +
                     "the user makes can be viewed in a catalog page that describes the soup. The goal of the game is to create" +
                     " all the different soups that can be made by mixing and matching the ingredients found in the forest area " +
-                    "as well as those found in the swamp area.", 10, dialoguePortraitImageView, R.drawable.waddledeeportrait,
+                    "as well as those found in the swamp area.", 10,3000, dialoguePortraitImageView, R.drawable.waddledeeportrait,
                     new DialogueBox.DialogueListener() {
                         @Override
                         public void onComplete() {
@@ -2770,6 +2775,7 @@ public class InGameActivity extends AppCompatActivity {
                     }
 
                     if(!itemsAreSet) {
+                        removeAllItems();
                         itemSetup(environment);
                         itemsAreSet = true;
                     }
@@ -2824,7 +2830,6 @@ public class InGameActivity extends AppCompatActivity {
                         oB = 190;
                         timeOfDay = "Morning";
                         itemsAreSet = false;
-                        removeAllItems();
                     }
                    // rHandler.postDelayed(this,231);
                 }
@@ -3018,7 +3023,8 @@ public class InGameActivity extends AppCompatActivity {
         closeInventory(view);
 
         DialogueBox soupMessage = new DialogueBox(InGameActivity.this, dialogueBoxLayout, dialogueNameTextView, "Soup!",
-                dialogueTextView, "Yay!! You made a new soup! Check out your catalog for more details!", 20, dialoguePortraitImageView, R.drawable.soupbase,
+                dialogueTextView, "Yay!! You made a " + String.valueOf(createdSoup.getStarRank()) +" star " + createdSoup.getSoupName()
+                +"! Check out your catalog for more details!", 20, 5000, dialoguePortraitImageView, R.drawable.soupbase,
                 new DialogueBox.DialogueListener() {
                     @Override
                     public void onComplete() {
