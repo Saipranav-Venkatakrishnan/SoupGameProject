@@ -2667,15 +2667,15 @@ public class InGameActivity extends AppCompatActivity {
                                 environmentSetUp("house");
                             }
                             else if(kirby.isGrounded() && environment.toLowerCase().equals("house")){
-                                //kirbyXPosition = tWidth - (tWidth/11F);
-                                kirbyXPosition = 0;
+                                kirbyXPosition = tWidth - (tWidth/11F);
+                               // kirbyXPosition = 0;
                                 kirbyYPosition = gameCamera.getBottomYPosition()+6;
                                 gameCameraFixed = true;
                                 gameCamera.setRightXPosition(tWidth);
                                 gameCameraXPosition = gameCamera.getXPosition();
                                 gameCameraYPosition = gameCamera.getYPosition();
                                 negateDayNightCycle(false);
-                                environmentSetUp("swamp");
+                                environmentSetUp("forest");
                             }
                             else if(kirby.isGrounded() && isByTutorialWaddleDee){
                                 // Tutorial info
