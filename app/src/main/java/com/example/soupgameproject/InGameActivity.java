@@ -337,7 +337,8 @@ public class InGameActivity extends AppCompatActivity {
             gameCamera.setXPosition(centerX);
         }
         else if(environment.toLowerCase().equals("swamp")){
-
+            gameCamera.setScale(fitZoom(3832,359));
+            gameCamera.setLeftXPosition(0);
         }
     }
 
@@ -760,7 +761,24 @@ public class InGameActivity extends AppCompatActivity {
             }
         }
         else if(environment.toLowerCase().equals("swamp")){
+            backgroundGameLayout.setBackgroundImage(R.drawable.swampyclouds2);
+            backgroundGameLayout.setLayoutObjects(swampEnvironmentBackgroundGameObjects);
+            foregroundGameLayout.setLayoutObjects(swampEnvironmentForegroundGameObjects);
 
+            collisionGameLayout.removeLayoutObject(kirby);
+
+            kirby.setXPosition(kirbyXPosition);
+            kirby.setYPosition(kirbyYPosition);
+
+            collisionGameLayout.addLayoutObject(kirby);
+            collisionGameLayout.addLayoutObjects(swampEnvironmentCollisionGameObjects);
+
+            if(!isGrounded) {
+                kirby.setGrounded(false);
+                kirby.getUdHandler().removeCallbacksAndMessages(null);
+                kirby.stopFall();
+                kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 200);
+            }
         }
 
         itemSetUp(environment);
@@ -1862,6 +1880,111 @@ public class InGameActivity extends AppCompatActivity {
                     }
                 });
 
+        Runnable dance2 = kirby.animatedAction(kirby.getAHandler(), true, R.drawable.kirbydance2, null,
+                new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                    }
+                },
+                new Character.CharacterListener() {
+                    @Override
+                    public void onActionComplete() {
+                        kirby.setObjectResource(kirby.getIdleResource());
+                        kirby.setHitBox(kirby.getIdleHitBox());
+                        kirby.showHitBox();
+                    }
+                });
+
+        Runnable dance3 = kirby.animatedAction(kirby.getAHandler(), true, R.drawable.kirbydance3, null,
+                new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                    }
+                },
+                new Character.CharacterListener() {
+                    @Override
+                    public void onActionComplete() {
+                        kirby.setObjectResource(kirby.getIdleResource());
+                        kirby.setHitBox(kirby.getIdleHitBox());
+                        kirby.showHitBox();
+                    }
+                });
+
+        Runnable dance4 = kirby.animatedAction(kirby.getAHandler(), true, R.drawable.kirbydance4, null,
+                new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                    }
+                },
+                new Character.CharacterListener() {
+                    @Override
+                    public void onActionComplete() {
+                        kirby.setObjectResource(kirby.getIdleResource());
+                        kirby.setHitBox(kirby.getIdleHitBox());
+                        kirby.showHitBox();
+                    }
+                });
+
+        Runnable dance5 = kirby.animatedAction(kirby.getAHandler(), true, R.drawable.kirbydance5, null,
+                new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                    }
+                },
+                new Character.CharacterListener() {
+                    @Override
+                    public void onActionComplete() {
+                        kirby.setObjectResource(kirby.getIdleResource());
+                        kirby.setHitBox(kirby.getIdleHitBox());
+                        kirby.showHitBox();
+                    }
+                });
+
+        Runnable dance6 = kirby.animatedAction(kirby.getAHandler(), true, R.drawable.kirbydance6, null,
+                new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                    }
+                },
+                new Character.CharacterListener() {
+                    @Override
+                    public void onActionComplete() {
+                        kirby.setObjectResource(kirby.getIdleResource());
+                        kirby.setHitBox(kirby.getIdleHitBox());
+                        kirby.showHitBox();
+                    }
+                });
+
+        Runnable dance7 = kirby.animatedAction(kirby.getAHandler(), true, R.drawable.kirbydance7, null,
+                new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                    }
+                },
+                new Character.CharacterListener() {
+                    @Override
+                    public void onActionComplete() {
+                        kirby.setObjectResource(kirby.getIdleResource());
+                        kirby.setHitBox(kirby.getIdleHitBox());
+                        kirby.showHitBox();
+                    }
+                });
+
+        Runnable dance8 = kirby.animatedAction(kirby.getAHandler(), true, R.drawable.kirbydance8, null,
+                new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                    }
+                },
+                new Character.CharacterListener() {
+                    @Override
+                    public void onActionComplete() {
+                        kirby.setObjectResource(kirby.getIdleResource());
+                        kirby.setHitBox(kirby.getIdleHitBox());
+                        kirby.showHitBox();
+                    }
+                });
+
 
         kirby.getAllActions().put("Left Walk", leftWalk);
         kirby.getAllActions().put("Left Run", leftRun);
@@ -1876,6 +1999,13 @@ public class InGameActivity extends AppCompatActivity {
         kirby.getAllActions().put("Float Fall", floatFall);
         kirby.getAllActions().put("Stop Float", stopFloat);
         kirby.getAllActions().put("Dance 1", dance1);
+        kirby.getAllActions().put("Dance 2", dance2);
+        kirby.getAllActions().put("Dance 3", dance3);
+        kirby.getAllActions().put("Dance 4", dance4);
+        kirby.getAllActions().put("Dance 5", dance5);
+        kirby.getAllActions().put("Dance 6", dance6);
+        kirby.getAllActions().put("Dance 7", dance7);
+        kirby.getAllActions().put("Dance 8", dance8);
 
 
 
@@ -2537,14 +2667,15 @@ public class InGameActivity extends AppCompatActivity {
                                 environmentSetUp("house");
                             }
                             else if(kirby.isGrounded() && environment.toLowerCase().equals("house")){
-                                kirbyXPosition = tWidth - (tWidth/11F);
+                                //kirbyXPosition = tWidth - (tWidth/11F);
+                                kirbyXPosition = 0;
                                 kirbyYPosition = gameCamera.getBottomYPosition()+6;
                                 gameCameraFixed = true;
                                 gameCamera.setRightXPosition(tWidth);
                                 gameCameraXPosition = gameCamera.getXPosition();
                                 gameCameraYPosition = gameCamera.getYPosition();
                                 negateDayNightCycle(false);
-                                environmentSetUp("forest");
+                                environmentSetUp("swamp");
                             }
                             else if(kirby.isGrounded() && isByTutorialWaddleDee){
                                 // Tutorial info
@@ -2809,13 +2940,13 @@ public class InGameActivity extends AppCompatActivity {
                    // rHandler.postDelayed(this,3667);
                 }
                 else if(timeOfDay.toLowerCase().equals("sunset")){
-                    if(toColor(255,70,70,1,40,40,40,1)){
+                    if(toColor(255,80,80,1,40,40,40,1)){
                         timeOfDay = "Night";
                     }
                     //rHandler.postDelayed(this,280);
                 }
                 else if(timeOfDay.toLowerCase().equals("night")){
-                    if(toColor(50,50,70,1,35,35,35,1)){
+                    if(toColor(100,100,120,1,35,35,35,1)){
                         timeOfDay = "Sunrise1";
                     }
                 //    rHandler.postDelayed(this,690);
@@ -3047,6 +3178,12 @@ public class InGameActivity extends AppCompatActivity {
                 soupMessage.resetDialogue();
                 soupMessage.getDialogueListener().onComplete();
             }
+        }
+
+        if(kirby.isGrounded() && !leftButton.isPressed() && !rightButton.isPressed()) {
+            kirby.getAHandler().removeCallbacksAndMessages(null);
+
+            kirby.getAHandler().postDelayed(kirby.getAllActions().get("Dance " + String.valueOf((int)(Math.random() * 8 + 1))),0);
         }
     }
 
