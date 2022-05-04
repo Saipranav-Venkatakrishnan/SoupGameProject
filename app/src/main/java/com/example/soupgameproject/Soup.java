@@ -197,7 +197,7 @@ public class Soup{
     }
 
     private void soupDescHandler(){
-        desc = "This soup was made using ";
+        desc = "";
         String[] names = new String[]{"Carrot", "Mushroom", "Radish", "Tomato", "Plant"};
         int[] counts = countIngredients();
 
