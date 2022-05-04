@@ -604,6 +604,7 @@ public class InGameActivity extends AppCompatActivity {
 
 
         // After populating all ArrayLists, set up the first environment the player will be in (which will be the forest)
+        initialItemSetUp();
         environmentSetUp(environment);
     }
 
@@ -623,7 +624,7 @@ public class InGameActivity extends AppCompatActivity {
             GameLayout.allLayouts = new ArrayList<GameLayout>();
         }
         catch(Exception e){
-            Log.i("EnvironmentSetup","GameLayouts not created yet");
+            Log.i("EnvironmentSetUp","GameLayouts not created yet");
         }
 
         try{
@@ -631,7 +632,7 @@ public class InGameActivity extends AppCompatActivity {
             eHandler.removeCallbacksAndMessages(null);
         }
         catch(Exception e){
-            Log.i("EnvironmentSetup", "Some handlers not created yet");
+            Log.i("EnvironmentSetUp", "Some handlers not created yet");
         }
 
         backgroundGameLayout = new GameLayout(this,"Background", backgroundLayout);
@@ -661,8 +662,7 @@ public class InGameActivity extends AppCompatActivity {
 
             kirby.setXPosition(kirbyXPosition);
             kirby.setYPosition(kirbyYPosition);
-
-            itemSetup(environment);
+            
             collisionGameLayout.addLayoutObject(kirby);
             collisionGameLayout.addLayoutObjects(testEnvironmentCollisionGameObjects);
 
@@ -708,8 +708,7 @@ public class InGameActivity extends AppCompatActivity {
 
             kirby.setXPosition(kirbyXPosition);
             kirby.setYPosition(kirbyYPosition);
-
-           // itemSetup(environment);
+            
             collisionGameLayout.addLayoutObject(kirby);
             collisionGameLayout.addLayoutObjects(forestEnvironmentCollisionGameObjects);
 
@@ -764,7 +763,7 @@ public class InGameActivity extends AppCompatActivity {
 
         }
 
-//        initialItemSetUp();
+        itemSetUp(environment);
 
     }
 
@@ -805,7 +804,12 @@ public class InGameActivity extends AppCompatActivity {
 
             allForestCurrentItems.add(ingredient);
 
-            if(environment.toLowerCase().equals("forest")) {
+        }
+    }
+    
+    private void itemSetUp(String environment){
+        if(environment.toLowerCase().equals("forest")) {
+            for(Ingredient ingredient: allForestCurrentItems) {
                 Runnable fall = ingredient.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
                     @Override
                     public void onCollision(GameObject object1, GameObject object2) {
@@ -829,13 +833,10 @@ public class InGameActivity extends AppCompatActivity {
 
                 itemHandler.postDelayed(fall, 5);
             }
-
         }
-
-        updateItems();
     }
 
-    private void itemSetup(String environment){
+    private void newItemSetUp(String environment){
 
         if(environment.toLowerCase().equals("test")){
             for(int i = 0; i < 10; i++){
@@ -953,7 +954,7 @@ public class InGameActivity extends AppCompatActivity {
 
                 itemHandler.postDelayed(tomatoFall, 0);
             }
-            Log.i("EnvironmentSetup","Test Items");
+            Log.i("EnvironmentSetUp","Test Items");
         }
         else if(environment.toLowerCase().equals("forest")){
             allForestCurrentItems = new ArrayList<Ingredient>();
@@ -1057,15 +1058,13 @@ public class InGameActivity extends AppCompatActivity {
                 itemHandler.postDelayed(tomatoFall, 5);
             }
 
-            Log.i("EnvironmentSetup","Forest Items");
+            Log.i("EnvironmentSetUp","Forest Items");
 
         }
         else if(environment.toLowerCase().equals("house")){
-            Log.i("EnvironmentSetup","There should be no items...");
+            Log.i("EnvironmentSetUp","There should be no items...");
         }
-
-        updateItems();
-
+        
     }
 
     private void removeAllItems(){
@@ -1081,20 +1080,6 @@ public class InGameActivity extends AppCompatActivity {
                 allForestCurrentItems = new ArrayList<Ingredient>();
             }
         }
-    }
-
-    private void updateItems(){
-        int i = 0;
-        allForestCurrentItemLocations = new float[200];
-        allForestCurrentItemNames = new ArrayList<String>();
-        for(Ingredient item : allForestCurrentItems){
-            allForestCurrentItemNames.add(item.getName());
-            allForestCurrentItemLocations[2 * i] = item.getXPosition();
-            allForestCurrentItemLocations[2 * i + 1] = item.getYPosition();
-            i++;
-        }
-
-        Log.i("ItemGeneration","Items: " + String.valueOf(allForestCurrentItems.size()) + " Names: " + String.valueOf(allForestCurrentItemNames.size()));
     }
 
     // Inventory Saving
@@ -2644,7 +2629,6 @@ public class InGameActivity extends AppCompatActivity {
             else if(environment.toLowerCase().equals("swamp")){
                 //allSwampCurrentItems.remove(ingredient);
             }
-            updateItems();
             switch(itemName) {
                 case "Carrot":
                     invDrawables[itemCount] = R.drawable.carrot;
@@ -2776,7 +2760,7 @@ public class InGameActivity extends AppCompatActivity {
 
                     if(!itemsAreSet) {
                         removeAllItems();
-                        itemSetup(environment);
+                        newItemSetUp(environment);
                         itemsAreSet = true;
                     }
 
@@ -3345,7 +3329,15 @@ public class InGameActivity extends AppCompatActivity {
         json = gson.toJson(forestCloudCoordinates);
         editor.putString(FOREST_CLOUD_COORDINATES, json);
 
-        updateItems();
+        int j = 0;
+        allForestCurrentItemLocations = new float[200];
+        allForestCurrentItemNames = new ArrayList<String>();
+        for(Ingredient item : allForestCurrentItems){
+            allForestCurrentItemNames.add(item.getName());
+            allForestCurrentItemLocations[2 * j] = item.getXPosition();
+            allForestCurrentItemLocations[2 * j + 1] = item.getYPosition();
+            j++;
+        }
 
         gson = new Gson();
         json = gson.toJson(allForestCurrentItemNames);
@@ -3742,7 +3734,6 @@ public class InGameActivity extends AppCompatActivity {
         initialInventorySetUp();
         initialSoupSetUp();
         initialEnvironmentSetUp();
-        initialItemSetUp();
         dayNightCycle();
     }
 //
