@@ -1847,6 +1847,21 @@ public class InGameActivity extends AppCompatActivity {
                     }
                 });
 
+        Runnable dance1 = kirby.animatedAction(kirby.getAHandler(), true, R.drawable.kirbydance1, null,
+                new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                    }
+                },
+                new Character.CharacterListener() {
+                    @Override
+                    public void onActionComplete() {
+                        kirby.setObjectResource(kirby.getIdleResource());
+                        kirby.setHitBox(kirby.getIdleHitBox());
+                        kirby.showHitBox();
+                    }
+                });
+
 
         kirby.getAllActions().put("Left Walk", leftWalk);
         kirby.getAllActions().put("Left Run", leftRun);
@@ -1860,6 +1875,7 @@ public class InGameActivity extends AppCompatActivity {
         kirby.getAllActions().put("Float Jump", floatJump);
         kirby.getAllActions().put("Float Fall", floatFall);
         kirby.getAllActions().put("Stop Float", stopFloat);
+        kirby.getAllActions().put("Dance 1", dance1);
 
 
 
@@ -2485,9 +2501,13 @@ public class InGameActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 // Hold
-
+                                if(kirby.isGrounded() && !leftButton.isPressed() && !rightButton.isPressed()) {
+                                    isClick = false;
+//                                    kirby.getAHandler().removeCallbacksAndMessages(null);
+//                                    kirby.getAHandler().postDelayed(kirby.getAllActions().get("Dance 1"), 0);
+                                }
                             }
-                        }, 150);
+                        }, 1000);
 
                         isDown = true;
                         break;

@@ -534,6 +534,8 @@ public class Character extends GameObject{
         this.stopMoving = stopMoving;
     }
 
+
+
     // Getters and Setters:
     public boolean isGrounded() {
         return isGrounded;
