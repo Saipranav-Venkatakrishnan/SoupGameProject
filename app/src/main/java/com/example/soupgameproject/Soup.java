@@ -288,6 +288,16 @@ public class Soup{
         imageView.setBackgroundTintList(ColorStateList.valueOf(bowlColor));
     }
 
+    public void stopShowingSoup(ImageView imageView){
+        imageView.setImageResource(android.R.color.transparent);
+        imageView.setScaleType(ImageView.ScaleType.FIT_START);
+        imageView.setImageTintMode(PorterDuff.Mode.SRC_ATOP);
+        imageView.setImageTintList(ColorStateList.valueOf(Color.argb(0,0,0,0)));
+
+        imageView.setBackgroundTintMode(PorterDuff.Mode.SRC_ATOP);
+        imageView.setBackgroundTintList(ColorStateList.valueOf(Color.argb(0,0,0,0)));
+    }
+
     public int getStarRank() {
         return starRank;
     }

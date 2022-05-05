@@ -3164,6 +3164,7 @@ public class InGameActivity extends AppCompatActivity {
                     @Override
                     public void onComplete() {
                         Log.i("Soup Dialogue", "Dialogue complete.");
+                        createdSoup.stopShowingSoup(dialoguePortraitImageView);
                     }
                 });
 
