@@ -179,8 +179,11 @@ public class InGameActivity extends AppCompatActivity {
     // Environment variables (SAVE)
 
     private String environment;
-    private boolean closeToHouse;
+    private boolean isCloseToHouse;
     private boolean isByTutorialWaddleDee;
+    private boolean isCloseToCauldron;
+    private boolean isCloseToForestDoor;
+    private boolean isCloseToSwampDoor;
     private boolean itemsAreSet;
 
     // Test Environment GameObjects
@@ -1418,8 +1421,11 @@ public class InGameActivity extends AppCompatActivity {
                             kirby.getUdHandler().removeCallbacksAndMessages(null);
                             kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
                         }
-                        closeToHouse = false;
+                        isCloseToHouse = false;
                         isByTutorialWaddleDee = false;
+                        isCloseToCauldron = false;
+                        isCloseToForestDoor = false;
+                        isCloseToSwampDoor = false;
 //                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
 //                            kirbyPreviousXPos = xPosition;
 //                            kirbyPreviousYPos = yPosition;
@@ -1484,8 +1490,11 @@ public class InGameActivity extends AppCompatActivity {
                             kirby.getUdHandler().removeCallbacksAndMessages(null);
                             kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
                         }
-                        closeToHouse = false;
+                        isCloseToHouse = false;
                         isByTutorialWaddleDee = false;
+                        isCloseToCauldron = false;
+                        isCloseToForestDoor = false;
+                        isCloseToSwampDoor = false;
 //                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
 //                            kirbyPreviousXPos = xPosition;
 //                            kirbyPreviousYPos = yPosition;
@@ -1550,8 +1559,11 @@ public class InGameActivity extends AppCompatActivity {
                             kirby.getUdHandler().removeCallbacksAndMessages(null);
                             kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
                         }
-                        closeToHouse = false;
+                        isCloseToHouse = false;
                         isByTutorialWaddleDee = false;
+                        isCloseToCauldron = false;
+                        isCloseToForestDoor = false;
+                        isCloseToSwampDoor = false;
 //                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
 //                            kirbyPreviousXPos = xPosition;
 //                            kirbyPreviousYPos = yPosition;
@@ -1615,8 +1627,11 @@ public class InGameActivity extends AppCompatActivity {
                             kirby.getUdHandler().removeCallbacksAndMessages(null);
                             kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
                         }
-                        closeToHouse = false;
+                        isCloseToHouse = false;
                         isByTutorialWaddleDee = false;
+                        isCloseToCauldron = false;
+                        isCloseToForestDoor = false;
+                        isCloseToSwampDoor = false;
 //                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
 //                            kirbyPreviousXPos = xPosition;
 //                            kirbyPreviousYPos = yPosition;
@@ -2346,7 +2361,7 @@ public class InGameActivity extends AppCompatActivity {
                         }
                     });
 
-            Runnable wLeftRun = tempNPC.walk(tempNPC.getLrHandler(), R.drawable.waddledeewalk, "left", runSpeed, waddleDeeRunHitBoxes,
+            Runnable wLeftRun = tempNPC.walk(tempNPC.getLrHandler(), R.drawable.waddledeerun, "left", runSpeed, waddleDeeRunHitBoxes,
                     new GameObject.CollisionListener() {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
@@ -2385,7 +2400,7 @@ public class InGameActivity extends AppCompatActivity {
                         }
                     });
 
-            Runnable wRightRun = tempNPC.walk(tempNPC.getLrHandler(), R.drawable.waddledeewalk, "right", runSpeed, waddleDeeRunHitBoxes,
+            Runnable wRightRun = tempNPC.walk(tempNPC.getLrHandler(), R.drawable.waddledeerun, "right", runSpeed, waddleDeeRunHitBoxes,
                     new GameObject.CollisionListener() {
                         @Override
                         public void onCollision(GameObject object1, GameObject object2) {
@@ -2742,7 +2757,7 @@ public class InGameActivity extends AppCompatActivity {
                                 kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Stop Float"), 0);
                             }
 
-                            if(kirby.isGrounded() && closeToHouse && environment.toLowerCase().equals("forest")){
+                            if(kirby.isGrounded() && isCloseToHouse && environment.toLowerCase().equals("forest")){
                                 gameCameraXPosition = -1;
                                 gameCameraYPosition = -1;
                                 gameCameraFixed = true;
@@ -2755,14 +2770,14 @@ public class InGameActivity extends AppCompatActivity {
                             }
                             else if(kirby.isGrounded() && environment.toLowerCase().equals("house")){
                                 kirbyXPosition = tWidth - (tWidth/11F);
-                                kirbyXPosition = 0;
-                                //kirbyYPosition = gameCamera.getBottomYPosition()+6;
+                                //kirbyXPosition = 0;
+                                kirbyYPosition = gameCamera.getBottomYPosition()+6;
                                 gameCameraFixed = true;
                                 gameCamera.setRightXPosition(tWidth);
                                 gameCameraXPosition = gameCamera.getXPosition();
                                 gameCameraYPosition = gameCamera.getYPosition();
                                 negateDayNightCycle(false);
-                                environmentSetUp("swamp");
+                                environmentSetUp("forest");
                             }
                             else if(kirby.isGrounded() && isByTutorialWaddleDee){
                                 // Tutorial info
@@ -2810,8 +2825,8 @@ public class InGameActivity extends AppCompatActivity {
             Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
             return true;
         }
-        else if(object1.isCharacter() && object2.getObjectName().toLowerCase().equals("mushroom house")){
-            closeToHouse = true;
+        else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby") && object2.getObjectName().toLowerCase().equals("mushroom house")){
+            isCloseToHouse = true;
             Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
             return true;
         }
@@ -2841,6 +2856,10 @@ public class InGameActivity extends AppCompatActivity {
                 && object2.equals(allNPCs.get("Waddle Dee 0")) && collisionType.equals("left")){
             isByTutorialWaddleDee = true;
             Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
+        }
+        else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
+                && object2.getObjectName().toLowerCase().equals("cauldron")){
+            isCloseToCauldron = true;
         }
 
         return false;
@@ -3159,66 +3178,67 @@ public class InGameActivity extends AppCompatActivity {
 
     // Soup making method
     private void makeSoup(){
-        selectedIngredients = new ArrayList<Ingredient>();
-        selectedIngredientsIndex = new ArrayList<Integer>();
+        if(isCloseToCauldron) {
+            selectedIngredients = new ArrayList<Ingredient>();
+            selectedIngredientsIndex = new ArrayList<Integer>();
 
-        makeBttn.setVisibility(View.VISIBLE);
-        makeBttn.setClickable(false);
+            makeBttn.setVisibility(View.VISIBLE);
+            makeBttn.setClickable(false);
 
-        inventoryItemClickCounter = new int[15];
+            inventoryItemClickCounter = new int[15];
 
-        layout.setVisibility(View.VISIBLE);
+            layout.setVisibility(View.VISIBLE);
 
-        for (int i = 0; i < invImages.length; i++) {
-            invImages[i] = (ImageView) findViewById(invRes[i]);
-            invImages[i].setImageResource(invDrawables[i]);
-            invImages[i].setVisibility(View.VISIBLE);
+            for (int i = 0; i < invImages.length; i++) {
+                invImages[i] = (ImageView) findViewById(invRes[i]);
+                invImages[i].setImageResource(invDrawables[i]);
+                invImages[i].setVisibility(View.VISIBLE);
 
-            int itemNumber = i;
-            if(userIngredients[itemNumber] != null) {
-                invImages[i].setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        inventoryItemClickCounter[itemNumber]++;
-                        if (inventoryItemClickCounter[itemNumber] % 2 == 1) {
-                            // select item
-                            int numSelected = 0;
-                            for (int i = 0; i < inventoryItemClickCounter.length; i++) {
-                                if (inventoryItemClickCounter[i] % 2 == 1) {
-                                    numSelected++;
+                int itemNumber = i;
+                if (userIngredients[itemNumber] != null) {
+                    invImages[i].setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            inventoryItemClickCounter[itemNumber]++;
+                            if (inventoryItemClickCounter[itemNumber] % 2 == 1) {
+                                // select item
+                                int numSelected = 0;
+                                for (int i = 0; i < inventoryItemClickCounter.length; i++) {
+                                    if (inventoryItemClickCounter[i] % 2 == 1) {
+                                        numSelected++;
+                                    }
                                 }
-                            }
-                            if (numSelected >= 3) {
-                                makeBttn.setClickable(true);
-                            }
-
-                            invImages[itemNumber].setImageTintMode(PorterDuff.Mode.SRC_OVER);
-                            invImages[itemNumber].setImageTintList(ColorStateList.valueOf(Color.argb(100, 100, 100, 100)));
-                            selectedIngredients.add(userIngredients[itemNumber]);
-                            selectedIngredientsIndex.add(itemNumber);
-
-                        } else {
-                            // deselect item
-                            int numSelected = 0;
-                            for (int i = 0; i < inventoryItemClickCounter.length; i++) {
-                                if (inventoryItemClickCounter[i] % 2 == 1) {
-                                    numSelected++;
+                                if (numSelected >= 3) {
+                                    makeBttn.setClickable(true);
                                 }
-                            }
-                            if (numSelected < 3) {
-                                makeBttn.setClickable(false);
-                            }
 
-                            invImages[itemNumber].setImageTintMode(PorterDuff.Mode.OVERLAY);
-                            invImages[itemNumber].setImageTintList(ColorStateList.valueOf(Color.argb(0, 100, 100, 100)));
-                            selectedIngredients.remove(userIngredients[itemNumber]);
-                            selectedIngredientsIndex.remove((Integer) itemNumber);
+                                invImages[itemNumber].setImageTintMode(PorterDuff.Mode.SRC_OVER);
+                                invImages[itemNumber].setImageTintList(ColorStateList.valueOf(Color.argb(100, 100, 100, 100)));
+                                selectedIngredients.add(userIngredients[itemNumber]);
+                                selectedIngredientsIndex.add(itemNumber);
+
+                            } else {
+                                // deselect item
+                                int numSelected = 0;
+                                for (int i = 0; i < inventoryItemClickCounter.length; i++) {
+                                    if (inventoryItemClickCounter[i] % 2 == 1) {
+                                        numSelected++;
+                                    }
+                                }
+                                if (numSelected < 3) {
+                                    makeBttn.setClickable(false);
+                                }
+
+                                invImages[itemNumber].setImageTintMode(PorterDuff.Mode.OVERLAY);
+                                invImages[itemNumber].setImageTintList(ColorStateList.valueOf(Color.argb(0, 100, 100, 100)));
+                                selectedIngredients.remove(userIngredients[itemNumber]);
+                                selectedIngredientsIndex.remove((Integer) itemNumber);
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
         }
-
     }
 
     public void createSoup(View view){

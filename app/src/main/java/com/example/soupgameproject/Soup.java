@@ -161,39 +161,47 @@ public class Soup{
         String[] names = new String[]{"Carrot", "Mushroom", "Radish", "Tomato", "Plant"};
         int[] counts = countIngredients();
 
-        // sort
-        for (int i = 1; i < counts.length; i++) {
-            int current = counts[i];
-            String temp = names[i];
-            int j = i - 1;
-            while(j >= 0 && current < counts[j]) {
-                counts[j+1] = counts[j];
-                names[j+1] = names[j];
-                j--;
-            }
-            counts[j+1] = current;
-            names[j+1] = temp;
+        // Check for special soups here:
+        // subject to change...
+        if(counts[0] == 6 && counts[1] == 2 && counts[3] == 1){
+            // star rank is guaranteed to be 3 because 9 ingredients are used
+            this.soupName = "Forest Special Soup";
         }
+        // Otherwise:
+        else {
+            // sort
+            for (int i = 1; i < counts.length; i++) {
+                int current = counts[i];
+                String temp = names[i];
+                int j = i - 1;
+                while (j >= 0 && current < counts[j]) {
+                    counts[j + 1] = counts[j];
+                    names[j + 1] = names[j];
+                    j--;
+                }
+                counts[j + 1] = current;
+                names[j + 1] = temp;
+            }
 
 //        Log.i("SoupMaking",names[0] + ", " + names[1] + ", " + names[2]+ ", " + names[3]+ ", " + names[4]);
 //        Log.i("SoupMaking",counts[0] + ", " + counts[1] + ", " + counts[2]+ ", " + counts[3]+ ", " + counts[4]);
-        String tempName = "";
+            String tempName = "";
 
-        if(counts[2] == 0) {
-            for (int i = 4; i >2; i--) {
-                if (counts[i] > 0) {
-                    tempName += names[i] + "-";
+            if (counts[2] == 0) {
+                for (int i = 4; i > 2; i--) {
+                    if (counts[i] > 0) {
+                        tempName += names[i] + "-";
+                    }
                 }
+                String substring = tempName.substring(0, tempName.length() - 1);
+
+                tempName = substring + " Soup";
+            } else {
+                tempName = "Generic Soup";
             }
-            String substring = tempName.substring(0, tempName.length()-1);
 
-            tempName = substring + " Soup";
+            this.soupName = tempName;
         }
-        else{
-            tempName = "Generic Soup";
-        }
-
-        this.soupName = tempName;
     }
 
     private void soupDescHandler(){
@@ -215,7 +223,7 @@ public class Soup{
             names[j+1] = temp;
         }
 
-        for(int i = 0; i < counts.length; i++){
+        for(int i = counts.length-1; i > 0; i--){
             if(counts[i] > 1){
                 desc += String.valueOf(counts[i]) + " " + names[i] + "s, ";
             }
@@ -223,6 +231,8 @@ public class Soup{
                 desc += String.valueOf(counts[i]) + " " + names[i] + ", ";
             }
         }
+
+        desc = desc.substring(0,desc.length()-2);
 
         Log.i("SoupDesc", desc);
     }
@@ -264,10 +274,15 @@ public class Soup{
         return counts;
     }
 
-    // Maybe have different colored bowls depending on rank?
     private void bowlColorHandler(){
         if(starRank == 3){
-            bowlColor = Color.argb(120,255, 215, 0);
+            // special soup bowl color?
+            if(soupName.toLowerCase().equals("forest special soup")){
+                   bowlColor = Color.argb(150, 112, 252, 5);
+            }
+            else {
+                bowlColor = Color.argb(120, 255, 215, 0);
+            }
         }
         else if(starRank == 2){
             bowlColor = Color.argb(100,250, 250, 250);
