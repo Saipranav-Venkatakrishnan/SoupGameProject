@@ -223,8 +223,10 @@ public class GameLayout {
 
                 for (GameObject gameObject : gameLayout.getLayoutObjects()) {
                     // Apply  tint
+                    if(!gameObject.isCharacter()){
                     gameObject.setBackgroundTintMode(PorterDuff.Mode.MULTIPLY);
                     gameObject.setBackgroundTintList(ColorStateList.valueOf(color));
+                    }
                 }
             }
         }
@@ -239,8 +241,10 @@ public class GameLayout {
 
                 for (GameObject gameObject : gameLayout.getLayoutObjects()) {
                     // Apply  tint
-                    gameObject.setBackgroundTintMode(PorterDuff.Mode.SRC_ATOP);
-                    gameObject.setBackgroundTintList(ColorStateList.valueOf(color));
+                    if(!gameObject.isCharacter()) {
+                        gameObject.setBackgroundTintMode(PorterDuff.Mode.SRC_ATOP);
+                        gameObject.setBackgroundTintList(ColorStateList.valueOf(color));
+                    }
                 }
             }
         }
@@ -255,6 +259,15 @@ public class GameLayout {
                     gameObject.setBackgroundTintList(ColorStateList.valueOf(color));
                 }
             }
+            else if(gameLayout.getName().toLowerCase().equals("background")){
+                for (GameObject gameObject : gameLayout.getLayoutObjects()) {
+                    // Apply  tint to characters only
+                    if(gameObject.isCharacter()) {
+                        gameObject.setBackgroundTintMode(PorterDuff.Mode.MULTIPLY);
+                        gameObject.setBackgroundTintList(ColorStateList.valueOf(color));
+                    }
+                }
+            }
         }
     }
 
@@ -265,6 +278,15 @@ public class GameLayout {
                     // Apply  tint
                     gameObject.setBackgroundTintMode(PorterDuff.Mode.SRC_ATOP);
                     gameObject.setBackgroundTintList(ColorStateList.valueOf(color));
+                }
+            }
+            else if(gameLayout.getName().toLowerCase().equals("background")){
+                for (GameObject gameObject : gameLayout.getLayoutObjects()) {
+                    // Apply  tint to characters only
+                    if(gameObject.isCharacter()) {
+                        gameObject.setBackgroundTintMode(PorterDuff.Mode.SRC_ATOP);
+                        gameObject.setBackgroundTintList(ColorStateList.valueOf(color));
+                    }
                 }
             }
         }

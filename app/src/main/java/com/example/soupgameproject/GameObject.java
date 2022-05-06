@@ -393,6 +393,59 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
         return action;
     }
 
+
+    public void fadeOut(GameLayout layout, FadeCompletionListener fadeCompletionListener){
+        Handler handler = new Handler();
+        Runnable fade = new Runnable() {
+
+            private float i = 1;
+
+            @Override
+            public void run() {
+                if(i >= 0) {
+                    setAlpha(i);
+                    i-=1/10F;
+                    handler.postDelayed(this,1);
+                }
+                else{
+                    layout.removeLayoutObject(GameObject.this);
+                    setAlpha(1F);
+                    fadeCompletionListener.fadeOnComplete();
+                    handler.removeCallbacks(this);
+                }
+            }
+        };
+
+        handler.postDelayed(fade,0);
+    }
+
+    public void fadeIn(GameLayout layout, FadeCompletionListener fadeCompletionListener){
+        setAlpha(0F);
+        layout.addLayoutObject(GameObject.this);
+
+        Handler handler = new Handler();
+        Runnable fade = new Runnable() {
+
+            private float i = 0;
+
+            @Override
+            public void run() {
+                if(i <= 1) {
+                    setAlpha(i);
+                    i+=1/10F;
+                    handler.postDelayed(this,1);
+                }
+                else{
+                    setAlpha(1F);
+                    fadeCompletionListener.fadeOnComplete();
+                    handler.removeCallbacks(this);
+                }
+            }
+        };
+
+        handler.postDelayed(fade,0);
+    }
+
     // Stops the falling
     public void stopFall(){
         stopFall = true;
@@ -571,5 +624,9 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
 
     public void setStopFall(boolean stopFall) {
         this.stopFall = stopFall;
+    }
+
+    public interface FadeCompletionListener{
+        void fadeOnComplete();
     }
 }

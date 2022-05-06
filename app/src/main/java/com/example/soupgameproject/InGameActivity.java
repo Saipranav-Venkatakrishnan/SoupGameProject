@@ -90,6 +90,12 @@ public class InGameActivity extends AppCompatActivity {
 
     public static final String TEST_SAVE = "testSave";
 
+    public static final String SPECIALDEE_XPOSITION = "specialDeeXPosition";
+    public static final String SPECIALDEE_YPOSITION = "specialDeeYPosition";
+    public static final String IS_SPECIALDEE_PRESENT = "isSpecialDeePresent";
+    public static final String SPECIALDEE_DIRECTION = "specialDeeDirection";
+    public static final String FOREST_HINT_NUMBER = "forestHintNumber";
+
     public static float kirbyPreviousXPos;
     public static float kirbyPreviousYPos;
 
@@ -158,6 +164,15 @@ public class InGameActivity extends AppCompatActivity {
     // Save the hashmap
     private HashMap<String, Character> allNPCs;//
 
+    private float specialDeeXPosition;
+    private float specialDeeYPosition;
+    private boolean isSpecialDeePresent;
+    private String specialDeeDirection;
+    private int forestHintNumber;
+
+    private final String[] forestHints = new String[]{"Forest hint 1: Introduction to special forest soup. Meet at night.","Forest hint 2: Carrot amount. Meet morning.",
+            "Forest hint 3: Mushroom amount. Meet at sunrise.", "Forest hint 4: Tomato amount.","Done"};
+
 
     private ArrayList<Character> npcCopyList;
 
@@ -181,6 +196,7 @@ public class InGameActivity extends AppCompatActivity {
     private String environment;
     private boolean isCloseToHouse;
     private boolean isByTutorialWaddleDee;
+    private boolean isByForestSoupHintWaddleDee;
     private boolean isCloseToCauldron;
     private boolean isCloseToForestDoor;
     private boolean isCloseToSwampDoor;
@@ -306,6 +322,8 @@ public class InGameActivity extends AppCompatActivity {
         invImages = new ImageView[] {iv_1, iv_2, iv_3, iv_4, iv_5, iv_6, iv_7, iv_8, iv_9, iv_10, iv_11, iv_12, iv_13, iv_14, iv_15};
 
         Log.i("Nick",String.valueOf((tWidth)));
+
+        isSpecialDeePresent = true;
     }
 
     // Camera creation and set up
@@ -411,11 +429,19 @@ public class InGameActivity extends AppCompatActivity {
 
         forestClouds = new ArrayList<GameObject>();
 
-        // NPC Waddle Dee 0
+        // NPC Waddle Dee 0 (Tutorial Waddle Dee)
         allNPCs.get("Waddle Dee 0").setXPosition(2 * tWidth/21F);
         allNPCs.get("Waddle Dee 0").setYPosition(gameCamera.getBottomYPosition() + 6);
         allNPCs.get("Waddle Dee 0").faceDirection("Left");
         forestEnvironmentCollisionGameObjects.add(allNPCs.get("Waddle Dee 0"));
+
+        // NPC Waddle Dee 1 (SpecialDee)
+        allNPCs.get("Waddle Dee 1").setXPosition(specialDeeXPosition);
+        allNPCs.get("Waddle Dee 1").setYPosition(specialDeeYPosition);
+        allNPCs.get("Waddle Dee 1").faceDirection(specialDeeDirection);
+        if(isSpecialDeePresent) {
+            forestEnvironmentBackgroundGameObjects.add(allNPCs.get("Waddle Dee 1"));
+        }
 
         forestEnvironmentCollisionGameObjects.add(new GameObject(this, "Ground", (int)(tWidth),10,
                 R.drawable.testground, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
@@ -1423,6 +1449,7 @@ public class InGameActivity extends AppCompatActivity {
                         }
                         isCloseToHouse = false;
                         isByTutorialWaddleDee = false;
+                        isByForestSoupHintWaddleDee = false;
                         isCloseToCauldron = false;
                         isCloseToForestDoor = false;
                         isCloseToSwampDoor = false;
@@ -1492,6 +1519,7 @@ public class InGameActivity extends AppCompatActivity {
                         }
                         isCloseToHouse = false;
                         isByTutorialWaddleDee = false;
+                        isByForestSoupHintWaddleDee = false;
                         isCloseToCauldron = false;
                         isCloseToForestDoor = false;
                         isCloseToSwampDoor = false;
@@ -1561,6 +1589,7 @@ public class InGameActivity extends AppCompatActivity {
                         }
                         isCloseToHouse = false;
                         isByTutorialWaddleDee = false;
+                        isByForestSoupHintWaddleDee = false;
                         isCloseToCauldron = false;
                         isCloseToForestDoor = false;
                         isCloseToSwampDoor = false;
@@ -1629,6 +1658,7 @@ public class InGameActivity extends AppCompatActivity {
                         }
                         isCloseToHouse = false;
                         isByTutorialWaddleDee = false;
+                        isByForestSoupHintWaddleDee = false;
                         isCloseToCauldron = false;
                         isCloseToForestDoor = false;
                         isCloseToSwampDoor = false;
@@ -2091,7 +2121,7 @@ public class InGameActivity extends AppCompatActivity {
         // Create multiple Waddle Dee
         npcCopyList = new ArrayList<Character>();
         // ~30-40 limit on number of NPCs
-        for(int i = 0; i < 1; i++){
+        for(int i = 0; i < 2; i++){
             npcCopyList.add(null);
         }
 
@@ -2368,6 +2398,8 @@ public class InGameActivity extends AppCompatActivity {
                             if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))) {
                                 if(GameObject.getCollisionType(object1, object2).contains("right")){
                                     tempNPC.setXPosition(tempNPC.getXPosition() + runSpeed);
+                                    tempNPC.setStopMoving(true);
+                                    tempNPC.getLrHandler().postDelayed(tempNPC.getAllActions().get("Right Run"),0);
                                     Log.i("Collision", object1.getObjectName() + " collided with the right of " + object2.getObjectName());
                                 }
                             }
@@ -2407,6 +2439,8 @@ public class InGameActivity extends AppCompatActivity {
                             if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2))) {
                                 if(GameObject.getCollisionType(object1, object2).contains("left")) {
                                     tempNPC.setXPosition(tempNPC.getXPosition() - runSpeed);
+                                    tempNPC.setStopMoving(true);
+                                    tempNPC.getLrHandler().postDelayed(tempNPC.getAllActions().get("Left Run"),0);
                                     Log.i("Collision", object1.getObjectName() + " collided with the left of " + object2.getObjectName());
                                 }
                             }
@@ -2449,6 +2483,63 @@ public class InGameActivity extends AppCompatActivity {
             // Add all NPCs to HashMap
             allNPCs.put("Waddle Dee " + String.valueOf(x), tempNPC);
             x++;
+        }
+    }
+
+    // Moves SpecialDee
+    private void moveSpecialDee(){
+        switch(forestHintNumber){
+            case 1:
+                allNPCs.get("Waddle Dee 1").fadeOut(backgroundGameLayout, new GameObject.FadeCompletionListener() {
+                    @Override
+                    public void fadeOnComplete() {
+                        allNPCs.get("Waddle Dee 1").setXPosition(tWidth/2 + tWidth/7);
+                        specialDeeDirection = "Left";
+                        allNPCs.get("Waddle Dee 1").faceDirection(specialDeeDirection);
+                        isSpecialDeePresent = false;
+                    }
+                });
+                break;
+
+            case 2:
+                allNPCs.get("Waddle Dee 1").fadeOut(backgroundGameLayout, new GameObject.FadeCompletionListener() {
+                    @Override
+                    public void fadeOnComplete() {
+                        allNPCs.get("Waddle Dee 1").setXPosition(0);
+                        specialDeeDirection = "Right";
+                        allNPCs.get("Waddle Dee 1").faceDirection(specialDeeDirection);
+                        isSpecialDeePresent = false;
+                    }
+                });
+                break;
+
+            case 3:
+                allNPCs.get("Waddle Dee 1").fadeOut(backgroundGameLayout, new GameObject.FadeCompletionListener() {
+                    @Override
+                    public void fadeOnComplete() {
+                        allNPCs.get("Waddle Dee 1").setCenterXPosition(tWidth - tWidth/3 - tWidth/25 + (float)(16*8/7F));
+                        allNPCs.get("Waddle Dee 1").setYPosition(gameCamera.getBottomYPosition() + 6 + (int)(39*8/7F));
+                        specialDeeDirection = "Right";
+                        isSpecialDeePresent = false;
+                    }
+                });
+                break;
+
+            case 4:
+                allNPCs.get("Waddle Dee 1").fadeOut(backgroundGameLayout, new GameObject.FadeCompletionListener() {
+                    @Override
+                    public void fadeOnComplete() {
+                        allNPCs.get("Waddle Dee 1").setXPosition(tWidth/4);
+                        allNPCs.get("Waddle Dee 1").setYPosition(gameCamera.getBottomYPosition() + 6);
+                        specialDeeDirection = "Right";
+                        allNPCs.get("Waddle Dee 1").faceDirection(specialDeeDirection);
+                        isSpecialDeePresent = false;
+                    }
+                });
+                break;
+
+            default:
+                break;
         }
     }
 
@@ -2757,39 +2848,66 @@ public class InGameActivity extends AppCompatActivity {
                                 kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Stop Float"), 0);
                             }
 
-                            if(kirby.isGrounded() && isCloseToHouse && environment.toLowerCase().equals("forest")){
-                                gameCameraXPosition = -1;
-                                gameCameraYPosition = -1;
-                                gameCameraFixed = true;
-                                kirbyXPosition = centerX - kirby.getObjectWidth();
-                                kirbyYPosition = gameCamera.getBottomYPosition()+6;
-                                negateDayNightCycle(true);
-                                setLightingTemporarily(255,255,255,255,255,255);
+                            if(kirby.isGrounded()){
+                                if(isCloseToHouse && environment.toLowerCase().equals("forest")){
+                                    gameCameraXPosition = -1;
+                                    gameCameraYPosition = -1;
+                                    gameCameraFixed = true;
+                                    kirbyXPosition = centerX - kirby.getObjectWidth();
+                                    kirbyYPosition = gameCamera.getBottomYPosition()+6;
+                                    negateDayNightCycle(true);
+                                    setLightingTemporarily(255,255,255,255,255,255);
 
-                                environmentSetUp("house");
-                            }
-                            else if(kirby.isGrounded() && environment.toLowerCase().equals("house")){
-                                kirbyXPosition = tWidth - (tWidth/11F);
-                                //kirbyXPosition = 0;
-                                kirbyYPosition = gameCamera.getBottomYPosition()+6;
-                                gameCameraFixed = true;
-                                gameCamera.setRightXPosition(tWidth);
-                                gameCameraXPosition = gameCamera.getXPosition();
-                                gameCameraYPosition = gameCamera.getYPosition();
-                                negateDayNightCycle(false);
-                                environmentSetUp("forest");
-                            }
-                            else if(kirby.isGrounded() && isByTutorialWaddleDee){
-                                // Tutorial info
-                                if(!tutorial.isPlaying()){
-                                    if(!tutorial.isDone()) {
-                                        tutorial.getTextHandler().postDelayed(tutorial.getPlayDialogue(), 0);
-                                        tutorial.showDialogBox();
+                                    environmentSetUp("house");
+                                }
+                                else if(environment.toLowerCase().equals("house")){
+                                    kirbyXPosition = tWidth - (tWidth/11F);
+                                    //kirbyXPosition = 0;
+                                    kirbyYPosition = gameCamera.getBottomYPosition()+6;
+                                    gameCameraFixed = true;
+                                    gameCamera.setRightXPosition(tWidth);
+                                    gameCameraXPosition = gameCamera.getXPosition();
+                                    gameCameraYPosition = gameCamera.getYPosition();
+                                    negateDayNightCycle(false);
+                                    environmentSetUp("forest");
+                                }
+                                else if(isByTutorialWaddleDee){
+                                    // Tutorial info
+                                    if(!tutorial.isPlaying()){
+                                        if(!tutorial.isDone()) {
+                                            tutorial.getTextHandler().postDelayed(tutorial.getPlayDialogue(), 0);
+                                            tutorial.showDialogBox();
+                                        }
+                                        else{
+                                            DialogueBox.hideDialogBox();
+                                            tutorial.resetDialogue();
+                                            tutorial.getDialogueListener().onComplete();
+                                        }
                                     }
-                                    else{
-                                        DialogueBox.hideDialogBox();
-                                        tutorial.resetDialogue();
-                                        tutorial.getDialogueListener().onComplete();
+                                }
+                                else if(isByForestSoupHintWaddleDee){
+                                    DialogueBox specialForestSoupHint = new DialogueBox(InGameActivity.this, dialogueBoxLayout, dialogueNameTextView, "SpecialDee",
+                                            dialogueTextView, forestHints[forestHintNumber], 10,3000, dialoguePortraitImageView, R.drawable.waddledeeportrait,
+                                            new DialogueBox.DialogueListener() {
+                                                @Override
+                                                public void onComplete() {
+                                                    Log.i("Dialogue", "Dialogue complete.");
+                                                    if(forestHintNumber < 4) {
+                                                        forestHintNumber++;
+                                                        moveSpecialDee();
+                                                    }
+                                                }
+                                            });
+                                    if(!specialForestSoupHint.isPlaying()){
+                                        if(!specialForestSoupHint.isDone()) {
+                                            specialForestSoupHint.getTextHandler().postDelayed(specialForestSoupHint.getPlayDialogue(), 0);
+                                            specialForestSoupHint.showDialogBox();
+                                        }
+                                        else{
+                                            DialogueBox.hideDialogBox();
+                                            specialForestSoupHint.resetDialogue();
+                                            specialForestSoupHint.getDialogueListener().onComplete();
+                                        }
                                     }
                                 }
                             }
@@ -2858,8 +2976,14 @@ public class InGameActivity extends AppCompatActivity {
             Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
         }
         else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
+                && object2.equals(allNPCs.get("Waddle Dee 1"))){
+            isByForestSoupHintWaddleDee = true;
+            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
+        }
+        else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
                 && object2.getObjectName().toLowerCase().equals("cauldron")){
             isCloseToCauldron = true;
+            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
         }
 
         return false;
@@ -3013,6 +3137,17 @@ public class InGameActivity extends AppCompatActivity {
                     }
                     else{
                         timeOfDay = "Noon";
+                        if(environment.toLowerCase().equals("forest")) {
+                            if (forestHintNumber == 2 || forestHintNumber == 4) {
+                                allNPCs.get("Waddle Dee 1").fadeIn(backgroundGameLayout,
+                                        new GameObject.FadeCompletionListener() {
+                                            @Override
+                                            public void fadeOnComplete() {
+                                                isSpecialDeePresent = true;
+                                            }
+                                        });
+                            }
+                        }
                     }
 
                     if(!itemsAreSet) {
@@ -3048,18 +3183,69 @@ public class InGameActivity extends AppCompatActivity {
                 else if(timeOfDay.toLowerCase().equals("sunset")){
                     if(toColor(255,80,80,1,40,40,40,1)){
                         timeOfDay = "Night";
+                        if(environment.toLowerCase().equals("forest")){
+                            if(forestHintNumber == 1) {
+                                allNPCs.get("Waddle Dee 1").fadeIn(backgroundGameLayout,
+                                        new GameObject.FadeCompletionListener() {
+                                    @Override
+                                    public void fadeOnComplete() {
+                                        isSpecialDeePresent = true;
+                                    }
+                                });
+                            }
+                            else if(forestHintNumber == 2) {
+                                allNPCs.get("Waddle Dee 1").fadeOut(backgroundGameLayout,
+                                        new GameObject.FadeCompletionListener() {
+                                            @Override
+                                            public void fadeOnComplete() {
+                                                isSpecialDeePresent = false;
+                                            }
+                                        });
+                            }
+                        }
                     }
                     //rHandler.postDelayed(this,280);
                 }
                 else if(timeOfDay.toLowerCase().equals("night")){
                     if(toColor(100,100,120,1,35,35,35,1)){
                         timeOfDay = "Sunrise1";
+                        if(environment.toLowerCase().equals("forest")){
+                            if(forestHintNumber == 1) {
+                                allNPCs.get("Waddle Dee 1").fadeOut(backgroundGameLayout,
+                                        new GameObject.FadeCompletionListener() {
+                                            @Override
+                                            public void fadeOnComplete() {
+                                                isSpecialDeePresent = false;
+                                            }
+                                        });
+                            }
+                            else if(forestHintNumber == 3) {
+                                allNPCs.get("Waddle Dee 1").fadeIn(backgroundGameLayout,
+                                        new GameObject.FadeCompletionListener() {
+                                            @Override
+                                            public void fadeOnComplete() {
+                                                isSpecialDeePresent = true;
+                                            }
+                                        });
+                            }
+                        }
                     }
                 //    rHandler.postDelayed(this,690);
                 }
                 else if(timeOfDay.toLowerCase().equals("sunrise1")){
                     if(toColor(254,108,184,2,100,100,100,1)){
                         timeOfDay = "Sunrise2";
+                        if(environment.toLowerCase().equals("forest")) {
+                            if (forestHintNumber == 3) {
+                                allNPCs.get("Waddle Dee 1").fadeOut(backgroundGameLayout,
+                                        new GameObject.FadeCompletionListener() {
+                                            @Override
+                                            public void fadeOnComplete() {
+                                                isSpecialDeePresent = false;
+                                            }
+                                        });
+                            }
+                        }
                     }
                   //  rHandler.postDelayed(this,625);
                 }
@@ -3075,7 +3261,7 @@ public class InGameActivity extends AppCompatActivity {
                    // rHandler.postDelayed(this,231);
                 }
                 // Testing purposes
-                rHandler.postDelayed(this,10);
+                rHandler.postDelayed(this,30);
             }
 
             // rates must lead to color values being equal to the desired color.
@@ -3574,6 +3760,16 @@ public class InGameActivity extends AppCompatActivity {
         editor.putFloat(KIRBY_XPOSITION, kirbyXPosition);
         editor.putFloat(KIRBY_YPOSITION, kirbyYPosition);
 
+        specialDeeXPosition = allNPCs.get("Waddle Dee 1").getXPosition();
+        specialDeeYPosition = allNPCs.get("Waddle Dee 1").getYPosition();
+
+        editor.putFloat(SPECIALDEE_XPOSITION, specialDeeXPosition);
+        editor.putFloat(SPECIALDEE_YPOSITION, specialDeeYPosition);
+        editor.putBoolean(IS_SPECIALDEE_PRESENT, isSpecialDeePresent);
+        editor.putString(SPECIALDEE_DIRECTION, specialDeeDirection);
+        editor.putInt(FOREST_HINT_NUMBER,forestHintNumber);
+
+
 
         gson = new Gson();
         json = gson.toJson(invDrawables);
@@ -3735,6 +3931,16 @@ public class InGameActivity extends AppCompatActivity {
         kirbyXPosition = sharedPreferences.getFloat(KIRBY_XPOSITION, 0);
 
         kirbyYPosition = sharedPreferences.getFloat(KIRBY_YPOSITION, TitleActivity.HEIGHT/(2 * TitleActivity.DENSITY));
+
+        specialDeeXPosition = sharedPreferences.getFloat(SPECIALDEE_XPOSITION, tWidth/4);
+
+        specialDeeYPosition = sharedPreferences.getFloat(SPECIALDEE_YPOSITION, (float)(148.52191 + 6));
+
+        isSpecialDeePresent = sharedPreferences.getBoolean(IS_SPECIALDEE_PRESENT, true);
+
+        specialDeeDirection = sharedPreferences.getString(SPECIALDEE_DIRECTION, "Right");
+
+        forestHintNumber = sharedPreferences.getInt(FOREST_HINT_NUMBER, 0);
 
 
         Gson gson = new Gson();
