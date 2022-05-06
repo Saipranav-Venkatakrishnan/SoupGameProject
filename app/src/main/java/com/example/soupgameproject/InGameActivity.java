@@ -23,6 +23,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -95,6 +96,8 @@ public class InGameActivity extends AppCompatActivity {
     public static final String IS_SPECIALDEE_PRESENT = "isSpecialDeePresent";
     public static final String SPECIALDEE_DIRECTION = "specialDeeDirection";
     public static final String FOREST_HINT_NUMBER = "forestHintNumber";
+
+    public static final String SOUP_NUM = "soupNum";
 
     public static float kirbyPreviousXPos;
     public static float kirbyPreviousYPos;
@@ -170,8 +173,17 @@ public class InGameActivity extends AppCompatActivity {
     private String specialDeeDirection;
     private int forestHintNumber;
 
-    private final String[] forestHints = new String[]{"Forest hint 1: Introduction to special forest soup. Meet at night.","Forest hint 2: Carrot amount. Meet morning.",
-            "Forest hint 3: Mushroom amount. Meet at sunrise.", "Forest hint 4: Tomato amount.","Done"};
+    private final String[] forestHints = new String[]{"Did you know that there is SPECIAL kind of soup that can only be made using all three ingredients found in this forest? " +
+            "It's a soup that very few know about. Intrigued? Well you're lucky you ran into me because making SPECIAL soups is my SPECIALTY! " +
+            "If you want to learn more about this SPECIAL soup, look for me during the NIGHT. I'll be lurking in the shadows waiting for you.",
+            "You found me! You must be eager to make this SPECIAL soup. I'll give you a hint on how to make it: It is mostly made of CARROTS! " +
+                    "If you want another hint, you can find me somewhere in the forest in the DAY TIME.",
+            "...wow you look just like me. I like your eyes...hey Kirby, you're in the way! ... Oh you want to learn more about the SPECIAL soup? " +
+                    "Okay, here's another hint: You'll need TWO MUSHROOMS for this soup. If you want another hint, I'll be around the forest at SUNRISE. Bye!",
+            "Hey there! Isn't the sunrise nice? I wish there were more Waddle Dees around to see this. I'm glad that you are here Kirby. Are you ready for " +
+                    "my last hint to make the forest SPECIAL soup? The soup is made from exactly NINE ingredients with only ONE of them being a TOMATO. And" +
+                    " that is all! You have all the information you need to make the forest SPECIAL soup. Good luck on your soup making!",
+            "Hey Kirby! I hope you were able to make the SPECIAL soup of the forest. Good luck on the rest of your soup making!"};
 
 
     private ArrayList<Character> npcCopyList;
@@ -2511,6 +2523,7 @@ public class InGameActivity extends AppCompatActivity {
                         specialDeeDirection = "Left";
                         allNPCs.get("Waddle Dee 1").faceDirection(specialDeeDirection);
                         isSpecialDeePresent = false;
+                        isByForestSoupHintWaddleDee = false;
                     }
                 });
                 break;
@@ -2519,10 +2532,11 @@ public class InGameActivity extends AppCompatActivity {
                 allNPCs.get("Waddle Dee 1").fadeOut(backgroundGameLayout, new GameObject.FadeCompletionListener() {
                     @Override
                     public void fadeOnComplete() {
-                        allNPCs.get("Waddle Dee 1").setXPosition(0);
+                        allNPCs.get("Waddle Dee 1").setXPosition(tWidth/18);
                         specialDeeDirection = "Right";
                         allNPCs.get("Waddle Dee 1").faceDirection(specialDeeDirection);
                         isSpecialDeePresent = false;
+                        isByForestSoupHintWaddleDee = false;
                     }
                 });
                 break;
@@ -2535,6 +2549,7 @@ public class InGameActivity extends AppCompatActivity {
                         allNPCs.get("Waddle Dee 1").setYPosition(gameCamera.getBottomYPosition() + 6 + (int)(39*8/7F));
                         specialDeeDirection = "Right";
                         isSpecialDeePresent = false;
+                        isByForestSoupHintWaddleDee = false;
                     }
                 });
                 break;
@@ -2548,6 +2563,7 @@ public class InGameActivity extends AppCompatActivity {
                         specialDeeDirection = "Right";
                         allNPCs.get("Waddle Dee 1").faceDirection(specialDeeDirection);
                         isSpecialDeePresent = false;
+                        isByForestSoupHintWaddleDee = false;
                     }
                 });
                 break;
@@ -2826,6 +2842,67 @@ public class InGameActivity extends AppCompatActivity {
                         }
                     });
 
+            DialogueBox specialForestSoupHint1 = new DialogueBox(InGameActivity.this, dialogueBoxLayout, dialogueNameTextView, "SpecialDee",
+                    dialogueTextView, forestHints[0], 20,3000, dialoguePortraitImageView, R.drawable.waddledeeportrait,
+                    new DialogueBox.DialogueListener() {
+                        @Override
+                        public void onComplete() {
+                            Log.i("Dialogue", "Dialogue complete.");
+                            if(forestHintNumber < 4) {
+                                forestHintNumber++;
+                                moveSpecialDee();
+                            }
+                        }
+                    });
+            DialogueBox specialForestSoupHint2 = new DialogueBox(InGameActivity.this, dialogueBoxLayout, dialogueNameTextView, "SpecialDee",
+                    dialogueTextView, forestHints[1], 20,3000, dialoguePortraitImageView, R.drawable.waddledeeportrait,
+                    new DialogueBox.DialogueListener() {
+                        @Override
+                        public void onComplete() {
+                            Log.i("Dialogue", "Dialogue complete.");
+                            if(forestHintNumber < 4) {
+                                forestHintNumber++;
+                                moveSpecialDee();
+                            }
+                        }
+                    });
+            DialogueBox specialForestSoupHint3 = new DialogueBox(InGameActivity.this, dialogueBoxLayout, dialogueNameTextView, "SpecialDee",
+                    dialogueTextView, forestHints[2], 20,3000, dialoguePortraitImageView, R.drawable.waddledeeportrait,
+                    new DialogueBox.DialogueListener() {
+                        @Override
+                        public void onComplete() {
+                            Log.i("Dialogue", "Dialogue complete.");
+                            if(forestHintNumber < 4) {
+                                forestHintNumber++;
+                                moveSpecialDee();
+                            }
+                        }
+                    });
+            DialogueBox specialForestSoupHint4 = new DialogueBox(InGameActivity.this, dialogueBoxLayout, dialogueNameTextView, "SpecialDee",
+                    dialogueTextView, forestHints[3], 20,3000, dialoguePortraitImageView, R.drawable.waddledeeportrait,
+                    new DialogueBox.DialogueListener() {
+                        @Override
+                        public void onComplete() {
+                            Log.i("Dialogue", "Dialogue complete.");
+                            if(forestHintNumber < 4) {
+                                forestHintNumber++;
+                                moveSpecialDee();
+                            }
+                        }
+                    });
+            DialogueBox specialForestSoupHint5 = new DialogueBox(InGameActivity.this, dialogueBoxLayout, dialogueNameTextView, "SpecialDee",
+                    dialogueTextView, forestHints[4], 20,3000, dialoguePortraitImageView, R.drawable.waddledeeportrait,
+                    new DialogueBox.DialogueListener() {
+                        @Override
+                        public void onComplete() {
+                            Log.i("Dialogue", "Dialogue complete.");
+                            if(forestHintNumber < 4) {
+                                forestHintNumber++;
+                                moveSpecialDee();
+                            }
+                        }
+                    });
+
 
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -2904,28 +2981,75 @@ public class InGameActivity extends AppCompatActivity {
                                     }
                                 }
                                 else if(isByForestSoupHintWaddleDee){
-                                    DialogueBox specialForestSoupHint = new DialogueBox(InGameActivity.this, dialogueBoxLayout, dialogueNameTextView, "SpecialDee",
-                                            dialogueTextView, forestHints[forestHintNumber], 10,3000, dialoguePortraitImageView, R.drawable.waddledeeportrait,
-                                            new DialogueBox.DialogueListener() {
-                                                @Override
-                                                public void onComplete() {
-                                                    Log.i("Dialogue", "Dialogue complete.");
-                                                    if(forestHintNumber < 4) {
-                                                        forestHintNumber++;
-                                                        moveSpecialDee();
-                                                    }
+                                    switch(forestHintNumber){
+                                        case 0:
+                                            if(!specialForestSoupHint1.isPlaying()){
+                                                if(!specialForestSoupHint1.isDone()) {
+                                                    specialForestSoupHint1.getTextHandler().postDelayed(specialForestSoupHint1.getPlayDialogue(), 0);
+                                                    specialForestSoupHint1.showDialogBox();
                                                 }
-                                            });
-                                    if(!specialForestSoupHint.isPlaying()){
-                                        if(!specialForestSoupHint.isDone()) {
-                                            specialForestSoupHint.getTextHandler().postDelayed(specialForestSoupHint.getPlayDialogue(), 0);
-                                            specialForestSoupHint.showDialogBox();
-                                        }
-                                        else{
-                                            DialogueBox.hideDialogBox();
-                                            specialForestSoupHint.resetDialogue();
-                                            specialForestSoupHint.getDialogueListener().onComplete();
-                                        }
+                                                else{
+                                                    DialogueBox.hideDialogBox();
+                                                    specialForestSoupHint1.resetDialogue();
+                                                    specialForestSoupHint1.getDialogueListener().onComplete();
+                                                }
+                                            }
+                                            break;
+                                        case 1:
+                                            if(!specialForestSoupHint2.isPlaying()){
+                                                if(!specialForestSoupHint2.isDone()) {
+                                                    specialForestSoupHint2.getTextHandler().postDelayed(specialForestSoupHint2.getPlayDialogue(), 0);
+                                                    specialForestSoupHint2.showDialogBox();
+                                                }
+                                                else{
+                                                    DialogueBox.hideDialogBox();
+                                                    specialForestSoupHint2.resetDialogue();
+                                                    specialForestSoupHint2.getDialogueListener().onComplete();
+                                                }
+                                            }
+                                            break;
+                                        case 2:
+                                            if(!specialForestSoupHint3.isPlaying()){
+                                                if(!specialForestSoupHint3.isDone()) {
+                                                    specialForestSoupHint3.getTextHandler().postDelayed(specialForestSoupHint3.getPlayDialogue(), 0);
+                                                    specialForestSoupHint3.showDialogBox();
+                                                }
+                                                else{
+                                                    DialogueBox.hideDialogBox();
+                                                    specialForestSoupHint3.resetDialogue();
+                                                    specialForestSoupHint3.getDialogueListener().onComplete();
+                                                }
+                                            }
+                                            break;
+                                        case 3:
+                                            if(!specialForestSoupHint4.isPlaying()){
+                                                if(!specialForestSoupHint4.isDone()) {
+                                                    specialForestSoupHint4.getTextHandler().postDelayed(specialForestSoupHint4.getPlayDialogue(), 0);
+                                                    specialForestSoupHint4.showDialogBox();
+                                                }
+                                                else{
+                                                    DialogueBox.hideDialogBox();
+                                                    specialForestSoupHint4.resetDialogue();
+                                                    specialForestSoupHint4.getDialogueListener().onComplete();
+                                                }
+                                            }
+                                            break;
+                                        case 4:
+                                            if(!specialForestSoupHint5.isPlaying()){
+                                                if(!specialForestSoupHint5.isDone()) {
+                                                    specialForestSoupHint5.getTextHandler().postDelayed(specialForestSoupHint5.getPlayDialogue(), 0);
+                                                    specialForestSoupHint5.showDialogBox();
+                                                }
+                                                else{
+                                                    DialogueBox.hideDialogBox();
+                                                    specialForestSoupHint5.resetDialogue();
+                                                    specialForestSoupHint5.getDialogueListener().onComplete();
+                                                }
+                                            }
+                                            break;
+                                        default:
+                                            break;
+                                            
                                     }
                                 }
                             }
@@ -3217,6 +3341,7 @@ public class InGameActivity extends AppCompatActivity {
                                             @Override
                                             public void fadeOnComplete() {
                                                 isSpecialDeePresent = false;
+                                                isByForestSoupHintWaddleDee = false;
                                             }
                                         });
                             }
@@ -3234,6 +3359,7 @@ public class InGameActivity extends AppCompatActivity {
                                             @Override
                                             public void fadeOnComplete() {
                                                 isSpecialDeePresent = false;
+                                                isByForestSoupHintWaddleDee = false;
                                             }
                                         });
                             }
@@ -3260,6 +3386,7 @@ public class InGameActivity extends AppCompatActivity {
                                             @Override
                                             public void fadeOnComplete() {
                                                 isSpecialDeePresent = false;
+                                                isByForestSoupHintWaddleDee = false;
                                             }
                                         });
                             }
@@ -3765,6 +3892,8 @@ public class InGameActivity extends AppCompatActivity {
         editor.putString(ENVIRONMENT, environment);
         editor.putBoolean(ITEMS_ARE_SET, itemsAreSet);
 
+        editor.putInt(SOUP_NUM, soupNum);
+
         gameCameraXPosition = gameCamera.getXPosition();
         gameCameraYPosition = gameCamera.getYPosition();
         gameCameraFixed = gameCamera.isFixedPosition();
@@ -3960,6 +4089,8 @@ public class InGameActivity extends AppCompatActivity {
         specialDeeDirection = sharedPreferences.getString(SPECIALDEE_DIRECTION, "Right");
 
         forestHintNumber = sharedPreferences.getInt(FOREST_HINT_NUMBER, 0);
+
+        soupNum = sharedPreferences.getInt(SOUP_NUM,0);
 
 
         Gson gson = new Gson();
