@@ -31,7 +31,7 @@ public class CatalogPage extends AppCompatActivity {
             createCard(soup);
         }
         numCollectedText = findViewById(R.id.collectedAmntText);
-        numCollectedText.setText("Soups Collected: " + InGameActivity.soupNum + "/25");
+        numCollectedText.setText("Soups Collected: " + InGameActivity.soupNum + "/26");
     }
 
     public void createCard(Soup soup) {
