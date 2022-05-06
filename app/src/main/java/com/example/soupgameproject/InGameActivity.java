@@ -1419,6 +1419,7 @@ public class InGameActivity extends AppCompatActivity {
                             kirby.getUdHandler().removeCallbacksAndMessages(null);
                             kirby.stopFall();
                             kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 0);
+                            pauseWalkEffect();
                         }
                     }
 
@@ -1490,6 +1491,7 @@ public class InGameActivity extends AppCompatActivity {
                             kirby.getUdHandler().removeCallbacksAndMessages(null);
                             kirby.stopFall();
                             kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 0);
+                            pauseWalkEffect();
                         }
                     }
 
@@ -1561,6 +1563,7 @@ public class InGameActivity extends AppCompatActivity {
                             kirby.getUdHandler().removeCallbacksAndMessages(null);
                             kirby.stopFall();
                             kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 0);
+                            pauseWalkEffect();
                         }
                     }
 
@@ -1630,6 +1633,7 @@ public class InGameActivity extends AppCompatActivity {
                             kirby.getUdHandler().removeCallbacksAndMessages(null);
                             kirby.stopFall();
                             kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 0);
+                            pauseWalkEffect();
                         }
                     }
 
@@ -1706,6 +1710,7 @@ public class InGameActivity extends AppCompatActivity {
                 new Character.PositionListener() {
                     @Override
                     public void atPosition(float xPosition, float yPosition) {
+                        pauseWalkEffect();
                     }
                 });
 
@@ -1751,6 +1756,7 @@ public class InGameActivity extends AppCompatActivity {
                             kirby.getUdHandler().removeCallbacksAndMessages(null);
                             kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
                         }
+                        pauseWalkEffect();
                     }
                 });
 
@@ -1798,6 +1804,7 @@ public class InGameActivity extends AppCompatActivity {
                             kirby.getUdHandler().removeCallbacksAndMessages(null);
                             kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
                         }
+                        pauseWalkEffect();
                     }
                 });
 
@@ -1840,7 +1847,9 @@ public class InGameActivity extends AppCompatActivity {
                             kirby.getUdHandler().removeCallbacksAndMessages(null);
                             kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
                         }
+                        pauseWalkEffect();
                     }
+
                 });
 
         Runnable startFloat = kirby.animatedAction(kirby.getUdHandler(), false, R.drawable.kirbystartfloat, kirbyStartFloatHitBoxes,
@@ -1905,6 +1914,7 @@ public class InGameActivity extends AppCompatActivity {
                             kirby.getUdHandler().removeCallbacksAndMessages(null);
                             kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
                         }
+                        pauseWalkEffect();
                     }
                 });
 
@@ -1948,6 +1958,7 @@ public class InGameActivity extends AppCompatActivity {
                             kirby.getUdHandler().removeCallbacksAndMessages(null);
                             kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
                         }
+                        pauseWalkEffect();
                     }
                 });
 
@@ -2729,6 +2740,7 @@ public class InGameActivity extends AppCompatActivity {
                                     kirby.getUdHandler().postDelayed(kirby.getAllActions().get("High Jump"), 0);
                                     Log.i("MovementCheck", "Big Jump");
                                     playJumpEffect(R.raw.jump, false);
+                                    pauseWalkEffect();
                                 }
                             }
                         }, 150);
@@ -2750,6 +2762,7 @@ public class InGameActivity extends AppCompatActivity {
                                 kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Jump"),0);
                                 Log.i("MovementCheck", "Short Jump");
                                 playJumpEffect(R.raw.jump, false);
+                                pauseWalkEffect();
                                 //jumpEffectPlayer.setVolume(25, 25);
                             }
                             else {
@@ -2765,6 +2778,7 @@ public class InGameActivity extends AppCompatActivity {
                                     Log.i("MovementCheck", "Start Float");
                                     playJumpEffect(R.raw.jump, false);
                                     //jumpEffectPlayer.setVolume(25, 25);
+                                    pauseWalkEffect();
                                 }
                                 else if(startFloatFinished && jumpCount < 6){
                                     jumpCount++;
@@ -2775,6 +2789,7 @@ public class InGameActivity extends AppCompatActivity {
                                     kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Float Jump"),0);
                                     Log.i("MovementCheck", "Float Jump");
                                     playJumpEffect(R.raw.jump, false);
+                                    pauseWalkEffect();
                                     //jumpEffectPlayer.setVolume(25, 25);
                                 }
                             }
@@ -4288,40 +4303,40 @@ public class InGameActivity extends AppCompatActivity {
 //            Toast.makeText(this, "Audio started playing..", Toast.LENGTH_SHORT).show();
 //            Log.i("Sai", "Playing is: " + walkEffectPlayer.isPlaying());
         }
-        else if(walkEffectPlayer != null){
-            pauseWalkEffect();
-            walkEffectPlayer = new MediaPlayer();
-
-            // below line is use to set the audio
-            // stream type for our media player.
-//            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
-            // below line is use to set our
-//            // url to our media player.
-//            try {
-//                mediaPlayer.setDataSource(audioUrl);
-//                // below line is use to prepare
-//                // and start our media player.
-//                mediaPlayer.prepareAsync();
-//                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//                    @Override
-//                    public void onPrepared(MediaPlayer mediaPlayer) {
-//                        mediaPlayer.start();
-//                    }
-//                });
+//        else if(walkEffectPlayer != null){
+//            pauseWalkEffect();
+//            walkEffectPlayer = new MediaPlayer();
 //
+//            // below line is use to set the audio
+//            // stream type for our media player.
+////            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 //
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-
-            walkEffectPlayer = MediaPlayer.create(this, rawSound);
-            walkEffectPlayer.start();
-            walkEffectPlayer.setLooping(shouldLoop);
-//            while(!isGrounded){
-//                pauseWalkEffect();
-//            }
-        }
+//            // below line is use to set our
+////            // url to our media player.
+////            try {
+////                mediaPlayer.setDataSource(audioUrl);
+////                // below line is use to prepare
+////                // and start our media player.
+////                mediaPlayer.prepareAsync();
+////                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+////                    @Override
+////                    public void onPrepared(MediaPlayer mediaPlayer) {
+////                        mediaPlayer.start();
+////                    }
+////                });
+////
+////
+////            } catch (IOException e) {
+////                e.printStackTrace();
+////            }
+//
+//            walkEffectPlayer = MediaPlayer.create(this, rawSound);
+//            walkEffectPlayer.start();
+//            walkEffectPlayer.setLooping(shouldLoop);
+////            while(!isGrounded){
+////                pauseWalkEffect();
+////            }
+//        }
         else{
             //Toast.makeText(this, "Audio is already playing", Toast.LENGTH_SHORT).show();
         }
@@ -4355,7 +4370,7 @@ public class InGameActivity extends AppCompatActivity {
     public void playJumpEffect(int rawSound, boolean shouldLoop){
         if(jumpEffectPlayer == null){
             // initializing media player
-            walkEffectPlayer = new MediaPlayer();
+            jumpEffectPlayer = new MediaPlayer();
 
             // below line is use to set the audio
             // stream type for our media player.
@@ -4380,9 +4395,9 @@ public class InGameActivity extends AppCompatActivity {
 //                e.printStackTrace();
 //            }
 
-            walkEffectPlayer = MediaPlayer.create(this, rawSound);
-            walkEffectPlayer.start();
-            walkEffectPlayer.setLooping(shouldLoop);
+            jumpEffectPlayer = MediaPlayer.create(this, rawSound);
+            jumpEffectPlayer.start();
+            jumpEffectPlayer.setLooping(shouldLoop);
 
             // below line is use to display a toast message.
 //            Toast.makeText(this, "Audio started playing..", Toast.LENGTH_SHORT).show();
@@ -4390,6 +4405,7 @@ public class InGameActivity extends AppCompatActivity {
         }
         else if(jumpEffectPlayer != null){
             pauseJumpEffect();
+            pauseWalkEffect();
             jumpEffectPlayer = new MediaPlayer();
 
             // below line is use to set the audio
