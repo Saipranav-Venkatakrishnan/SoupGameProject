@@ -22,6 +22,8 @@
         <entry key="..\:/Users/Benjamin/Documents/GitHub/SoupGameProject/app/src/main/res/drawable/kirbystartfloat.xml" value="0.143" />
         <entry key="..\:/Users/Benjamin/Documents/GitHub/SoupGameProject/app/src/main/res/drawable/kirbystopfloat.xml" value="0.143" />
         <entry key="..\:/Users/Benjamin/Documents/GitHub/SoupGameProject/app/src/main/res/drawable/kirbywalk.xml" value="0.1315" />
+        <entry key="..\:/Users/Benjamin/Documents/GitHub/SoupGameProject/app/src/main/res/drawable/transition.xml" value="0.2245" />
+        <entry key="..\:/Users/Benjamin/Documents/GitHub/SoupGameProject/app/src/main/res/drawable/transitionshape.xml" value="0.2245" />
         <entry key="..\:/Users/Benjamin/Documents/GitHub/SoupGameProject/app/src/main/res/drawable/waddledeeflipfall.xml" value="0.113" />
         <entry key="..\:/Users/Benjamin/Documents/GitHub/SoupGameProject/app/src/main/res/drawable/waddledeeidle.xml" value="0.113" />
         <entry key="..\:/Users/Benjamin/Documents/GitHub/SoupGameProject/app/src/main/res/drawable/waddledeerun.xml" value="0.113" />
@@ -29,7 +31,7 @@
         <entry key="..\:/Users/Benjamin/Documents/GitHub/SoupGameProject/app/src/main/res/layout/activity_in_game.xml" value="0.22" />
         <entry key="..\:/Users/Benjamin/Documents/GitHub/SoupGameProject/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/Benjamin/Documents/GitHub/SoupGameProject/app/src/main/res/layout/activity_settings_page.xml" value="0.325" />
-        <entry key="..\:/Users/Benjamin/Documents/GitHub/SoupGameProject/app/src/main/res/layout/activity_title.xml" value="0.5" />
+        <entry key="..\:/Users/Benjamin/Documents/GitHub/SoupGameProject/app/src/main/res/layout/activity_title.xml" value="0.4466666666666667" />
         <entry key="..\:/Users/nicol/Documents/GitHub/SoupGameProject/app/src/main/res/layout/activity_catalog_page.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/nicol/Documents/GitHub/SoupGameProject/app/src/main/res/layout/activity_in_game.xml" value="0.27447916666666666" />
         <entry key="..\:/Users/nicol/Documents/GitHub/SoupGameProject/app/src/main/res/layout/catalog_base.xml" value="0.27447916666666666" />

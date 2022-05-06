@@ -419,7 +419,7 @@ public class InGameActivity extends AppCompatActivity {
                 (int)(tWidth), 300, 0, gameCamera.getBottomYPosition(),0,-294)));
         forestEnvironmentCollisionGameObjects.add(rightBoundary);
         forestEnvironmentCollisionGameObjects.add(leftBoundary);
-        forestEnvironmentCollisionGameObjects.add(topBoundary);
+        //forestEnvironmentCollisionGameObjects.add(topBoundary);
 
 
 
@@ -603,6 +603,9 @@ public class InGameActivity extends AppCompatActivity {
         swampEnvironmentCollisionGameObjects = new ArrayList<GameObject>();
         swampEnvironmentForegroundGameObjects = new ArrayList<GameObject>();
 
+        swampEnvironmentCollisionGameObjects.add(new GameObject(this, "Ground", (int)(tWidth),10,
+                R.drawable.testground, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
+                (int)(tWidth), 300, 0, gameCamera.getBottomYPosition(),0,-294)));
 
         // After populating all ArrayLists, set up the first environment the player will be in (which will be the forest)
         initialItemSetUp();
@@ -1409,6 +1412,12 @@ public class InGameActivity extends AppCompatActivity {
                                 kirby.setCenterXPosition(gameCamera.getXPosition());
                             }
                         }
+                        if(yPosition < gameCamera.getBottomYPosition() - 100){
+                            kirby.setYPosition(centerY);
+                            kirby.stopFall();
+                            kirby.getUdHandler().removeCallbacksAndMessages(null);
+                            kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
+                        }
                         closeToHouse = false;
                         isByTutorialWaddleDee = false;
 //                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
@@ -1468,6 +1477,12 @@ public class InGameActivity extends AppCompatActivity {
                                 cHandler.postDelayed(leftRunCamera, 0);
                                 kirby.setCenterXPosition(gameCamera.getXPosition());
                             }
+                        }
+                        if(yPosition < gameCamera.getBottomYPosition() - 100){
+                            kirby.setYPosition(centerY);
+                            kirby.stopFall();
+                            kirby.getUdHandler().removeCallbacksAndMessages(null);
+                            kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
                         }
                         closeToHouse = false;
                         isByTutorialWaddleDee = false;
@@ -1529,6 +1544,12 @@ public class InGameActivity extends AppCompatActivity {
                                 kirby.setCenterXPosition(gameCamera.getXPosition());
                             }
                         }
+                        if(yPosition < gameCamera.getBottomYPosition() - 100){
+                            kirby.setYPosition(centerY);
+                            kirby.stopFall();
+                            kirby.getUdHandler().removeCallbacksAndMessages(null);
+                            kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
+                        }
                         closeToHouse = false;
                         isByTutorialWaddleDee = false;
 //                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
@@ -1587,6 +1608,12 @@ public class InGameActivity extends AppCompatActivity {
                                 cHandler.postDelayed(rightRunCamera, 0);
                                 kirby.setCenterXPosition(gameCamera.getXPosition());
                             }
+                        }
+                        if(yPosition < gameCamera.getBottomYPosition() - 100){
+                            kirby.setYPosition(centerY);
+                            kirby.stopFall();
+                            kirby.getUdHandler().removeCallbacksAndMessages(null);
+                            kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
                         }
                         closeToHouse = false;
                         isByTutorialWaddleDee = false;
@@ -1670,6 +1697,12 @@ public class InGameActivity extends AppCompatActivity {
                             kirbyPreviousXPos = xPosition;
                             kirbyPreviousYPos = yPosition;
                         }
+                        if(yPosition < gameCamera.getBottomYPosition() - 100){
+                            kirby.setYPosition(centerY);
+                            kirby.stopFall();
+                            kirby.getUdHandler().removeCallbacksAndMessages(null);
+                            kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
+                        }
                     }
                 });
 
@@ -1711,6 +1744,12 @@ public class InGameActivity extends AppCompatActivity {
                             kirbyPreviousXPos = xPosition;
                             kirbyPreviousYPos = yPosition;
                         }
+                        if(yPosition < gameCamera.getBottomYPosition() - 100){
+                            kirby.setYPosition(centerY);
+                            kirby.stopFall();
+                            kirby.getUdHandler().removeCallbacksAndMessages(null);
+                            kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
+                        }
                     }
                 });
 
@@ -1746,6 +1785,12 @@ public class InGameActivity extends AppCompatActivity {
                             Log.i("MovementLogging", "Flip");
                             kirbyPreviousXPos = xPosition;
                             kirbyPreviousYPos = yPosition;
+                        }
+                        if(yPosition < gameCamera.getBottomYPosition() - 100){
+                            kirby.setYPosition(centerY);
+                            kirby.stopFall();
+                            kirby.getUdHandler().removeCallbacksAndMessages(null);
+                            kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
                         }
                     }
                 });
@@ -1806,6 +1851,12 @@ public class InGameActivity extends AppCompatActivity {
                             kirbyPreviousXPos = xPosition;
                             kirbyPreviousYPos = yPosition;
                         }
+                        if(yPosition < gameCamera.getBottomYPosition() - 100){
+                            kirby.setYPosition(centerY);
+                            kirby.stopFall();
+                            kirby.getUdHandler().removeCallbacksAndMessages(null);
+                            kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
+                        }
                     }
                 });
 
@@ -1842,6 +1893,12 @@ public class InGameActivity extends AppCompatActivity {
                             Log.i("MovementLogging", "Float Fall");
                             kirbyPreviousXPos = xPosition;
                             kirbyPreviousYPos = yPosition;
+                        }
+                        if(yPosition < gameCamera.getBottomYPosition() - 100){
+                            kirby.setYPosition(centerY);
+                            kirby.stopFall();
+                            kirby.getUdHandler().removeCallbacksAndMessages(null);
+                            kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
                         }
                     }
                 });
@@ -2159,7 +2216,12 @@ public class InGameActivity extends AppCompatActivity {
                     new Character.PositionListener() {
                         @Override
                         public void atPosition(float xPosition, float yPosition) {
-
+                            if(yPosition < gameCamera.getBottomYPosition() - 100){
+                                tempNPC.setYPosition(centerY);
+                                tempNPC.stopFall();
+                                tempNPC.getUdHandler().removeCallbacksAndMessages(null);
+                                tempNPC.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
+                            }
                         }
                     });
 
@@ -2193,7 +2255,12 @@ public class InGameActivity extends AppCompatActivity {
                     new Character.PositionListener() {
                         @Override
                         public void atPosition(float xPosition, float yPosition) {
-
+                            if(yPosition < gameCamera.getBottomYPosition() - 100){
+                                tempNPC.setYPosition(centerY);
+                                tempNPC.stopFall();
+                                tempNPC.getUdHandler().removeCallbacksAndMessages(null);
+                                tempNPC.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
+                            }
                         }
                     });
 
@@ -2229,7 +2296,12 @@ public class InGameActivity extends AppCompatActivity {
                     new Character.PositionListener() {
                         @Override
                         public void atPosition(float xPosition, float yPosition) {
-
+                            if(yPosition < gameCamera.getBottomYPosition() - 100){
+                                tempNPC.setYPosition(centerY);
+                                tempNPC.stopFall();
+                                tempNPC.getUdHandler().removeCallbacksAndMessages(null);
+                                tempNPC.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
+                            }
                         }
                     });
 
@@ -2265,7 +2337,12 @@ public class InGameActivity extends AppCompatActivity {
                     new Character.PositionListener() {
                         @Override
                         public void atPosition(float xPosition, float yPosition) {
-
+                            if(yPosition < gameCamera.getBottomYPosition() - 100){
+                                tempNPC.setYPosition(centerY);
+                                tempNPC.stopFall();
+                                tempNPC.getUdHandler().removeCallbacksAndMessages(null);
+                                tempNPC.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
+                            }
                         }
                     });
 
@@ -2299,7 +2376,12 @@ public class InGameActivity extends AppCompatActivity {
                     new Character.PositionListener() {
                         @Override
                         public void atPosition(float xPosition, float yPosition) {
-
+                            if(yPosition < gameCamera.getBottomYPosition() - 100){
+                                tempNPC.setYPosition(centerY);
+                                tempNPC.stopFall();
+                                tempNPC.getUdHandler().removeCallbacksAndMessages(null);
+                                tempNPC.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
+                            }
                         }
                     });
 
@@ -2333,7 +2415,12 @@ public class InGameActivity extends AppCompatActivity {
                     new Character.PositionListener() {
                         @Override
                         public void atPosition(float xPosition, float yPosition) {
-
+                            if(yPosition < gameCamera.getBottomYPosition() - 100){
+                                tempNPC.setYPosition(centerY);
+                                tempNPC.stopFall();
+                                tempNPC.getUdHandler().removeCallbacksAndMessages(null);
+                                tempNPC.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),0);
+                            }
                         }
                     });
 
@@ -2668,14 +2755,14 @@ public class InGameActivity extends AppCompatActivity {
                             }
                             else if(kirby.isGrounded() && environment.toLowerCase().equals("house")){
                                 kirbyXPosition = tWidth - (tWidth/11F);
-                               // kirbyXPosition = 0;
-                                kirbyYPosition = gameCamera.getBottomYPosition()+6;
+                                kirbyXPosition = 0;
+                                //kirbyYPosition = gameCamera.getBottomYPosition()+6;
                                 gameCameraFixed = true;
                                 gameCamera.setRightXPosition(tWidth);
                                 gameCameraXPosition = gameCamera.getXPosition();
                                 gameCameraYPosition = gameCamera.getYPosition();
                                 negateDayNightCycle(false);
-                                environmentSetUp("forest");
+                                environmentSetUp("swamp");
                             }
                             else if(kirby.isGrounded() && isByTutorialWaddleDee){
                                 // Tutorial info
