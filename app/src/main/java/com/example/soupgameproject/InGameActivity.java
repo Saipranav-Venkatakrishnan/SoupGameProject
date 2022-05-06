@@ -4244,6 +4244,8 @@ public class InGameActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
+        pauseWalkEffect();
+
         saveData();
 
         Log.i("Sai", "Pause");
@@ -4316,6 +4318,9 @@ public class InGameActivity extends AppCompatActivity {
             walkEffectPlayer = MediaPlayer.create(this, rawSound);
             walkEffectPlayer.start();
             walkEffectPlayer.setLooping(shouldLoop);
+            while(!isGrounded){
+                pauseWalkEffect();
+            }
         }
         else{
             //Toast.makeText(this, "Audio is already playing", Toast.LENGTH_SHORT).show();
