@@ -4318,9 +4318,9 @@ public class InGameActivity extends AppCompatActivity {
             walkEffectPlayer = MediaPlayer.create(this, rawSound);
             walkEffectPlayer.start();
             walkEffectPlayer.setLooping(shouldLoop);
-            while(!isGrounded){
-                pauseWalkEffect();
-            }
+//            while(!isGrounded){
+//                pauseWalkEffect();
+//            }
         }
         else{
             //Toast.makeText(this, "Audio is already playing", Toast.LENGTH_SHORT).show();
