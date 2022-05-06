@@ -250,6 +250,9 @@ public class InGameActivity extends AppCompatActivity {
     private ArrayList<Integer> selectedIngredientsIndex;
 
     public static ArrayList<Soup> userSoups = new ArrayList<Soup>();
+
+    public static int soupNum = 0;
+
     // for recreating/saving soups
     private ArrayList<String> soupIngredients;
     private int[] soupRanks;
@@ -3443,6 +3446,7 @@ public class InGameActivity extends AppCompatActivity {
 
         if(!alreadyHave){
             userSoups.add(createdSoup);
+            soupNum++;
         }
         // Whatever happens when soup is made:
         for(int i : selectedIngredientsIndex){

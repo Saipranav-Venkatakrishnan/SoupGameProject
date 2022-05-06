@@ -18,7 +18,6 @@ public class CatalogPage extends AppCompatActivity {
 
     private LinearLayoutCompat cards;
     TextView numCollectedText;
-    int numCollected = 0;
 
     // https://stackoverflow.com/questions/63661601/add-many-cardviews-with-onclick-method-programmatically
     @Override
@@ -32,7 +31,7 @@ public class CatalogPage extends AppCompatActivity {
             createCard(soup);
         }
         numCollectedText = findViewById(R.id.collectedAmntText);
-        numCollectedText.setText("Soups Collected: " + numCollected + "/25");
+        numCollectedText.setText("Soups Collected: " + InGameActivity.soupNum + "/25");
     }
 
     public void createCard(Soup soup) {
