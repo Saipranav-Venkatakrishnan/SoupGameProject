@@ -369,7 +369,7 @@ public class InGameActivity extends AppCompatActivity {
         }
         else if(environment.toLowerCase().equals("house")){
             // temporary camera set up
-            gameCamera.setScale(fitZoom(3832,359));
+            gameCamera.setScale(fitZoom(3832,800));
             gameCamera.setXPosition(centerX);
         }
         else if(environment.toLowerCase().equals("swamp")){
@@ -606,7 +606,7 @@ public class InGameActivity extends AppCompatActivity {
 
         // temporary objects:
         houseEnvironmentCollisionGameObjects.add(new GameObject(this, "Ground", (int)(tWidth),10,
-                R.drawable.testground, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
+                R.drawable.house_floor, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
                 (int)(tWidth), 300, 0, gameCamera.getBottomYPosition(),0,-294)));
         // Cauldron
         float cauldronRatio = 1/40F;
@@ -788,7 +788,7 @@ public class InGameActivity extends AppCompatActivity {
 
         }
         else if(environment.toLowerCase().equals("house")){
-            backgroundGameLayout.setBackgroundImage(R.drawable.cloudsbackgroundextended);
+            backgroundGameLayout.setBackgroundImage(R.drawable.house_bg_1);
             backgroundGameLayout.setLayoutObjects(houseEnvironmentBackgroundGameObjects);
             foregroundGameLayout.setLayoutObjects(houseEnvironmentForegroundGameObjects);
 
