@@ -3887,21 +3887,21 @@ public class InGameActivity extends AppCompatActivity {
             mediaPlayer = MediaPlayer.create(this, R.raw.kirbythemesong);
             mediaPlayer.start();
             mediaPlayer.setVolume(.25f,.25f);
-//            mediaPlayer.setLooping(true);
+            mediaPlayer.setLooping(true);
 
-            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mediaPlayer) {
-                    randomSong();
-                }
-            });
+//            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//                @Override
+//                public void onCompletion(MediaPlayer mediaPlayer) {
+//                    randomSong();
+//                }
+//            });
 
             // below line is use to display a toast message.
-            Toast.makeText(this, "Audio started playing..", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Audio started playing..", Toast.LENGTH_SHORT).show();
             Log.i("Sai", "Playing is: " + mediaPlayer.isPlaying());
         }
         else{
-            Toast.makeText(this, "Audio is already playing", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Audio is already playing", Toast.LENGTH_SHORT).show();
         }
 
         Log.i("Sai", "Playing is: " + mediaPlayer.isPlaying());
