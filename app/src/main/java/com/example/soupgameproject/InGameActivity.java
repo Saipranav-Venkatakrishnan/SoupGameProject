@@ -357,7 +357,7 @@ public class InGameActivity extends AppCompatActivity {
         zoomed = true;
     }
 
-    // Sets up the camera for a chosen environment. Called in environmentSetUp. It is unnecessary to call this elsewhere
+    // Sets up the camera for a chosen environment. Called in environmentSetUp.
     private void cameraSetUp(String environment){
         if(environment.toLowerCase().equals("test")){
             gameCamera.setScale(fitZoom(3832,359));
@@ -370,7 +370,7 @@ public class InGameActivity extends AppCompatActivity {
         else if(environment.toLowerCase().equals("house")){
             // temporary camera set up
             gameCamera.setScale(fitZoom(15000,800));
-            gameCamera.setXPosition(centerX);
+            gameCamera.setLeftXPosition((centerX - tWidth * 3440/30000F));
         }
         else if(environment.toLowerCase().equals("swamp")){
             gameCamera.setScale(fitZoom(3832,359));
@@ -608,6 +608,12 @@ public class InGameActivity extends AppCompatActivity {
         GameObject topBoundaryHouse = new GameObject(this, "Boundary", (int)(tWidth),
                 300, R.drawable.boundary, 0,gameCamera.getTopYPosition(),true);
 
+        GameObject forestDoor = new GameObject(this, "Forest Door",(int)(tWidth * 328/15000F),(int)(tWidth * 533/15000F),
+                android.R.color.transparent,(centerX - tWidth * 3440/30000F) + (tWidth * 167/15000F), gameCamera.getBottomYPosition() + 3, true);
+
+        GameObject swampDoor = new GameObject(this, "Swamp Door",(int)(tWidth * 328/15000F),(int)(tWidth * 533/15000F),
+                android.R.color.transparent,(centerX + tWidth * 3440/30000F) - (tWidth * 180/15000F) - (int)(tWidth * 328/15000F), gameCamera.getBottomYPosition() + 3, true);
+
         houseEnvironmentBackgroundGameObjects = new ArrayList<GameObject>();
         houseEnvironmentCollisionGameObjects = new ArrayList<GameObject>();
         houseEnvironmentForegroundGameObjects = new ArrayList<GameObject>();
@@ -626,30 +632,32 @@ public class InGameActivity extends AppCompatActivity {
         cauldron.setScaleType(ImageView.ScaleType.FIT_START);
         cauldron.setImageResource(R.drawable.cauldrontop);
 
-        cauldron.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Soup testing
-//                ImageView test = findViewById(R.id.soupTest);
-//                ImageView test2 = findViewById(R.id.soupTest2);
-//                String[] ingredientNames = new String[]{"Carrot","Mushroom","Radish","Tomato","Plant"};
-//
-//                Ingredient ingredient1 = ingredientKey.get(ingredientNames[(int)(Math.random() * 5)]);
-//                Ingredient ingredient2 = ingredientKey.get(ingredientNames[(int)(Math.random() * 5)]);
-//                int amount1 = (int)(Math.random() * 9 + 1);
-//                int amount2 = 10 - amount1;
-//
-//                Soup soup = new Soup(ingredient1,amount1);
-//                Soup mixSoup = new Soup(ingredient1,amount1,ingredient2,amount2);
-//
-//                soup.showSoup(test);
-//
-//                mixSoup.showSoup(test2);
-                makeSoup();
-            }
-        });
+//        cauldron.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                // Soup testing
+////                ImageView test = findViewById(R.id.soupTest);
+////                ImageView test2 = findViewById(R.id.soupTest2);
+////                String[] ingredientNames = new String[]{"Carrot","Mushroom","Radish","Tomato","Plant"};
+////
+////                Ingredient ingredient1 = ingredientKey.get(ingredientNames[(int)(Math.random() * 5)]);
+////                Ingredient ingredient2 = ingredientKey.get(ingredientNames[(int)(Math.random() * 5)]);
+////                int amount1 = (int)(Math.random() * 9 + 1);
+////                int amount2 = 10 - amount1;
+////
+////                Soup soup = new Soup(ingredient1,amount1);
+////                Soup mixSoup = new Soup(ingredient1,amount1,ingredient2,amount2);
+////
+////                soup.showSoup(test);
+////
+////                mixSoup.showSoup(test2);
+//                makeSoup();
+//            }
+//        });
 
         houseEnvironmentCollisionGameObjects.add(cauldron);
+        houseEnvironmentCollisionGameObjects.add(forestDoor);
+        houseEnvironmentCollisionGameObjects.add(swampDoor);
 
         // Swamp Environment
         cameraSetUp("Swamp");
@@ -658,8 +666,11 @@ public class InGameActivity extends AppCompatActivity {
         swampEnvironmentCollisionGameObjects = new ArrayList<GameObject>();
         swampEnvironmentForegroundGameObjects = new ArrayList<GameObject>();
 
+        swampEnvironmentCollisionGameObjects.add(leftBoundary);
+        swampEnvironmentCollisionGameObjects.add(rightBoundary);
+
         swampEnvironmentCollisionGameObjects.add(new GameObject(this, "Ground", (int)(tWidth),10,
-                R.drawable.testground, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
+                R.drawable.testground2, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
                 (int)(tWidth), 300, 0, gameCamera.getBottomYPosition(),0,-294)));
 
         // After populating all ArrayLists, set up the first environment the player will be in (which will be the forest)
@@ -1494,6 +1505,7 @@ public class InGameActivity extends AppCompatActivity {
                         isCloseToCauldron = false;
                         isCloseToForestDoor = false;
                         isCloseToSwampDoor = false;
+                        actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
 //                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
 //                            kirbyPreviousXPos = xPosition;
 //                            kirbyPreviousYPos = yPosition;
@@ -1579,6 +1591,7 @@ public class InGameActivity extends AppCompatActivity {
                         isCloseToCauldron = false;
                         isCloseToForestDoor = false;
                         isCloseToSwampDoor = false;
+                        actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
 //                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
 //                            kirbyPreviousXPos = xPosition;
 //                            kirbyPreviousYPos = yPosition;
@@ -1665,6 +1678,7 @@ public class InGameActivity extends AppCompatActivity {
                         isCloseToCauldron = false;
                         isCloseToForestDoor = false;
                         isCloseToSwampDoor = false;
+                        actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
 //                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
 //                            kirbyPreviousXPos = xPosition;
 //                            kirbyPreviousYPos = yPosition;
@@ -1750,6 +1764,7 @@ public class InGameActivity extends AppCompatActivity {
                         isCloseToCauldron = false;
                         isCloseToForestDoor = false;
                         isCloseToSwampDoor = false;
+                        actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
 //                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
 //                            kirbyPreviousXPos = xPosition;
 //                            kirbyPreviousYPos = yPosition;
@@ -3010,116 +3025,152 @@ public class InGameActivity extends AppCompatActivity {
                                 kirby.stopJump();
                                 kirby.stopFall();
                                 kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Stop Float"), 0);
+                                actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
                             }
 
                             if(kirby.isGrounded()){
-                                if(isCloseToHouse && environment.toLowerCase().equals("forest")){
-                                    gameCameraXPosition = -1;
-                                    gameCameraYPosition = -1;
-                                    gameCameraFixed = false;
-                                    kirbyXPosition = centerX - kirby.getObjectWidth();
-                                    kirbyYPosition = gameCamera.getBottomYPosition()+6;
-                                    negateDayNightCycle(true);
-                                    setLightingTemporarily(255,255,255,255,255,255);
+                                if(environment.toLowerCase().equals("forest")){
+                                    if(isCloseToHouse) {
+                                        gameCameraXPosition = -1;
+                                        gameCameraYPosition = -1;
+                                        gameCameraFixed = true;
+                                        cameraSetUp("house");
+                                        kirbyXPosition = (centerX - tWidth * 3440/30000F) + (tWidth * 30/15000F);
+                                        kirbyYPosition = gameCamera.getBottomYPosition() + 1;
+                                        negateDayNightCycle(true);
+                                        setLightingTemporarily(255, 255, 255, 255, 255, 255);
+                                        actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
+                                        environmentSetUp("house");
+                                    }
+                                    else if(isByTutorialWaddleDee){
+                                        // Tutorial info
+                                        if(!tutorial.isPlaying()){
+                                            if(!tutorial.isDone()) {
+                                                tutorial.getTextHandler().postDelayed(tutorial.getPlayDialogue(), 0);
+                                                tutorial.showDialogBox();
+                                            }
+                                            else{
+                                                DialogueBox.hideDialogBox();
+                                                tutorial.resetDialogue();
+                                                tutorial.getDialogueListener().onComplete();
+                                            }
+                                        }
+                                    }
+                                    else if(isByForestSoupHintWaddleDee){
+                                        switch(forestHintNumber){
+                                            case 0:
+                                                if(!specialForestSoupHint1.isPlaying()){
+                                                    if(!specialForestSoupHint1.isDone()) {
+                                                        specialForestSoupHint1.getTextHandler().postDelayed(specialForestSoupHint1.getPlayDialogue(), 0);
+                                                        specialForestSoupHint1.showDialogBox();
+                                                    }
+                                                    else{
+                                                        DialogueBox.hideDialogBox();
+                                                        specialForestSoupHint1.resetDialogue();
+                                                        specialForestSoupHint1.getDialogueListener().onComplete();
+                                                    }
+                                                }
+                                                break;
+                                            case 1:
+                                                if(!specialForestSoupHint2.isPlaying()){
+                                                    if(!specialForestSoupHint2.isDone()) {
+                                                        specialForestSoupHint2.getTextHandler().postDelayed(specialForestSoupHint2.getPlayDialogue(), 0);
+                                                        specialForestSoupHint2.showDialogBox();
+                                                    }
+                                                    else{
+                                                        DialogueBox.hideDialogBox();
+                                                        specialForestSoupHint2.resetDialogue();
+                                                        specialForestSoupHint2.getDialogueListener().onComplete();
+                                                    }
+                                                }
+                                                break;
+                                            case 2:
+                                                if(!specialForestSoupHint3.isPlaying()){
+                                                    if(!specialForestSoupHint3.isDone()) {
+                                                        specialForestSoupHint3.getTextHandler().postDelayed(specialForestSoupHint3.getPlayDialogue(), 0);
+                                                        specialForestSoupHint3.showDialogBox();
+                                                    }
+                                                    else{
+                                                        DialogueBox.hideDialogBox();
+                                                        specialForestSoupHint3.resetDialogue();
+                                                        specialForestSoupHint3.getDialogueListener().onComplete();
+                                                    }
+                                                }
+                                                break;
+                                            case 3:
+                                                if(!specialForestSoupHint4.isPlaying()){
+                                                    if(!specialForestSoupHint4.isDone()) {
+                                                        specialForestSoupHint4.getTextHandler().postDelayed(specialForestSoupHint4.getPlayDialogue(), 0);
+                                                        specialForestSoupHint4.showDialogBox();
+                                                    }
+                                                    else{
+                                                        DialogueBox.hideDialogBox();
+                                                        specialForestSoupHint4.resetDialogue();
+                                                        specialForestSoupHint4.getDialogueListener().onComplete();
+                                                    }
+                                                }
+                                                break;
+                                            case 4:
+                                                if(!specialForestSoupHint5.isPlaying()){
+                                                    if(!specialForestSoupHint5.isDone()) {
+                                                        specialForestSoupHint5.getTextHandler().postDelayed(specialForestSoupHint5.getPlayDialogue(), 0);
+                                                        specialForestSoupHint5.showDialogBox();
+                                                    }
+                                                    else{
+                                                        DialogueBox.hideDialogBox();
+                                                        specialForestSoupHint5.resetDialogue();
+                                                        specialForestSoupHint5.getDialogueListener().onComplete();
+                                                    }
+                                                }
+                                                break;
+                                            default:
+                                                break;
 
-                                    environmentSetUp("house");
+                                        }
+                                    }
                                 }
                                 else if(environment.toLowerCase().equals("house")){
-                                    kirbyXPosition = tWidth - (tWidth/11F);
-                                    //kirbyXPosition = 0;
-                                    kirbyYPosition = gameCamera.getBottomYPosition()+6;
+                                    if(isCloseToForestDoor){
+                                        kirbyXPosition = tWidth - (tWidth/13F);
+                                        kirbyYPosition = (float)(148.52191 + 6);
+                                        gameCameraFixed = true;
+                                        cameraSetUp("forest");
+                                        gameCamera.setRightXPosition(tWidth);
+                                        gameCameraXPosition = gameCamera.getXPosition();
+                                        gameCameraYPosition = gameCamera.getYPosition();
+                                        negateDayNightCycle(false);
+                                        actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
+                                        environmentSetUp("forest");
+                                    }
+                                    else if(isCloseToSwampDoor){
+                                        kirbyXPosition = 0;
+                                        kirbyYPosition = (float)(148.52191 + 6);
+                                        gameCameraFixed = true;
+                                        gameCameraXPosition = -1;
+                                        gameCameraYPosition = -1;
+                                        negateDayNightCycle(false);
+                                        actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
+                                        environmentSetUp("swamp");
+                                    }
+                                    else if(isCloseToCauldron){
+                                        // soup making here instead...
+                                        makeSoup();
+                                    }
+                                }
+                                else if(environment.toLowerCase().equals("swamp")){
+                                    // temporary move back to house. Need door back to house in swamp area...
+                                    cameraSetUp("house");
+                                    kirby.faceDirection("left");
+                                    kirbyXPosition = (centerX + tWidth * 3440/30000F) - kirby.getObjectWidth() - (tWidth * 30/15000F);
+                                    kirbyYPosition = gameCamera.getBottomYPosition() + 1;
                                     gameCameraFixed = true;
-                                    gameCamera.setRightXPosition(tWidth);
+                                    gameCamera.setRightXPosition(centerX + tWidth * 3440/30000F);
                                     gameCameraXPosition = gameCamera.getXPosition();
                                     gameCameraYPosition = gameCamera.getYPosition();
-                                    negateDayNightCycle(false);
-                                    environmentSetUp("forest");
-                                }
-                                else if(isByTutorialWaddleDee){
-                                    // Tutorial info
-                                    if(!tutorial.isPlaying()){
-                                        if(!tutorial.isDone()) {
-                                            tutorial.getTextHandler().postDelayed(tutorial.getPlayDialogue(), 0);
-                                            tutorial.showDialogBox();
-                                        }
-                                        else{
-                                            DialogueBox.hideDialogBox();
-                                            tutorial.resetDialogue();
-                                            tutorial.getDialogueListener().onComplete();
-                                        }
-                                    }
-                                }
-                                else if(isByForestSoupHintWaddleDee){
-                                    switch(forestHintNumber){
-                                        case 0:
-                                            if(!specialForestSoupHint1.isPlaying()){
-                                                if(!specialForestSoupHint1.isDone()) {
-                                                    specialForestSoupHint1.getTextHandler().postDelayed(specialForestSoupHint1.getPlayDialogue(), 0);
-                                                    specialForestSoupHint1.showDialogBox();
-                                                }
-                                                else{
-                                                    DialogueBox.hideDialogBox();
-                                                    specialForestSoupHint1.resetDialogue();
-                                                    specialForestSoupHint1.getDialogueListener().onComplete();
-                                                }
-                                            }
-                                            break;
-                                        case 1:
-                                            if(!specialForestSoupHint2.isPlaying()){
-                                                if(!specialForestSoupHint2.isDone()) {
-                                                    specialForestSoupHint2.getTextHandler().postDelayed(specialForestSoupHint2.getPlayDialogue(), 0);
-                                                    specialForestSoupHint2.showDialogBox();
-                                                }
-                                                else{
-                                                    DialogueBox.hideDialogBox();
-                                                    specialForestSoupHint2.resetDialogue();
-                                                    specialForestSoupHint2.getDialogueListener().onComplete();
-                                                }
-                                            }
-                                            break;
-                                        case 2:
-                                            if(!specialForestSoupHint3.isPlaying()){
-                                                if(!specialForestSoupHint3.isDone()) {
-                                                    specialForestSoupHint3.getTextHandler().postDelayed(specialForestSoupHint3.getPlayDialogue(), 0);
-                                                    specialForestSoupHint3.showDialogBox();
-                                                }
-                                                else{
-                                                    DialogueBox.hideDialogBox();
-                                                    specialForestSoupHint3.resetDialogue();
-                                                    specialForestSoupHint3.getDialogueListener().onComplete();
-                                                }
-                                            }
-                                            break;
-                                        case 3:
-                                            if(!specialForestSoupHint4.isPlaying()){
-                                                if(!specialForestSoupHint4.isDone()) {
-                                                    specialForestSoupHint4.getTextHandler().postDelayed(specialForestSoupHint4.getPlayDialogue(), 0);
-                                                    specialForestSoupHint4.showDialogBox();
-                                                }
-                                                else{
-                                                    DialogueBox.hideDialogBox();
-                                                    specialForestSoupHint4.resetDialogue();
-                                                    specialForestSoupHint4.getDialogueListener().onComplete();
-                                                }
-                                            }
-                                            break;
-                                        case 4:
-                                            if(!specialForestSoupHint5.isPlaying()){
-                                                if(!specialForestSoupHint5.isDone()) {
-                                                    specialForestSoupHint5.getTextHandler().postDelayed(specialForestSoupHint5.getPlayDialogue(), 0);
-                                                    specialForestSoupHint5.showDialogBox();
-                                                }
-                                                else{
-                                                    DialogueBox.hideDialogBox();
-                                                    specialForestSoupHint5.resetDialogue();
-                                                    specialForestSoupHint5.getDialogueListener().onComplete();
-                                                }
-                                            }
-                                            break;
-                                        default:
-                                            break;
-                                            
-                                    }
+                                    negateDayNightCycle(true);
+                                    setLightingTemporarily(255, 255, 255, 255, 255, 255);
+                                    actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
+                                    environmentSetUp("house");
                                 }
                             }
                         }
@@ -3184,16 +3235,32 @@ public class InGameActivity extends AppCompatActivity {
         else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
                 && object2.equals(allNPCs.get("Waddle Dee 0")) && collisionType.equals("left")){
             isByTutorialWaddleDee = true;
+            actionButton.setBackgroundResource(R.drawable.testtalkicon);
             Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
         }
         else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
                 && object2.equals(allNPCs.get("Waddle Dee 1"))){
             isByForestSoupHintWaddleDee = true;
+            actionButton.setBackgroundResource(R.drawable.testtalkicon);
             Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
         }
         else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
                 && object2.getObjectName().toLowerCase().equals("cauldron")){
             isCloseToCauldron = true;
+            // bad icon...
+            actionButton.setBackgroundResource(R.drawable.testmakesoupicon);
+            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
+            return true;
+        }
+        else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
+                && object2.getObjectName().toLowerCase().equals("forest door")){
+            isCloseToForestDoor = true;
+            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
+            return true;
+        }
+        else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
+                && object2.getObjectName().toLowerCase().equals("swamp door")){
+            isCloseToSwampDoor = true;
             Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
             return true;
         }

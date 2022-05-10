@@ -590,8 +590,8 @@ public class GameObject extends androidx.appcompat.widget.AppCompatImageView {
         return isFacingRight;
     }
 
-    public void setFacingRight(boolean facingLeft) {
-        isFacingRight = facingLeft;
+    public void setFacingRight(boolean facingRight) {
+        isFacingRight = facingRight;
     }
 
     public boolean isIngredient() {
