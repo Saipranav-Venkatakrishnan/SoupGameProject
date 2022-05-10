@@ -673,6 +673,44 @@ public class InGameActivity extends AppCompatActivity {
                 R.drawable.testground2, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
                 (int)(tWidth), 300, 0, gameCamera.getBottomYPosition(),0,-294)));
 
+        swampEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(66 * ratio3),(int)(128 * ratio3),
+                R.drawable.tree4_bg, tWidth/16, gameCamera.getBottomYPosition() + 6, false));
+        swampEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(66 * ratio),(int)(128 * ratio),
+                R.drawable.tree4_bg, tWidth/4, gameCamera.getBottomYPosition() + 6, false));
+        swampEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(66 * ratio),(int)(128 * ratio),
+                R.drawable.tree4_bg, tWidth/2, gameCamera.getBottomYPosition() + 6, false));
+        swampEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(66 * ratio),(int)(128 * ratio),
+                R.drawable.tree4_bg, tWidth/2 + tWidth/8, gameCamera.getBottomYPosition() + 6, false));
+        swampEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(66 * ratio3),(int)(128 * ratio3),
+                R.drawable.tree4_bg, tWidth/2 + tWidth/5, gameCamera.getBottomYPosition() + 6, false));
+
+        swampEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(66 * ratio),(int)(99 * ratio),
+                R.drawable.tree5_bg, tWidth/8, gameCamera.getBottomYPosition() + 6, false));
+        swampEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(66 * ratio),(int)(99 * ratio),
+                R.drawable.tree5_bg, tWidth/3, gameCamera.getBottomYPosition() + 6, false));
+        swampEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(66 * ratio6),(int)(99 * ratio6),
+                R.drawable.tree5_bg, tWidth/2 - tWidth/10, gameCamera.getBottomYPosition() + 6, false));
+        swampEnvironmentBackgroundGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(66 * ratio),(int)(99 * ratio),
+                R.drawable.tree5_bg, tWidth/2 + tWidth/3, gameCamera.getBottomYPosition() + 6, false));
+
+        swampEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(43*ratio5),(int)(58*ratio5),
+                R.drawable.tree6, tWidth/10, gameCamera.getBottomYPosition() + 6, true,
+                new HitBox(InGameActivity.this, true, (int)(7*ratio5),(int)(39*ratio5),tWidth/10
+                        ,gameCamera.getBottomYPosition()+6,(float)(16*ratio5),0)));
+        swampEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(43*ratio5),(int)(58*ratio5),
+                R.drawable.tree6, tWidth/2 + tWidth/10, gameCamera.getBottomYPosition() + 6, true,
+                new HitBox(InGameActivity.this, true, (int)(7*ratio5),(int)(39*ratio5),tWidth/2 + tWidth/10
+                        ,gameCamera.getBottomYPosition()+6,(float)(16*ratio5),0)));
+        swampEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(43*ratio4),(int)(58*ratio4),
+                R.drawable.tree6, tWidth/2 + tWidth/4, gameCamera.getBottomYPosition() + 6, true,
+                new HitBox(InGameActivity.this, true, (int)(7*ratio4),(int)(39*ratio4),tWidth/2 + tWidth/4
+                        ,gameCamera.getBottomYPosition()+6,(float)(16*ratio4),0)));
+
+        swampEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(66*ratio3),(int)(99*ratio3),
+                R.drawable.tree5, tWidth/5, gameCamera.getBottomYPosition() + 6, true,
+                new HitBox(InGameActivity.this, true, (int)(7*ratio3),(int)(39*ratio3),tWidth/5
+                        ,gameCamera.getBottomYPosition()+6,(float)(16*ratio3),0)));
+
         // After populating all ArrayLists, set up the first environment the player will be in (which will be the forest)
         initialItemSetUp();
         environmentSetUp(environment);
