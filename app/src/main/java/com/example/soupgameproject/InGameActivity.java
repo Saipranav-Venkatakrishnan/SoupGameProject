@@ -85,6 +85,9 @@ public class InGameActivity extends AppCompatActivity {
 
     public static final String ALL_FOREST_CURRENT_ITEM_NAMES = "allForestCurrentItemNames";
     public static final String ALL_FOREST_CURRENT_ITEM_LOCATIONS = "allForestCurrentItemLocations";
+    
+    public static final String ALL_SWAMP_CURRENT_ITEM_NAMES = "allSwampCurrentItemNames";
+    public static final String ALL_SWAMP_CURRENT_ITEM_LOCATIONS = "allSwampCurrentItemLocations";
 
     public static final String SOUP_INGREDIENTS = "soupIngredients";
     public static final String SOUP_RANKS = "soupRanks";
@@ -212,7 +215,9 @@ public class InGameActivity extends AppCompatActivity {
     private boolean isCloseToCauldron;
     private boolean isCloseToForestDoor;
     private boolean isCloseToSwampDoor;
+    private boolean isCloseToHouseBack;
     private boolean itemsAreSet;
+
 
     // Test Environment GameObjects
     private ArrayList<GameObject> testEnvironmentBackgroundGameObjects;
@@ -253,6 +258,10 @@ public class InGameActivity extends AppCompatActivity {
     private ArrayList<Ingredient> allForestCurrentItems;
     private ArrayList<String> allForestCurrentItemNames;
     private float[] allForestCurrentItemLocations;
+
+    private ArrayList<Ingredient> allSwampCurrentItems;
+    private ArrayList<String> allSwampCurrentItemNames;
+    private float[] allSwampCurrentItemLocations;
 
     private ConstraintLayout layout;
 
@@ -343,10 +352,8 @@ public class InGameActivity extends AppCompatActivity {
 
     // Camera creation and set up
     private void initialCameraSetUp(){
-//        walkSpeed = 1/3F;
-//        runSpeed = 1/2F;
-        walkSpeed = 1;
-        runSpeed = 2;
+        walkSpeed = 1/2F;
+        runSpeed = walkSpeed * 2;
         gameCamera = new Camera(scalingFrameLayout, gameContainerLayout);
         leftWalkCamera = gameCamera.moveLeft(cHandler, walkSpeed * TitleActivity.DENSITY);
         leftRunCamera = gameCamera.moveLeft(cHandler, runSpeed * TitleActivity.DENSITY);
@@ -452,6 +459,11 @@ public class InGameActivity extends AppCompatActivity {
 
         // NPC Waddle Dee 1 (SpecialDee)
         allNPCs.get("Waddle Dee 1").setXPosition(specialDeeXPosition);
+
+        if(specialDeeYPosition == -1){
+            cameraSetUp("forest");
+            specialDeeYPosition = gameCamera.getBottomYPosition() + 6;
+        }
         allNPCs.get("Waddle Dee 1").setYPosition(specialDeeYPosition);
         allNPCs.get("Waddle Dee 1").faceDirection(specialDeeDirection);
         if(isSpecialDeePresent) {
@@ -573,17 +585,6 @@ public class InGameActivity extends AppCompatActivity {
                 R.drawable.tree2, tWidth - tWidth/3 - tWidth/25, gameCamera.getBottomYPosition() + 6, true,
                 new HitBox(InGameActivity.this, true, (int)(7*ratio8),(int)(39*ratio8),tWidth - tWidth/3 - tWidth/25
                         ,gameCamera.getBottomYPosition()+6,(float)(16*ratio8),0)));
-        // Make this one more left
-//        forestEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39*ratio8),(int)(43*ratio8),
-//                R.drawable.tree2, tWidth/3 + tWidth/2, gameCamera.getBottomYPosition() + 6, true,
-//                new HitBox(InGameActivity.this, true, (int)(7*ratio8),(int)(39*ratio8),tWidth/3 + tWidth/2
-//                        ,gameCamera.getBottomYPosition()+6,(float)(16*ratio8),0)));
-
-        // Temporarily moving tree to see house
-//        forestEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39*ratio6),(int)(43*ratio6),
-//                R.drawable.tree2, tWidth - tWidth/10, gameCamera.getBottomYPosition() + 6, true,
-//                new HitBox(InGameActivity.this, true, (int)(7*ratio6),(int)(39*ratio6),tWidth - tWidth/10
-//                        ,gameCamera.getBottomYPosition()+6,(float)(16*ratio6),0)));
 
         // Mushroom House. Feel free to change :)
         float houseRatio = 1/7F;
@@ -632,28 +633,6 @@ public class InGameActivity extends AppCompatActivity {
         cauldron.setScaleType(ImageView.ScaleType.FIT_START);
         cauldron.setImageResource(R.drawable.cauldrontop);
 
-//        cauldron.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                // Soup testing
-////                ImageView test = findViewById(R.id.soupTest);
-////                ImageView test2 = findViewById(R.id.soupTest2);
-////                String[] ingredientNames = new String[]{"Carrot","Mushroom","Radish","Tomato","Plant"};
-////
-////                Ingredient ingredient1 = ingredientKey.get(ingredientNames[(int)(Math.random() * 5)]);
-////                Ingredient ingredient2 = ingredientKey.get(ingredientNames[(int)(Math.random() * 5)]);
-////                int amount1 = (int)(Math.random() * 9 + 1);
-////                int amount2 = 10 - amount1;
-////
-////                Soup soup = new Soup(ingredient1,amount1);
-////                Soup mixSoup = new Soup(ingredient1,amount1,ingredient2,amount2);
-////
-////                soup.showSoup(test);
-////
-////                mixSoup.showSoup(test2);
-//                makeSoup();
-//            }
-//        });
 
         houseEnvironmentCollisionGameObjects.add(cauldron);
         houseEnvironmentCollisionGameObjects.add(forestDoor);
@@ -695,21 +674,27 @@ public class InGameActivity extends AppCompatActivity {
 
         swampEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(43*ratio5),(int)(58*ratio5),
                 R.drawable.tree6, tWidth/10, gameCamera.getBottomYPosition() + 6, true,
-                new HitBox(InGameActivity.this, true, (int)(7*ratio5),(int)(39*ratio5),tWidth/10
-                        ,gameCamera.getBottomYPosition()+6,(float)(16*ratio5),0)));
+                new HitBox(InGameActivity.this, true, (int)(9*ratio5),(int)(50*ratio5),tWidth/10
+                        ,gameCamera.getBottomYPosition()+6,(float)(23*ratio5),0)));
         swampEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(43*ratio5),(int)(58*ratio5),
                 R.drawable.tree6, tWidth/2 + tWidth/10, gameCamera.getBottomYPosition() + 6, true,
-                new HitBox(InGameActivity.this, true, (int)(7*ratio5),(int)(39*ratio5),tWidth/2 + tWidth/10
-                        ,gameCamera.getBottomYPosition()+6,(float)(16*ratio5),0)));
+                new HitBox(InGameActivity.this, true, (int)(9*ratio5),(int)(50*ratio5),tWidth/2 + tWidth/10
+                        ,gameCamera.getBottomYPosition()+6,(float)(23*ratio5),0)));
         swampEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(43*ratio4),(int)(58*ratio4),
                 R.drawable.tree6, tWidth/2 + tWidth/4, gameCamera.getBottomYPosition() + 6, true,
-                new HitBox(InGameActivity.this, true, (int)(7*ratio4),(int)(39*ratio4),tWidth/2 + tWidth/4
-                        ,gameCamera.getBottomYPosition()+6,(float)(16*ratio4),0)));
+                new HitBox(InGameActivity.this, true, (int)(9*ratio4),(int)(50*ratio4),tWidth/2 + tWidth/4
+                        ,gameCamera.getBottomYPosition()+6,(float)(23*ratio4),0)));
 
         swampEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(66*ratio3),(int)(99*ratio3),
                 R.drawable.tree5, tWidth/5, gameCamera.getBottomYPosition() + 6, true,
-                new HitBox(InGameActivity.this, true, (int)(7*ratio3),(int)(39*ratio3),tWidth/5
-                        ,gameCamera.getBottomYPosition()+6,(float)(16*ratio3),0)));
+                new HitBox(InGameActivity.this, true, (int)(18*ratio3),(int)(74*ratio3),tWidth/5
+                        ,gameCamera.getBottomYPosition()+6,(float)(20*ratio3),0)));
+
+        GameObject mushroomHouseSwamp = new GameObject(InGameActivity.this, "Mushroom House (Back)", (int)(600 * houseRatio),
+                (int)(600 * houseRatio), R.drawable.mushroom_house_back, -tWidth/20F, gameCamera.getBottomYPosition() + 6 - (31 * houseRatio), true,
+                new HitBox(InGameActivity.this, true, (int)(140 * houseRatio),(int)(100 * houseRatio),-tWidth/20F,
+                        gameCamera.getBottomYPosition()+6 - (int)(31 * houseRatio), (int)(220 * houseRatio), (int)(31 * houseRatio)));
+        swampEnvironmentBackgroundGameObjects.add(mushroomHouseSwamp);
 
         // After populating all ArrayLists, set up the first environment the player will be in (which will be the forest)
         initialItemSetUp();
@@ -894,7 +879,8 @@ public class InGameActivity extends AppCompatActivity {
 
     private void initialItemSetUp(){
         Log.i("ItemGeneration","Initial item set up");
-        allForestCurrentItems = new ArrayList<>();
+        allForestCurrentItems = new ArrayList<Ingredient>();
+        allSwampCurrentItems = new ArrayList<Ingredient>();
 
         for(int i = 0; i < allForestCurrentItemNames.size(); i++){
             Ingredient ingredient;
@@ -930,11 +916,72 @@ public class InGameActivity extends AppCompatActivity {
             allForestCurrentItems.add(ingredient);
 
         }
+
+        for(int i = 0; i < allSwampCurrentItemNames.size(); i++){
+            Ingredient ingredient;
+            if(allSwampCurrentItemNames.get(i).toLowerCase().equals("carrot")){
+                ingredient = new Ingredient(this, "Carrot", 10, 6,
+                        R.drawable.carrot, allSwampCurrentItemLocations[2 * i],
+                        allSwampCurrentItemLocations[2 * i + 1], 150,242,149,27);
+            }
+            else if(allSwampCurrentItemNames.get(i).toLowerCase().equals("mushroom")){
+                ingredient = new Ingredient(this, "Mushroom", 8, 8,
+                        R.drawable.mushroom, allSwampCurrentItemLocations[2 * i],
+                        allSwampCurrentItemLocations[2 * i + 1], 150,201, 87, 48);
+            }
+            else if(allSwampCurrentItemNames.get(i).toLowerCase().equals("radish")){
+                ingredient = new Ingredient(this, "Radish", 12, 12,
+                        R.drawable.radish, allSwampCurrentItemLocations[2 * i],
+                        allSwampCurrentItemLocations[2 * i + 1], 150,243, 222, 255);
+            }
+            else if(allSwampCurrentItemNames.get(i).toLowerCase().equals("tomato")){
+                ingredient = new Ingredient(this, "Tomato", 8, 8,
+                        R.drawable.tomato, allSwampCurrentItemLocations[2 * i],
+                        allSwampCurrentItemLocations[2 * i + 1], 150,230, 16, 37);
+            }
+            else if(allSwampCurrentItemNames.get(i).toLowerCase().equals("plant")){
+                ingredient = new Ingredient(this, "Plant", 10, 10,
+                        R.drawable.plant1, allSwampCurrentItemLocations[2 * i],
+                        allSwampCurrentItemLocations[2 * i + 1], 150,113, 214, 79);
+            }
+            else{
+                ingredient = null;
+            }
+
+            allSwampCurrentItems.add(ingredient);
+
+        }
     }
     
     private void itemSetUp(String environment){
         if(environment.toLowerCase().equals("forest")) {
             for(Ingredient ingredient: allForestCurrentItems) {
+                Runnable fall = ingredient.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
+                                object1.stopFall();
+
+                                object1.setYPosition(object2.getHitBox().topLeft().y);
+
+                                object1.getHitBox().setYPosition(object1.getYPosition());
+                                object1.setHitBox(object1.getHitBox());
+                                object1.showHitBox();
+                            }
+
+                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                        }
+                    }
+                });
+
+                backgroundGameLayout.addLayoutObject(ingredient);
+
+                itemHandler.postDelayed(fall, 5);
+            }
+        }
+        else if(environment.toLowerCase().equals("swamp")) {
+            for(Ingredient ingredient: allSwampCurrentItems) {
                 Runnable fall = ingredient.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
                     @Override
                     public void onCollision(GameObject object1, GameObject object2) {
@@ -1083,7 +1130,6 @@ public class InGameActivity extends AppCompatActivity {
         }
         else if(environment.toLowerCase().equals("forest")){
             allForestCurrentItems = new ArrayList<Ingredient>();
-            // Make better randomizer later
             int totalItemCount = 20;
             int carrotCount = (int)(Math.random() * totalItemCount) + 1;
             int mushroomCount = (int)(Math.random() * (totalItemCount - carrotCount));
@@ -1189,6 +1235,73 @@ public class InGameActivity extends AppCompatActivity {
         else if(environment.toLowerCase().equals("house")){
             Log.i("EnvironmentSetUp","There should be no items...");
         }
+        else if(environment.toLowerCase().equals("swamp")){
+            int totalItemCount = 15;
+            int radishCount = (int)(Math.random() * totalItemCount) + 1;
+            int plantCount = totalItemCount-radishCount;
+
+            for(int i = 0; i < radishCount; i++) {
+                Ingredient radish = new Ingredient(this, "Radish", 12, 12,
+                        R.drawable.radish, (float) (Math.random() * (tWidth-tWidth/5F) + tWidth/9F),
+                        (float) (gameCamera.getTopYPosition()) + 70, 150,243, 222, 255);
+
+                backgroundGameLayout.addLayoutObject(radish);
+                allSwampCurrentItems.add(radish);
+
+                Runnable radishFall = radish.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
+                                object1.stopFall();
+
+                                object1.setYPosition(object2.getHitBox().topLeft().y);
+
+                                object1.getHitBox().setYPosition(object1.getYPosition());
+                                object1.setHitBox(object1.getHitBox());
+                                object1.showHitBox();
+                            }
+
+                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                        }
+                    }
+                });
+
+                itemHandler.postDelayed(radishFall, 5);
+            }
+
+            for(int i = 0; i < plantCount; i++) {
+                Ingredient plant = new Ingredient(this, "Plant", 10, 10,
+                        R.drawable.plant1,(float) (Math.random() * (tWidth-tWidth/5F) + tWidth/9F),
+                        (float) (gameCamera.getTopYPosition()) + 70, 150,113, 214, 79);
+
+                backgroundGameLayout.addLayoutObject(plant);
+                allSwampCurrentItems.add(plant);
+
+                Runnable plantFall = plant.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
+                                object1.stopFall();
+
+                                object1.setYPosition(object2.getHitBox().topLeft().y);
+
+                                object1.getHitBox().setYPosition(object1.getYPosition());
+                                object1.setHitBox(object1.getHitBox());
+                                object1.showHitBox();
+                            }
+
+                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                        }
+                    }
+                });
+
+                itemHandler.postDelayed(plantFall, 5);
+            }
+
+            Log.i("EnvironmentSetUp","Swamp Items");
+        }
         
     }
 
@@ -1203,6 +1316,18 @@ public class InGameActivity extends AppCompatActivity {
                 }
 
                 allForestCurrentItems = new ArrayList<Ingredient>();
+            }
+        }
+        else if(environment.toLowerCase().equals("swamp")) {
+            if (allSwampCurrentItems != null) {
+                int i = 0;
+                for (Ingredient item : allSwampCurrentItems) {
+                    i++;
+                    Log.i("ItemGeneration", String.valueOf(i) + ": " + item.getName());
+                    itemHandler.postDelayed(item.collected(itemHandler), 0);
+                }
+
+                allSwampCurrentItems = new ArrayList<Ingredient>();
             }
         }
     }
@@ -1254,12 +1379,12 @@ public class InGameActivity extends AppCompatActivity {
         // Kirby Set Up
 
         // Kirby Attributes
-//        walkSpeed = 1/3F;
-//        runSpeed = 1/2F;
-//        jumpHeight = 10;
-        walkSpeed = 1;
-        runSpeed = 2;
-        jumpHeight = 30;
+        walkSpeed = 1/2F;
+        runSpeed = walkSpeed * 2;
+        jumpHeight = 15;
+//        walkSpeed = 1;
+//        runSpeed = 2;
+//        jumpHeight = 30;
         highJumpHeight = jumpHeight * 2;
         floatJumpHeight = jumpHeight/2;
 
@@ -1543,6 +1668,7 @@ public class InGameActivity extends AppCompatActivity {
                         isCloseToCauldron = false;
                         isCloseToForestDoor = false;
                         isCloseToSwampDoor = false;
+                        isCloseToHouseBack = false;
                         actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
 //                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
 //                            kirbyPreviousXPos = xPosition;
@@ -1629,6 +1755,7 @@ public class InGameActivity extends AppCompatActivity {
                         isCloseToCauldron = false;
                         isCloseToForestDoor = false;
                         isCloseToSwampDoor = false;
+                        isCloseToHouseBack = false;
                         actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
 //                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
 //                            kirbyPreviousXPos = xPosition;
@@ -1716,6 +1843,7 @@ public class InGameActivity extends AppCompatActivity {
                         isCloseToCauldron = false;
                         isCloseToForestDoor = false;
                         isCloseToSwampDoor = false;
+                        isCloseToHouseBack = false;
                         actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
 //                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
 //                            kirbyPreviousXPos = xPosition;
@@ -1802,6 +1930,7 @@ public class InGameActivity extends AppCompatActivity {
                         isCloseToCauldron = false;
                         isCloseToForestDoor = false;
                         isCloseToSwampDoor = false;
+                        isCloseToHouseBack = false;
                         actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
 //                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
 //                            kirbyPreviousXPos = xPosition;
@@ -3177,10 +3306,10 @@ public class InGameActivity extends AppCompatActivity {
                                 }
                                 else if(environment.toLowerCase().equals("house")){
                                     if(isCloseToForestDoor){
-                                        kirbyXPosition = tWidth - (tWidth/13F);
-                                        kirbyYPosition = (float)(148.52191 + 6);
                                         gameCameraFixed = true;
                                         cameraSetUp("forest");
+                                        kirbyXPosition = tWidth - (tWidth/13F);
+                                        kirbyYPosition = (float)(gameCamera.getBottomYPosition()+ 6);
                                         gameCamera.setRightXPosition(tWidth);
                                         gameCameraXPosition = gameCamera.getXPosition();
                                         gameCameraYPosition = gameCamera.getYPosition();
@@ -3189,9 +3318,10 @@ public class InGameActivity extends AppCompatActivity {
                                         environmentSetUp("forest");
                                     }
                                     else if(isCloseToSwampDoor){
-                                        kirbyXPosition = 0;
-                                        kirbyYPosition = (float)(148.52191 + 6);
                                         gameCameraFixed = true;
+                                        cameraSetUp("swamp");
+                                        kirbyXPosition = 0;
+                                        kirbyYPosition = (float)(gameCamera.getBottomYPosition() + 6);
                                         gameCameraXPosition = -1;
                                         gameCameraYPosition = -1;
                                         negateDayNightCycle(false);
@@ -3201,22 +3331,25 @@ public class InGameActivity extends AppCompatActivity {
                                     else if(isCloseToCauldron){
                                         // soup making here instead...
                                         makeSoup();
+                                        isCloseToCauldron = false;
+                                        actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
                                     }
                                 }
                                 else if(environment.toLowerCase().equals("swamp")){
-                                    // temporary move back to house. Need door back to house in swamp area...
-                                    cameraSetUp("house");
-                                    kirby.faceDirection("left");
-                                    kirbyXPosition = (centerX + tWidth * 3440/30000F) - kirby.getObjectWidth() - (tWidth * 30/15000F);
-                                    kirbyYPosition = gameCamera.getBottomYPosition() + 1;
-                                    gameCameraFixed = true;
-                                    gameCamera.setRightXPosition(centerX + tWidth * 3440/30000F);
-                                    gameCameraXPosition = gameCamera.getXPosition();
-                                    gameCameraYPosition = gameCamera.getYPosition();
-                                    negateDayNightCycle(true);
-                                    setLightingTemporarily(255, 255, 255, 255, 255, 255);
-                                    actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
-                                    environmentSetUp("house");
+                                    if(isCloseToHouseBack) {
+                                        cameraSetUp("house");
+                                        kirby.faceDirection("left");
+                                        kirbyXPosition = (centerX + tWidth * 3440 / 30000F) - kirby.getObjectWidth() - (tWidth * 30 / 15000F);
+                                        kirbyYPosition = gameCamera.getBottomYPosition() + 1;
+                                        gameCameraFixed = true;
+                                        gameCamera.setRightXPosition(centerX + tWidth * 3440 / 30000F);
+                                        gameCameraXPosition = gameCamera.getXPosition();
+                                        gameCameraYPosition = gameCamera.getYPosition();
+                                        negateDayNightCycle(true);
+                                        setLightingTemporarily(255, 255, 255, 255, 255, 255);
+                                        actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
+                                        environmentSetUp("house");
+                                    }
                                 }
                             }
                         }
@@ -3310,6 +3443,12 @@ public class InGameActivity extends AppCompatActivity {
             Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
             return true;
         }
+        else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
+                && object2.getObjectName().toLowerCase().equals("mushroom house (back)")){
+            isCloseToHouseBack = true;
+            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
+            return true;
+        }
 
         return false;
     }
@@ -3333,7 +3472,7 @@ public class InGameActivity extends AppCompatActivity {
                 allForestCurrentItems.remove(ingredient);
             }
             else if(environment.toLowerCase().equals("swamp")){
-                //allSwampCurrentItems.remove(ingredient);
+                allSwampCurrentItems.remove(ingredient);
             }
             switch(itemName) {
                 case "Carrot":
@@ -3481,7 +3620,7 @@ public class InGameActivity extends AppCompatActivity {
                         itemsAreSet = true;
                     }
 
-                    //rHandler.postDelayed(this,3667);
+                    rHandler.postDelayed(this,3667);
                 }
                 else if(timeOfDay.toLowerCase().equals("noon")) {
                     if (bA > 0) {
@@ -3503,7 +3642,7 @@ public class InGameActivity extends AppCompatActivity {
                         oB = 255;
                     }
 
-                   // rHandler.postDelayed(this,3667);
+                    rHandler.postDelayed(this,3667);
                 }
                 else if(timeOfDay.toLowerCase().equals("sunset")){
                     if(toColor(255,80,80,1,40,40,40,1)){
@@ -3530,7 +3669,7 @@ public class InGameActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    //rHandler.postDelayed(this,280);
+                    rHandler.postDelayed(this,280);
                 }
                 else if(timeOfDay.toLowerCase().equals("night")){
                     if(toColor(100,100,120,1,35,35,35,1)){
@@ -3557,7 +3696,7 @@ public class InGameActivity extends AppCompatActivity {
                             }
                         }
                     }
-                //    rHandler.postDelayed(this,690);
+                    rHandler.postDelayed(this,690);
                 }
                 else if(timeOfDay.toLowerCase().equals("sunrise1")){
                     if(toColor(254,108,184,2,100,100,100,1)){
@@ -3575,7 +3714,7 @@ public class InGameActivity extends AppCompatActivity {
                             }
                         }
                     }
-                  //  rHandler.postDelayed(this,625);
+                    rHandler.postDelayed(this,625);
                 }
                 else if(timeOfDay.toLowerCase().equals("sunrise2")){
                     if(toColor(255,255,255,1,255,255,255,1)){
@@ -3586,10 +3725,10 @@ public class InGameActivity extends AppCompatActivity {
                         timeOfDay = "Morning";
                         itemsAreSet = false;
                     }
-                   // rHandler.postDelayed(this,231);
+                    rHandler.postDelayed(this,231);
                 }
                 // Testing purposes
-                rHandler.postDelayed(this,30);
+                //rHandler.postDelayed(this,30);
             }
 
             // rates must lead to color values being equal to the desired color.
@@ -4139,6 +4278,25 @@ public class InGameActivity extends AppCompatActivity {
         json = gson.toJson(allForestCurrentItemLocations);
         editor.putString(ALL_FOREST_CURRENT_ITEM_LOCATIONS, json);
 
+        int k = 0;
+        allSwampCurrentItemLocations = new float[200];
+        allSwampCurrentItemNames = new ArrayList<String>();
+        for(Ingredient item : allSwampCurrentItems){
+            allSwampCurrentItemNames.add(item.getName());
+            allSwampCurrentItemLocations[2 * k] = item.getXPosition();
+            allSwampCurrentItemLocations[2 * k + 1] = item.getYPosition();
+            k++;
+        }
+
+        gson = new Gson();
+        json = gson.toJson(allSwampCurrentItemNames);
+        editor.putString(ALL_SWAMP_CURRENT_ITEM_NAMES, json);
+
+        gson = new Gson();
+        json = gson.toJson(allSwampCurrentItemLocations);
+        editor.putString(ALL_SWAMP_CURRENT_ITEM_LOCATIONS, json);
+
+
 
 //        gson = new Gson();
 //        json = gson.toJson(new Ingredient(this, "Test", 120, 120,
@@ -4265,7 +4423,7 @@ public class InGameActivity extends AppCompatActivity {
 
         specialDeeXPosition = sharedPreferences.getFloat(SPECIALDEE_XPOSITION, tWidth/4);
 
-        specialDeeYPosition = sharedPreferences.getFloat(SPECIALDEE_YPOSITION, (float)(148.52191 + 6));
+        specialDeeYPosition = sharedPreferences.getFloat(SPECIALDEE_YPOSITION, -1);
 
         isSpecialDeePresent = sharedPreferences.getBoolean(IS_SPECIALDEE_PRESENT, true);
 
@@ -4319,6 +4477,24 @@ public class InGameActivity extends AppCompatActivity {
         }
         else{
             allForestCurrentItemLocations = new float[200];
+        }
+
+        gson = new Gson();
+        json = sharedPreferences.getString(ALL_SWAMP_CURRENT_ITEM_NAMES, "");
+        if(!json.equals("")){
+            allSwampCurrentItemNames = gson.fromJson(json, ArrayList.class);
+        }
+        else{
+            allSwampCurrentItemNames = new ArrayList<String>();
+        }
+
+        gson = new Gson();
+        json = sharedPreferences.getString(ALL_SWAMP_CURRENT_ITEM_LOCATIONS, "");
+        if(!json.equals("")){
+            allSwampCurrentItemLocations = gson.fromJson(json, float[].class);
+        }
+        else{
+            allSwampCurrentItemLocations = new float[200];
         }
 
         gson = new Gson();
@@ -4782,6 +4958,11 @@ public class InGameActivity extends AppCompatActivity {
 
     public void catalogPage(View v) {
         Intent intent = new Intent(this, CatalogPage.class);
+        startActivity(intent);
+    }
+
+    public void titlePage(View v) {
+        Intent intent = new Intent(this, TitleActivity.class);
         startActivity(intent);
     }
 

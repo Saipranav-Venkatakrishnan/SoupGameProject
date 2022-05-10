@@ -225,7 +225,12 @@ public class Soup{
 
         for(int i = counts.length-1; i > 0; i--){
             if(counts[i] > 1){
-                desc += String.valueOf(counts[i]) + " " + names[i] + "s, ";
+                if(names[i].toLowerCase().equals("radish")){
+                    desc += String.valueOf(counts[i]) + " " + names[i] + "es, ";
+                }
+                else {
+                    desc += String.valueOf(counts[i]) + " " + names[i] + "s, ";
+                }
             }
             else if(counts[i] > 0){
                 desc += String.valueOf(counts[i]) + " " + names[i] + ", ";
