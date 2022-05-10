@@ -3,32 +3,50 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/settingsbackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SettingsPage">
+
 
   <ToggleButton
       android:id="@+id/switch1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:background="@color/brown"
       android:text="Music?"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.499"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintVertical_bias="0.315" />
+      app:layout_constraintVertical_bias="0.53" />
 
-  <Switch
+  <ToggleButton
+      android:id="@+id/switch3"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="@color/brown"
+      android:text="Music?"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.499"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintVertical_bias="0.351" />
+
+  <ToggleButton
       android:id="@+id/ButtonPlacement"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="Left/Right"
+      android:background="@color/brown"
+      android:text="Music?"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.499"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintVertical_bias="0.747" />
+      app:layout_constraintVertical_bias="0.849" />
 
   <TextView
       android:id="@+id/Music"
@@ -41,7 +59,7 @@
       app:layout_constraintHorizontal_bias="0.499"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintVertical_bias="0.13" />
+      app:layout_constraintVertical_bias="0.142" />
 
   <TextView
       android:id="@+id/PlacementOfMovement"
@@ -51,17 +69,17 @@
       android:textSize="29dp"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.499"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintVertical_bias="0.631" />
+      app:layout_constraintVertical_bias="0.683" />
 
   <Button
       android:id="@+id/gameActivity"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="Back to Game"
+      android:text="   Back to Game   "
       android:onClick="gameActivityPage"
+      android:background="@color/brown"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.026"

@@ -1497,7 +1497,7 @@ public class InGameActivity extends AppCompatActivity {
 
                     @Override
                     public void isGrounded() {
-                        if(walkEffectPlayer == null || !walkEffectPlayer.isPlaying()){
+                        if(SettingsPage.isEffect&&(walkEffectPlayer == null || !walkEffectPlayer.isPlaying())){
                             playWalkEffect(R.raw.runningongrass, true);
                             walkEffectPlayer.setVolume(1f, 1f);
                         }
@@ -1584,7 +1584,7 @@ public class InGameActivity extends AppCompatActivity {
 
                     @Override
                     public void isGrounded() {
-                        if(walkEffectPlayer == null || !walkEffectPlayer.isPlaying()){
+                        if(SettingsPage.isEffect&&(walkEffectPlayer == null || !walkEffectPlayer.isPlaying())){
                             playWalkEffect(R.raw.runningongrass, true);
                             walkEffectPlayer.setVolume(1f, 1f);
                         }
@@ -1671,7 +1671,7 @@ public class InGameActivity extends AppCompatActivity {
 
                     @Override
                     public void isGrounded() {
-                        if(walkEffectPlayer == null || !walkEffectPlayer.isPlaying()){
+                        if(SettingsPage.isEffect&&(walkEffectPlayer == null || !walkEffectPlayer.isPlaying())){
                             playWalkEffect(R.raw.runningongrass, true);
                             walkEffectPlayer.setVolume(1f, 1f);
                         }
@@ -1757,7 +1757,7 @@ public class InGameActivity extends AppCompatActivity {
 
                     @Override
                     public void isGrounded() {
-                        if(walkEffectPlayer == null || !walkEffectPlayer.isPlaying()){
+                        if(SettingsPage.isEffect&&(walkEffectPlayer == null || !walkEffectPlayer.isPlaying())){
                             playWalkEffect(R.raw.runningongrass, true);
                             walkEffectPlayer.setVolume(1f, 1f);
                         }
@@ -2877,8 +2877,11 @@ public class InGameActivity extends AppCompatActivity {
                                     kirby.stopJump();
                                     kirby.getUdHandler().postDelayed(kirby.getAllActions().get("High Jump"), 0);
                                     Log.i("MovementCheck", "Big Jump");
-                                    playJumpEffect(R.raw.jump, false);
-                                    pauseWalkEffect();
+                                    if(SettingsPage.isEffect){
+                                        playJumpEffect(R.raw.jump, false);
+                                        pauseWalkEffect();
+                                    }
+
                                 }
                             }
                         }, 150);
@@ -2899,8 +2902,10 @@ public class InGameActivity extends AppCompatActivity {
                                 kirby.stopJump();
                                 kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Jump"),0);
                                 Log.i("MovementCheck", "Short Jump");
-                                playJumpEffect(R.raw.jump, false);
-                                pauseWalkEffect();
+                                if(SettingsPage.isEffect){
+                                    playJumpEffect(R.raw.jump, false);
+                                    pauseWalkEffect();
+                                }
                                 //jumpEffectPlayer.setVolume(25, 25);
                             }
                             else {
@@ -2914,9 +2919,10 @@ public class InGameActivity extends AppCompatActivity {
                                     kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Start Float"), 0);
                                     isFloating = true;
                                     Log.i("MovementCheck", "Start Float");
-                                    playJumpEffect(R.raw.jump, false);
-                                    //jumpEffectPlayer.setVolume(25, 25);
-                                    pauseWalkEffect();
+                                    if(SettingsPage.isEffect){
+                                        playJumpEffect(R.raw.jump, false);
+                                        pauseWalkEffect();
+                                    }
                                 }
                                 else if(startFloatFinished && jumpCount < 6){
                                     jumpCount++;
@@ -2926,8 +2932,10 @@ public class InGameActivity extends AppCompatActivity {
                                     kirby.stopJump();
                                     kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Float Jump"),0);
                                     Log.i("MovementCheck", "Float Jump");
-                                    playJumpEffect(R.raw.jump, false);
-                                    pauseWalkEffect();
+                                    if(SettingsPage.isEffect){
+                                        playJumpEffect(R.raw.jump, false);
+                                        pauseWalkEffect();
+                                    }
                                     //jumpEffectPlayer.setVolume(25, 25);
                                 }
                             }
@@ -4574,15 +4582,16 @@ public class InGameActivity extends AppCompatActivity {
 
 
     public void playWalkEffect(int rawSound, boolean shouldLoop){
-        if(walkEffectPlayer == null){
-            // initializing media player
-            walkEffectPlayer = new MediaPlayer();
+        if(SettingsPage.isEffect) {
+            if (walkEffectPlayer == null) {
+                // initializing media player
+                walkEffectPlayer = new MediaPlayer();
 
-            // below line is use to set the audio
-            // stream type for our media player.
+                // below line is use to set the audio
+                // stream type for our media player.
 //            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-            // below line is use to set our
+                // below line is use to set our
 //            // url to our media player.
 //            try {
 //                mediaPlayer.setDataSource(audioUrl);
@@ -4601,14 +4610,14 @@ public class InGameActivity extends AppCompatActivity {
 //                e.printStackTrace();
 //            }
 
-            walkEffectPlayer = MediaPlayer.create(this, rawSound);
-            walkEffectPlayer.start();
-            walkEffectPlayer.setLooping(shouldLoop);
+                walkEffectPlayer = MediaPlayer.create(this, rawSound);
+                walkEffectPlayer.start();
+                walkEffectPlayer.setLooping(shouldLoop);
 
-            // below line is use to display a toast message.
+                // below line is use to display a toast message.
 //            Toast.makeText(this, "Audio started playing..", Toast.LENGTH_SHORT).show();
 //            Log.i("Sai", "Playing is: " + walkEffectPlayer.isPlaying());
-        }
+            }
 //        else if(walkEffectPlayer != null){
 //            pauseWalkEffect();
 //            walkEffectPlayer = new MediaPlayer();
@@ -4643,8 +4652,9 @@ public class InGameActivity extends AppCompatActivity {
 ////                pauseWalkEffect();
 ////            }
 //        }
-        else{
-            //Toast.makeText(this, "Audio is already playing", Toast.LENGTH_SHORT).show();
+            else {
+                //Toast.makeText(this, "Audio is already playing", Toast.LENGTH_SHORT).show();
+            }
         }
 
 //        Log.i("Sai", "Playing is: " + walkEffectPlayer.isPlaying());
@@ -4674,15 +4684,16 @@ public class InGameActivity extends AppCompatActivity {
     }
 
     public void playJumpEffect(int rawSound, boolean shouldLoop){
-        if(jumpEffectPlayer == null){
-            // initializing media player
-            jumpEffectPlayer = new MediaPlayer();
+        if(SettingsPage.isEffect) {
+            if (jumpEffectPlayer == null) {
+                // initializing media player
+                jumpEffectPlayer = new MediaPlayer();
 
-            // below line is use to set the audio
-            // stream type for our media player.
+                // below line is use to set the audio
+                // stream type for our media player.
 //            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-            // below line is use to set our
+                // below line is use to set our
 //            // url to our media player.
 //            try {
 //                mediaPlayer.setDataSource(audioUrl);
@@ -4701,24 +4712,23 @@ public class InGameActivity extends AppCompatActivity {
 //                e.printStackTrace();
 //            }
 
-            jumpEffectPlayer = MediaPlayer.create(this, rawSound);
-            jumpEffectPlayer.start();
-            jumpEffectPlayer.setLooping(shouldLoop);
+                jumpEffectPlayer = MediaPlayer.create(this, rawSound);
+                jumpEffectPlayer.start();
+                jumpEffectPlayer.setLooping(shouldLoop);
 
-            // below line is use to display a toast message.
+                // below line is use to display a toast message.
 //            Toast.makeText(this, "Audio started playing..", Toast.LENGTH_SHORT).show();
 //            Log.i("Sai", "Playing is: " + walkEffectPlayer.isPlaying());
-        }
-        else if(jumpEffectPlayer != null){
-            pauseJumpEffect();
-            pauseWalkEffect();
-            jumpEffectPlayer = new MediaPlayer();
+            } else if (jumpEffectPlayer != null) {
+                pauseJumpEffect();
+                pauseWalkEffect();
+                jumpEffectPlayer = new MediaPlayer();
 
-            // below line is use to set the audio
-            // stream type for our media player.
+                // below line is use to set the audio
+                // stream type for our media player.
 //            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-            // below line is use to set our
+                // below line is use to set our
 //            // url to our media player.
 //            try {
 //                mediaPlayer.setDataSource(audioUrl);
@@ -4737,14 +4747,13 @@ public class InGameActivity extends AppCompatActivity {
 //                e.printStackTrace();
 //            }
 
-            jumpEffectPlayer = MediaPlayer.create(this, rawSound);
-            jumpEffectPlayer.start();
-            jumpEffectPlayer.setLooping(shouldLoop);
+                jumpEffectPlayer = MediaPlayer.create(this, rawSound);
+                jumpEffectPlayer.start();
+                jumpEffectPlayer.setLooping(shouldLoop);
+            } else {
+                //Toast.makeText(this, "Audio is already playing", Toast.LENGTH_SHORT).show();
+            }
         }
-        else{
-            //Toast.makeText(this, "Audio is already playing", Toast.LENGTH_SHORT).show();
-        }
-
 //        Log.i("Sai", "Playing is: " + walkEffectPlayer.isPlaying());
     }
 
