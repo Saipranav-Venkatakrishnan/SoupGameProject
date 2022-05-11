@@ -3635,7 +3635,7 @@ public class InGameActivity extends AppCompatActivity {
                         itemsAreSet = true;
                     }
 
-                    rHandler.postDelayed(this,3667);
+                    rHandler.postDelayed(this,3667/2);
                 }
                 else if(timeOfDay.toLowerCase().equals("noon")) {
                     if (bA > 0) {
@@ -3646,6 +3646,12 @@ public class InGameActivity extends AppCompatActivity {
                     }
                     else{
                         timeOfDay = "Sunset";
+                        itemsAreSet = false;
+                        if(!itemsAreSet) {
+                            removeAllItems();
+                            newItemSetUp(environment);
+                            itemsAreSet = true;
+                        }
                         bA = 255;
                         bR = 255;
                         bG = 255;
@@ -3657,7 +3663,7 @@ public class InGameActivity extends AppCompatActivity {
                         oB = 255;
                     }
 
-                    rHandler.postDelayed(this,3667);
+                    rHandler.postDelayed(this,3667/2);
                 }
                 else if(timeOfDay.toLowerCase().equals("sunset")){
                     if(toColor(255,80,80,1,40,40,40,1)){
@@ -3684,7 +3690,7 @@ public class InGameActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    rHandler.postDelayed(this,280);
+                    rHandler.postDelayed(this,280/2);
                 }
                 else if(timeOfDay.toLowerCase().equals("night")){
                     if(toColor(100,100,120,1,35,35,35,1)){
@@ -3711,7 +3717,7 @@ public class InGameActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    rHandler.postDelayed(this,690);
+                    rHandler.postDelayed(this,690/2);
                 }
                 else if(timeOfDay.toLowerCase().equals("sunrise1")){
                     if(toColor(254,108,184,2,100,100,100,1)){
@@ -3729,7 +3735,7 @@ public class InGameActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    rHandler.postDelayed(this,625);
+                    rHandler.postDelayed(this,625/2);
                 }
                 else if(timeOfDay.toLowerCase().equals("sunrise2")){
                     if(toColor(255,255,255,1,255,255,255,1)){
@@ -3740,7 +3746,7 @@ public class InGameActivity extends AppCompatActivity {
                         timeOfDay = "Morning";
                         itemsAreSet = false;
                     }
-                    rHandler.postDelayed(this,231);
+                    rHandler.postDelayed(this,231/2);
                 }
                 // Testing purposes
                 //rHandler.postDelayed(this,30);
