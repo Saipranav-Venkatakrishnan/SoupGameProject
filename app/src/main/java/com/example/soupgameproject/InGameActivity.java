@@ -3386,6 +3386,7 @@ public class InGameActivity extends AppCompatActivity {
         }
         else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby") && object2.getObjectName().toLowerCase().equals("mushroom house")){
             isCloseToHouse = true;
+            actionButton.setBackgroundResource(R.drawable.door_icon);
             Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
             return true;
         }
@@ -3434,18 +3435,21 @@ public class InGameActivity extends AppCompatActivity {
         else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
                 && object2.getObjectName().toLowerCase().equals("forest door")){
             isCloseToForestDoor = true;
+            actionButton.setBackgroundResource(R.drawable.door_icon);
             Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
             return true;
         }
         else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
                 && object2.getObjectName().toLowerCase().equals("swamp door")){
             isCloseToSwampDoor = true;
+            actionButton.setBackgroundResource(R.drawable.door_icon);
             Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
             return true;
         }
         else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
                 && object2.getObjectName().toLowerCase().equals("mushroom house (back)")){
             isCloseToHouseBack = true;
+            actionButton.setBackgroundResource(R.drawable.door_icon);
             Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
             return true;
         }
@@ -3454,6 +3458,7 @@ public class InGameActivity extends AppCompatActivity {
     }
 
     private void collectIngredient(Ingredient ingredient){
+        Button inv = (Button) findViewById(R.id.invButton);
         String itemName = ingredient.getName();
 
         int itemCount = -1;
@@ -3509,6 +3514,7 @@ public class InGameActivity extends AppCompatActivity {
 
             if(count == 15){
                 Log.i("Items","Max items collected");
+                inv.setBackgroundResource(R.drawable.inventory_full);
             }
 
         }
