@@ -4791,8 +4791,13 @@ public class InGameActivity extends AppCompatActivity {
 //            } catch (IOException e) {
 //                e.printStackTrace();
 //            }
+                if(environment.toLowerCase().equals("house")){
+                    walkEffectPlayer = MediaPlayer.create(this, R.raw.runningonwood);
+                }
+                else{
+                    walkEffectPlayer = MediaPlayer.create(this, R.raw.runningongrass);
+                }
 
-                walkEffectPlayer = MediaPlayer.create(this, rawSound);
                 walkEffectPlayer.start();
                 walkEffectPlayer.setLooping(shouldLoop);
 
