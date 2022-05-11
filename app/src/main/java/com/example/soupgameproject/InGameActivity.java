@@ -1676,7 +1676,10 @@ public class InGameActivity extends AppCompatActivity {
                         isCloseToForestDoor = false;
                         isCloseToSwampDoor = false;
                         isCloseToHouseBack = false;
-                        actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
+                        if(!actionButton.getBackground().getConstantState().equals(getDrawable(R.drawable.downarrow).getConstantState())) {
+                            actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
+                        }
+
 //                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
 //                            kirbyPreviousXPos = xPosition;
 //                            kirbyPreviousYPos = yPosition;
@@ -1763,7 +1766,10 @@ public class InGameActivity extends AppCompatActivity {
                         isCloseToForestDoor = false;
                         isCloseToSwampDoor = false;
                         isCloseToHouseBack = false;
-                        actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
+                        if(!actionButton.getBackground().getConstantState().equals(getDrawable(R.drawable.downarrow).getConstantState())) {
+                            actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
+                        }
+
 //                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
 //                            kirbyPreviousXPos = xPosition;
 //                            kirbyPreviousYPos = yPosition;
@@ -1851,7 +1857,10 @@ public class InGameActivity extends AppCompatActivity {
                         isCloseToForestDoor = false;
                         isCloseToSwampDoor = false;
                         isCloseToHouseBack = false;
-                        actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
+                        if(!actionButton.getBackground().getConstantState().equals(getDrawable(R.drawable.downarrow).getConstantState())) {
+                            actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
+                        }
+
 //                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
 //                            kirbyPreviousXPos = xPosition;
 //                            kirbyPreviousYPos = yPosition;
@@ -1938,7 +1947,10 @@ public class InGameActivity extends AppCompatActivity {
                         isCloseToForestDoor = false;
                         isCloseToSwampDoor = false;
                         isCloseToHouseBack = false;
-                        actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
+                        if(!actionButton.getBackground().getConstantState().equals(getDrawable(R.drawable.downarrow).getConstantState())) {
+                            actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
+                        }
+
 //                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
 //                            kirbyPreviousXPos = xPosition;
 //                            kirbyPreviousYPos = yPosition;
@@ -1999,7 +2011,7 @@ public class InGameActivity extends AppCompatActivity {
                                 kirby.setObjectResource(kirby.getIdleResource());
 
                                 kirby.setYPosition(object2.getHitBox().topLeft().y - kirby.getHitBox().getYBottom());
-
+                                actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
                                 kirby.setHitBox(kirby.getIdleHitBox());
                                 kirby.showHitBox();
                                 Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
@@ -3007,6 +3019,7 @@ public class InGameActivity extends AppCompatActivity {
                             public void run() {
                                 // High jump
                                 if(!shortJump && kirby.isGrounded()) {
+                                    actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
                                     isClick = false;
                                     kirby.getUdHandler().removeCallbacksAndMessages(null);
                                     kirby.getAHandler().removeCallbacksAndMessages(null);
@@ -3033,6 +3046,7 @@ public class InGameActivity extends AppCompatActivity {
 
                             if(kirby.isGrounded()){
                                 shortJump = true;
+                                actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
                                 kirby.getUdHandler().removeCallbacksAndMessages(null);
                                 kirby.getAHandler().removeCallbacksAndMessages(null);
                                 kirby.stopJump();
@@ -3054,6 +3068,7 @@ public class InGameActivity extends AppCompatActivity {
                                     kirby.stopFall();
                                     kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Start Float"), 0);
                                     isFloating = true;
+                                    actionButton.setBackgroundResource(R.drawable.downarrow);
                                     Log.i("MovementCheck", "Start Float");
                                     if(SettingsPage.isEffect){
                                         playJumpEffect(R.raw.jump, false);
@@ -3066,6 +3081,7 @@ public class InGameActivity extends AppCompatActivity {
                                     kirby.getUdHandler().removeCallbacksAndMessages(null);
                                     kirby.getAHandler().removeCallbacksAndMessages(null);
                                     kirby.stopJump();
+                                    actionButton.setBackgroundResource(R.drawable.downarrow);
                                     kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Float Jump"),0);
                                     Log.i("MovementCheck", "Float Jump");
                                     if(SettingsPage.isEffect){
@@ -3392,8 +3408,10 @@ public class InGameActivity extends AppCompatActivity {
             return true;
         }
         else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby") && object2.getObjectName().toLowerCase().equals("mushroom house")){
-            isCloseToHouse = true;
-            actionButton.setBackgroundResource(R.drawable.door_icon);
+            if(((Character) object1).isGrounded()) {
+                isCloseToHouse = true;
+                actionButton.setBackgroundResource(R.drawable.door_icon);
+            }
             Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
             return true;
         }
@@ -3421,42 +3439,53 @@ public class InGameActivity extends AppCompatActivity {
 //        }
         else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
                 && object2.equals(allNPCs.get("Waddle Dee 0")) && collisionType.equals("left")){
-            isByTutorialWaddleDee = true;
-            actionButton.setBackgroundResource(R.drawable.testtalkicon);
+            if(((Character) object1).isGrounded()) {
+                isByTutorialWaddleDee = true;
+                actionButton.setBackgroundResource(R.drawable.testtalkicon);
+            }
             Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
         }
         else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
                 && object2.equals(allNPCs.get("Waddle Dee 1"))){
-            isByForestSoupHintWaddleDee = true;
-            actionButton.setBackgroundResource(R.drawable.testtalkicon);
+            if(((Character) object1).isGrounded()) {
+                isByForestSoupHintWaddleDee = true;
+                actionButton.setBackgroundResource(R.drawable.testtalkicon);
+            }
             Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
         }
         else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
                 && object2.getObjectName().toLowerCase().equals("cauldron")){
-            isCloseToCauldron = true;
-            // bad icon...
-            actionButton.setBackgroundResource(R.drawable.testmakesoupicon);
+            if(((Character) object1).isGrounded()) {
+                isCloseToCauldron = true;
+                actionButton.setBackgroundResource(R.drawable.testmakesoupicon);
+            }
             Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
             return true;
         }
         else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
                 && object2.getObjectName().toLowerCase().equals("forest door")){
-            isCloseToForestDoor = true;
-            actionButton.setBackgroundResource(R.drawable.door_icon);
+            if(((Character) object1).isGrounded()) {
+                isCloseToForestDoor = true;
+                actionButton.setBackgroundResource(R.drawable.door_icon);
+            }
             Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
             return true;
         }
         else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
                 && object2.getObjectName().toLowerCase().equals("swamp door")){
-            isCloseToSwampDoor = true;
-            actionButton.setBackgroundResource(R.drawable.door_icon);
+            if(((Character) object1).isGrounded()) {
+                isCloseToSwampDoor = true;
+                actionButton.setBackgroundResource(R.drawable.door_icon);
+            }
             Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
             return true;
         }
         else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
                 && object2.getObjectName().toLowerCase().equals("mushroom house (back)")){
-            isCloseToHouseBack = true;
-            actionButton.setBackgroundResource(R.drawable.door_icon);
+            if(((Character) object1).isGrounded()) {
+                isCloseToHouseBack = true;
+                actionButton.setBackgroundResource(R.drawable.door_icon);
+            }
             Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
             return true;
         }
@@ -3939,9 +3968,11 @@ public class InGameActivity extends AppCompatActivity {
         }
         closeInventory(view);
 
+        String soupText = "Yay!! You made a " + String.valueOf(createdSoup.getStarRank()) +" star " + createdSoup.getSoupName()
+                +"! Check out your catalog for more details!";
+
         DialogueBox soupMessage = new DialogueBox(InGameActivity.this, dialogueBoxLayout, dialogueNameTextView, "Soup!",
-                dialogueTextView, "Yay!! You made a " + String.valueOf(createdSoup.getStarRank()) +" star " + createdSoup.getSoupName()
-                +"! Check out your catalog for more details!", 20, 5000, dialoguePortraitImageView, R.drawable.soupbase,
+                dialogueTextView, soupText, 20, 5000, dialoguePortraitImageView, R.drawable.soupbase,
                 new DialogueBox.DialogueListener() {
                     @Override
                     public void onComplete() {
@@ -3950,18 +3981,10 @@ public class InGameActivity extends AppCompatActivity {
                     }
                 });
 
-        if(!soupMessage.isPlaying()){
-            if(!soupMessage.isDone()) {
-                soupMessage.getTextHandler().postDelayed(soupMessage.getPlayDialogue(), 0);
-                createdSoup.showSoup(dialoguePortraitImageView);
-                soupMessage.showDialogBox();
-            }
-            else{
-                DialogueBox.hideDialogBox();
-                soupMessage.resetDialogue();
-                soupMessage.getDialogueListener().onComplete();
-            }
-        }
+        soupMessage.getTextHandler().postDelayed(soupMessage.getPlayDialogue(), 0);
+        createdSoup.showSoup(dialoguePortraitImageView);
+        soupMessage.showDialogBox();
+
 
         if(kirby.isGrounded() && !leftButton.isPressed() && !rightButton.isPressed()) {
             kirby.getAHandler().removeCallbacksAndMessages(null);
@@ -4984,11 +5007,6 @@ public class InGameActivity extends AppCompatActivity {
 
     public void catalogPage(View v) {
         Intent intent = new Intent(this, CatalogPage.class);
-        startActivity(intent);
-    }
-
-    public void titlePage(View v) {
-        Intent intent = new Intent(this, TitleActivity.class);
         startActivity(intent);
     }
 

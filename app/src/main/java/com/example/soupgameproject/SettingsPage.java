@@ -115,6 +115,11 @@ public class SettingsPage extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void titlePage(View v) {
+        Intent intent = new Intent(this, TitleActivity.class);
+        startActivity(intent);
+    }
+
     public void updateViews(){
         anotherSwitch.setChecked(isOn);
         controlSwitch.setChecked(isRight);
