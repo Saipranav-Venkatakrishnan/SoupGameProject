@@ -1347,10 +1347,17 @@ public class InGameActivity extends AppCompatActivity {
         ingredientKey.put("Plant",new Ingredient(this, "Plant",0,0,
                 R.drawable.plant1,0,0,150,113, 214, 79));
 
+        Button inv = (Button) findViewById(R.id.invButton);
+
         for(int i = 0; i < 15; i++){
             if(invDrawables[i] != 0) {
+                inv.setBackgroundResource(R.drawable.inventory_icon);
                 invImages[i].setImageResource(invDrawables[i]);
                 userIngredients[i] = ingredientKey.get(itemNames[i]);
+                if(i == 14 && invDrawables[i] != android.R.color.transparent){
+                    Log.i("inventoryIcon","Hello?");
+                    inv.setBackgroundResource(R.drawable.inventory_full);
+                }
             }
         }
     }
@@ -3525,6 +3532,7 @@ public class InGameActivity extends AppCompatActivity {
     }
 
     private void removeIngredientFromInventory(int index){
+        Button inv = (Button) findViewById(R.id.invButton);
         invDrawables[index] = android.R.color.transparent;
         invImages[index].setImageResource(invDrawables[index]);
         invImages[index].setImageTintMode(PorterDuff.Mode.OVERLAY);
@@ -3532,6 +3540,7 @@ public class InGameActivity extends AppCompatActivity {
         invImages[index].setOnClickListener(null);
         itemNames[index] = "";
         userIngredients[index] = null;
+        inv.setBackgroundResource(R.drawable.inventory_icon);
     }
 
     // This method helps to find the scale for the game camera to zoom to
