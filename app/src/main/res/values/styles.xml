@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="GameStyle" parent="Theme.AppCompat.NoActionBar">
+        <item name = "android:textViewStyle">@style/fontStyleText</item>
+        <item name="android:buttonStyle">@style/fontStyleButton</item>
+    </style>
 
+    <style name="fontStyleText" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-monospace</item>
+    </style>
+
+    <style name="fontStyleButton" parent="android:Widget.Holo.Button">
+        <item name="android:fontFamily">sans-serif-monospace</item>
     </style>
 </resources>

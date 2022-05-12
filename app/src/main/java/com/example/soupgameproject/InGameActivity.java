@@ -701,7 +701,6 @@ public class InGameActivity extends AppCompatActivity {
         environmentSetUp(environment);
     }
 
-
     // Sets up a brand new chosen in-game environment. Use to change environments
     private void environmentSetUp(String environment){
         this.environment = environment;
@@ -906,7 +905,7 @@ public class InGameActivity extends AppCompatActivity {
             }
             else if(allForestCurrentItemNames.get(i).toLowerCase().equals("plant")){
                 ingredient = new Ingredient(this, "Plant", 8, 8,
-                        R.drawable.plant1, allForestCurrentItemLocations[2 * i],
+                        R.drawable.plant3, allForestCurrentItemLocations[2 * i],
                         allForestCurrentItemLocations[2 * i + 1], 150,113, 214, 79);
             }
             else{
@@ -941,7 +940,7 @@ public class InGameActivity extends AppCompatActivity {
             }
             else if(allSwampCurrentItemNames.get(i).toLowerCase().equals("plant")){
                 ingredient = new Ingredient(this, "Plant", 10, 10,
-                        R.drawable.plant1, allSwampCurrentItemLocations[2 * i],
+                        R.drawable.plant3, allSwampCurrentItemLocations[2 * i],
                         allSwampCurrentItemLocations[2 * i + 1], 150,113, 214, 79);
             }
             else{
@@ -1272,7 +1271,7 @@ public class InGameActivity extends AppCompatActivity {
 
             for(int i = 0; i < plantCount; i++) {
                 Ingredient plant = new Ingredient(this, "Plant", 10, 10,
-                        R.drawable.plant1,(float) (Math.random() * (tWidth-tWidth/5F) + tWidth/9F),
+                        R.drawable.plant3,(float) (Math.random() * (tWidth-tWidth/5F) + tWidth/9F),
                         (float) (gameCamera.getTopYPosition()) + 70, 150,113, 214, 79);
 
                 backgroundGameLayout.addLayoutObject(plant);
@@ -1345,20 +1344,25 @@ public class InGameActivity extends AppCompatActivity {
         ingredientKey.put("Tomato",new Ingredient(this, "Tomato",0,0,
                 R.drawable.tomato,0,0,150,230, 16, 37));
         ingredientKey.put("Plant",new Ingredient(this, "Plant",0,0,
-                R.drawable.plant1,0,0,150,113, 214, 79));
+                R.drawable.plant3,0,0,150,113, 214, 79));
 
         Button inv = (Button) findViewById(R.id.invButton);
 
+        boolean isFull = true;
+
         for(int i = 0; i < 15; i++){
             if(invDrawables[i] != 0) {
-                inv.setBackgroundResource(R.drawable.inventory_icon);
                 invImages[i].setImageResource(invDrawables[i]);
                 userIngredients[i] = ingredientKey.get(itemNames[i]);
-                if(i == 14 && invDrawables[i] != android.R.color.transparent){
-                    Log.i("inventoryIcon","Hello?");
-                    inv.setBackgroundResource(R.drawable.inventory_full);
-                }
             }
+            if(invDrawables[i] == android.R.color.transparent || invDrawables[i] == 0){
+                inv.setBackgroundResource(R.drawable.inventory_icon);
+                isFull = false;
+            }
+        }
+
+        if(isFull){
+            inv.setBackgroundResource(R.drawable.inventory_full);
         }
     }
 
@@ -3533,7 +3537,7 @@ public class InGameActivity extends AppCompatActivity {
                     break;
 
                 case "Plant":
-                    invDrawables[itemCount] = R.drawable.plant1;
+                    invDrawables[itemCount] = R.drawable.plant3;
                     break;
             }
 
@@ -3664,7 +3668,7 @@ public class InGameActivity extends AppCompatActivity {
                         itemsAreSet = true;
                     }
 
-                    rHandler.postDelayed(this,3667/2);
+                    rHandler.postDelayed(this,3667/4);
                 }
                 else if(timeOfDay.toLowerCase().equals("noon")) {
                     if (bA > 0) {
@@ -3692,7 +3696,7 @@ public class InGameActivity extends AppCompatActivity {
                         oB = 255;
                     }
 
-                    rHandler.postDelayed(this,3667/2);
+                    rHandler.postDelayed(this,3667/4);
                 }
                 else if(timeOfDay.toLowerCase().equals("sunset")){
                     if(toColor(255,80,80,1,40,40,40,1)){
@@ -3719,7 +3723,7 @@ public class InGameActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    rHandler.postDelayed(this,280/2);
+                    rHandler.postDelayed(this,280/4);
                 }
                 else if(timeOfDay.toLowerCase().equals("night")){
                     if(toColor(100,100,120,1,35,35,35,1)){
@@ -3746,7 +3750,7 @@ public class InGameActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    rHandler.postDelayed(this,690/2);
+                    rHandler.postDelayed(this,690/4);
                 }
                 else if(timeOfDay.toLowerCase().equals("sunrise1")){
                     if(toColor(254,108,184,2,100,100,100,1)){
@@ -3764,7 +3768,7 @@ public class InGameActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    rHandler.postDelayed(this,625/2);
+                    rHandler.postDelayed(this,625/4);
                 }
                 else if(timeOfDay.toLowerCase().equals("sunrise2")){
                     if(toColor(255,255,255,1,255,255,255,1)){
@@ -3775,7 +3779,7 @@ public class InGameActivity extends AppCompatActivity {
                         timeOfDay = "Morning";
                         itemsAreSet = false;
                     }
-                    rHandler.postDelayed(this,231/2);
+                    rHandler.postDelayed(this,231/4);
                 }
                 // Testing purposes
                 //rHandler.postDelayed(this,30);
