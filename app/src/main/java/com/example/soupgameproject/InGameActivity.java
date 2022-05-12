@@ -106,6 +106,17 @@ public class InGameActivity extends AppCompatActivity {
     public static float kirbyPreviousYPos;
 
 
+    private final String tutorialText = "Welcome to Kirby's Soup Adventure! Here's how to play. WALK by holding down the left or right button. " +
+            "Double click and hold the left or right button to RUN in that direction. Click the jump button to do a SHORT JUMP. Hold the jump button while" +
+            " on the ground to do a HIGH JUMP! While in the air, you can FLOAT JUMP in the air up to 6 times. The grey circle button is the action button. " +
+            "This button will change depending on the action that can be performed in a given situation. For example, while floating in the air, a down button " +
+            "will appear. Click it to exhale and fall faster. At the top of the screen, from left to right, you can open the settings, inventory, and catalog. " +
+            "View settings to adjust audio and control placement. View your inventory to see what ingredients you have collected and select any ingredients you " +
+            "want to remove, and then click remove, to get rid of ingredients. When the inventory bag turns red, this means that you have collected the max " +
+            "amount of ingredients. Go make a soup or remove some ingredients to collect more. The catalog is where you can view all of the unique soups you have made. " +
+            "The goal of the game is to collect ingredients and discover all of the different kinds of soups you can make. Soups are ranked from 1 star to 3 stars. " +
+            "Experiment with different combinations of ingredients to discover the secrets to soup making! And that is all I will tell you! Go out there, " +
+            "explore the land, discover new soups, uncover a secret recipe, and most importantly, HAVE FUN!";
 
 
     // General Screen Size Variables in DP
@@ -628,7 +639,7 @@ public class InGameActivity extends AppCompatActivity {
 
         // Cauldron
         float cauldronRatio = 1/60F;
-        GameObject cauldron = new GameObject(this, "Cauldron", (int)(1650 * cauldronRatio), (int)(1289 * cauldronRatio), R.drawable.cauldronbase,
+        GameObject cauldron = new GameObject(this, "Cauldron", (int)(1650 * cauldronRatio), (int)(1289 * cauldronRatio), R.drawable.cauldronbasecompressed,
                 centerX - (int)(1650 * cauldronRatio)/2F, gameCamera.getBottomYPosition() + 3/4F, true);
         cauldron.setScaleType(ImageView.ScaleType.FIT_START);
         cauldron.setImageResource(R.drawable.cauldrontop);
@@ -3113,14 +3124,7 @@ public class InGameActivity extends AppCompatActivity {
             private boolean isClick = true;
 
             DialogueBox tutorial = new DialogueBox(InGameActivity.this, dialogueBoxLayout, dialogueNameTextView, "Waddle Dee",
-                    dialogueTextView, "Our project is a 2D side scrolling game where the user plays as Kirby and " +
-                    "roams various areas to collect ingredients to make soup. The two areas that are currently planned for " +
-                    "the game are a forest area and a swamp area. In the forest area, there will be a mushroom house that" +
-                    " Kirby can go inside of. In here, there will be a cauldron where users can use the ingredients they’ve" +
-                    " collected to make a variety of soups. Ingredients can be viewed in an inventory pop-up and the soups " +
-                    "the user makes can be viewed in a catalog page that describes the soup. The goal of the game is to create" +
-                    " all the different soups that can be made by mixing and matching the ingredients found in the forest area " +
-                    "as well as those found in the swamp area.", 10,3000, dialoguePortraitImageView, R.drawable.waddledeeportrait,
+                    dialogueTextView, tutorialText, 20,5000, dialoguePortraitImageView, R.drawable.waddledeeportrait,
                     new DialogueBox.DialogueListener() {
                         @Override
                         public void onComplete() {
@@ -3558,10 +3562,7 @@ public class InGameActivity extends AppCompatActivity {
             }
 
         }
-//        else{
-//            //Toast.makeText(this, "Max Items Collected", Toast.LENGTH_SHORT).show();
-//            Log.i("Items","Max items collected");
-//        }
+
     }
 
     private void removeIngredientFromInventory(int index){
@@ -3949,6 +3950,7 @@ public class InGameActivity extends AppCompatActivity {
     }
 
     public void createSoup(View view){
+        String soupText = "";
         Soup createdSoup = new Soup(selectedIngredients);
         boolean alreadyHave = false;
         for(int i = 0; i < userSoups.size(); i++){
@@ -3965,6 +3967,12 @@ public class InGameActivity extends AppCompatActivity {
         if(!alreadyHave){
             userSoups.add(createdSoup);
             soupNum++;
+            soupText = "Yay!! You made a " + String.valueOf(createdSoup.getStarRank()) +" star " + createdSoup.getSoupName()
+                    +" for the first time! Check out your catalog for more details!";
+        }
+        else{
+            soupText = "You made a " + String.valueOf(createdSoup.getStarRank()) +" star " + createdSoup.getSoupName()
+                    +"! Check out your catalog for more details!";
         }
         // Whatever happens when soup is made:
         for(int i : selectedIngredientsIndex){
@@ -3972,8 +3980,7 @@ public class InGameActivity extends AppCompatActivity {
         }
         closeInventory(view);
 
-        String soupText = "Yay!! You made a " + String.valueOf(createdSoup.getStarRank()) +" star " + createdSoup.getSoupName()
-                +"! Check out your catalog for more details!";
+
 
         DialogueBox soupMessage = new DialogueBox(InGameActivity.this, dialogueBoxLayout, dialogueNameTextView, "Soup!",
                 dialogueTextView, soupText, 20, 5000, dialoguePortraitImageView, R.drawable.soupbase,
