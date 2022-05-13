@@ -38,16 +38,16 @@ public class CatalogPage extends AppCompatActivity {
             }
         }
         numCollectedText = findViewById(R.id.collectedAmntText);
-        if(InGameActivity.soupNum == 26) {
+        if(InGameActivity.soupNum == 27) {
             messageText.setText("Congratulations! You've made all the different kinds of soups! Now aim for all 3 stars!");
-            if(threeStarCount == 26){
+            if(threeStarCount == 27){
                 messageText.setText("PERFECTION! You've made all possible soups with 3 stars on each!");
             }
         }
         else{
             messageText.setText("Keep Making Soups!");
         }
-        numCollectedText.setText("Soups Collected: " + InGameActivity.soupNum + "/26");
+        numCollectedText.setText("Soups Collected: " + InGameActivity.soupNum + "/27");
     }
 
     public void createCard(Soup soup) {
