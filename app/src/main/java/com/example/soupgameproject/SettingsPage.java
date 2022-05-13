@@ -100,7 +100,7 @@ public class SettingsPage extends AppCompatActivity {
 
         editor.apply();
 
-        Toast.makeText(this, "Data Saved", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Data Saved", Toast.LENGTH_SHORT).show();
     }
 
     public void loadData(){

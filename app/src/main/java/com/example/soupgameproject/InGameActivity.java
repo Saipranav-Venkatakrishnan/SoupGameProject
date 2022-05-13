@@ -40,19 +40,8 @@ public class InGameActivity extends AppCompatActivity {
     public static MediaPlayer walkEffectPlayer;
     public static MediaPlayer jumpEffectPlayer;
     public static boolean shouldPlay;
-//    public static final String BACKGROUND_GAME_LAYOUT = "backgroundGameLayout";
-//    public static final String COLLISION_GAME_LAYOUT = "collisionGameLayout";
-//    public static final String FOREGROUND_GAME_LAYOUT = "foregroundGameLayout";
-//    public static final String GAME_CAMERA = "gameCamera";
-//    public static final String LEFT_WALK_CAMERA = "leftWalkCamera";
-//    public static final String LEFT_RUN_CAMERA = "leftRunCamera";
-//    public static final String RIGHT_WALK_CAMERA = "rightWalkCamera";
-//    public static final String RIGHT_RUN_CAMERA = "rightRunCamera";
-//    public static final String KIRBY = "kirby";
-//    public static final String ALL_NPCS = "allNPCs";
-//    public static final String TEST_ENVIRONMENT_BACKGROUND_GAME_OBJECTS = "testEnvironmentBackgroundGameObjects";
-//    public static final String TEST_ENVIRONMENT_COLLISION_GAME_OBJECTS = "testEnvironmentCollisionGameObjects";
-//    public static final String TEST_ENVIRONMENT_FOREGROUND_GAME_OBJECTS = "testEnvironmentForegroundGameObjects";
+
+    // Final strings for saving
     public static final String TIME_OF_DAY = "timeOfDay";
     public static final String LIGHTING_BA = "lightingBA";
     public static final String LIGHTING_BR = "lightingBR";
@@ -92,8 +81,6 @@ public class InGameActivity extends AppCompatActivity {
     public static final String SOUP_INGREDIENTS = "soupIngredients";
     public static final String SOUP_RANKS = "soupRanks";
 
-    public static final String TEST_SAVE = "testSave";
-
     public static final String SPECIALDEE_XPOSITION = "specialDeeXPosition";
     public static final String SPECIALDEE_YPOSITION = "specialDeeYPosition";
     public static final String IS_SPECIALDEE_PRESENT = "isSpecialDeePresent";
@@ -102,9 +89,9 @@ public class InGameActivity extends AppCompatActivity {
 
     public static final String SOUP_NUM = "soupNum";
 
+
     public static float kirbyPreviousXPos;
     public static float kirbyPreviousYPos;
-
 
     private final String tutorialText = "Welcome to Kirby's Soup Adventure! Here's how to play. WALK by holding down the left or right button. " +
             "Double click and hold the left or right button to RUN in that direction. Click the jump button to do a SHORT JUMP. Hold the jump button while" +
@@ -134,11 +121,11 @@ public class InGameActivity extends AppCompatActivity {
     private FrameLayout scalingFrameLayout;
     private ConstraintLayout gameContainerLayout, backgroundLayout, collisionLayout, foregroundLayout, userInterfaceLayout;
 
-    // GameLayouts (SAVE)
+    // GameLayouts 
     @SuppressLint("StaticFieldLeak")
-    public static GameLayout backgroundGameLayout; //
-    public static GameLayout collisionGameLayout; //
-    private GameLayout foregroundGameLayout; //
+    public static GameLayout backgroundGameLayout;
+    public static GameLayout collisionGameLayout;
+    private GameLayout foregroundGameLayout;
 
     // NPC Handler
     private Handler npcHandler;
@@ -149,38 +136,33 @@ public class InGameActivity extends AppCompatActivity {
     // Deal with environment animations
     private Handler eHandler;
 
-    // Deal with other runnables unrelated to animations
+    // Deal with other runnables unrelated to animations (Day night cycle)
     private Handler rHandler;
 
-    // Game Camera variables (SAVE)
-    private Camera gameCamera; //
+    // Game Camera variables 
+    private Camera gameCamera;
     private float gameCameraXPosition;
     private float gameCameraYPosition;
     private boolean gameCameraFixed;
 
     // Deal with camera movement
     private Handler cHandler;
-    // (SAVE)
-    private Runnable leftWalkCamera, leftRunCamera, rightWalkCamera, rightRunCamera;  //
+    private Runnable leftWalkCamera, leftRunCamera, rightWalkCamera, rightRunCamera;
 
     // Character variables
-    // (SAVE)
-    private Character kirby; //
+    private Character kirby;
     private float kirbyXPosition;
     private float kirbyYPosition;
-
-    // Save these
     private float walkSpeed, runSpeed, jumpHeight, highJumpHeight, floatJumpHeight;
-
-    // (SAVE)
-    private boolean isFloating; //
-    private boolean startFloatFinished; //
-    private int jumpCount; //
+    private boolean isFloating;
+    private boolean startFloatFinished;
+    private int jumpCount;
     private boolean isGrounded;
 
-    // Save the hashmap
-    private HashMap<String, Character> allNPCs;//
+    // Hashmap of all npcs
+    private HashMap<String, Character> allNPCs;
 
+    // specialDee variables
     private float specialDeeXPosition;
     private float specialDeeYPosition;
     private boolean isSpecialDeePresent;
@@ -199,12 +181,10 @@ public class InGameActivity extends AppCompatActivity {
                     " that is all! You have all the information you need to make the forest SPECIAL soup. Good luck on your soup making!",
             "Hey Kirby! I hope you were able to make the SPECIAL soup of the forest. Good luck on the rest of your soup making!"};
 
-
     private ArrayList<Character> npcCopyList;
 
     // Day/Night cycle variables
-    // (SAVE)
-    private String timeOfDay; //
+    private String timeOfDay;
     private int bA;
     private int bR;
     private int bG;
@@ -217,8 +197,7 @@ public class InGameActivity extends AppCompatActivity {
 
     private boolean negateDayNight;
 
-    // Environment variables (SAVE)
-
+    // Environment variables
     private String environment;
     private boolean isCloseToHouse;
     private boolean isByTutorialWaddleDee;
@@ -229,8 +208,6 @@ public class InGameActivity extends AppCompatActivity {
     private boolean isCloseToHouseBack;
     private boolean itemsAreSet;
 
-
-    // Test Environment GameObjects
     private ArrayList<GameObject> testEnvironmentBackgroundGameObjects;
     private ArrayList<GameObject> testEnvironmentCollisionGameObjects;
     private ArrayList<GameObject> testEnvironmentForegroundGameObjects;
@@ -257,7 +234,8 @@ public class InGameActivity extends AppCompatActivity {
     private ImageView iv_1, iv_2, iv_3, iv_4, iv_5, iv_6, iv_7, iv_8, iv_9, iv_10, iv_11, iv_12, iv_13, iv_14, iv_15;
 
     private ImageView[] invImages;
-    private int[] invRes = new int[] {R.id.iv1, R.id.iv2, R.id.iv3, R.id.iv4, R.id.iv5, R.id.iv6, R.id.iv7, R.id.iv8, R.id.iv9, R.id.iv10, R.id.iv11, R.id.iv12, R.id.iv13, R.id.iv14, R.id.iv15};
+    private int[] invRes = new int[] {R.id.iv1, R.id.iv2, R.id.iv3, R.id.iv4, R.id.iv5, R.id.iv6, R.id.iv7,
+            R.id.iv8, R.id.iv9, R.id.iv10, R.id.iv11, R.id.iv12, R.id.iv13, R.id.iv14, R.id.iv15};
     private int[] invDrawables;
 
     private String[] itemNames;
@@ -274,6 +252,7 @@ public class InGameActivity extends AppCompatActivity {
     private ArrayList<String> allSwampCurrentItemNames;
     private float[] allSwampCurrentItemLocations;
 
+    // inventory layout
     private ConstraintLayout layout;
 
     private int[] inventoryItemClickCounter;
@@ -289,9 +268,9 @@ public class InGameActivity extends AppCompatActivity {
     private ArrayList<String> soupIngredients;
     private int[] soupRanks;
 
+    // making soup button and removing ingredients button
     private Button makeBttn;
     private Button removeBttn;
-
 
     // Dialogue Box variables
     private ConstraintLayout dialogueBoxLayout;
@@ -323,21 +302,9 @@ public class InGameActivity extends AppCompatActivity {
         makeBttn = findViewById(R.id.makeSoupBttn);
         removeBttn = findViewById(R.id.removeItemBttn);
 
+        // inventory stuff
         layout = (ConstraintLayout) this.findViewById(R.id.inventoryLayout);
 
-
-
-        // Set up Handlers
-        cHandler = new Handler();
-        itemHandler = new Handler();
-        eHandler = new Handler();
-        npcHandler = new Handler();
-
-        rHandler = new Handler();
-
-        controllerSetUp();
-
-        // Temporary inventory stuff
         iv_1 = (ImageView) findViewById(R.id.iv1);
         iv_2 = (ImageView) findViewById(R.id.iv2);
         iv_3 = (ImageView) findViewById(R.id.iv3);
@@ -356,10 +323,20 @@ public class InGameActivity extends AppCompatActivity {
 
         invImages = new ImageView[] {iv_1, iv_2, iv_3, iv_4, iv_5, iv_6, iv_7, iv_8, iv_9, iv_10, iv_11, iv_12, iv_13, iv_14, iv_15};
 
-        Log.i("Nick",String.valueOf((tWidth)));
-
         isSpecialDeePresent = true;
+
+        // Set up Handlers
+        cHandler = new Handler();
+        itemHandler = new Handler();
+        eHandler = new Handler();
+        npcHandler = new Handler();
+
+        rHandler = new Handler();
+
+        controllerSetUp();
     }
+
+    // INITIAL SETUPS:
 
     // Camera creation and set up
     private void initialCameraSetUp(){
@@ -371,29 +348,8 @@ public class InGameActivity extends AppCompatActivity {
         rightWalkCamera = gameCamera.moveRight(cHandler, walkSpeed * TitleActivity.DENSITY);
         rightRunCamera = gameCamera.moveRight(cHandler, runSpeed * TitleActivity.DENSITY);
 
-        // Debugging Variables
+        // Debugging Variable
         zoomed = true;
-    }
-
-    // Sets up the camera for a chosen environment. Called in environmentSetUp.
-    private void cameraSetUp(String environment){
-        if(environment.toLowerCase().equals("test")){
-            gameCamera.setScale(fitZoom(3832,359));
-            gameCamera.setLeftXPosition(0);
-        }
-        else if(environment.toLowerCase().equals("forest")){
-            gameCamera.setScale(fitZoom(3832,359));
-            gameCamera.setLeftXPosition(0);
-        }
-        else if(environment.toLowerCase().equals("house")){
-            // temporary camera set up
-            gameCamera.setScale(fitZoom(15000,800));
-            gameCamera.setLeftXPosition((centerX - tWidth * 3440/30000F));
-        }
-        else if(environment.toLowerCase().equals("swamp")){
-            gameCamera.setScale(fitZoom(3832,359));
-            gameCamera.setLeftXPosition(0);
-        }
     }
 
     // Environment initial set up. Populates ArrayLists of objects for each environment.
@@ -406,9 +362,6 @@ public class InGameActivity extends AppCompatActivity {
 
         // Test environment
         cameraSetUp("test");
-
-        GameObject topBoundary = new GameObject(this, "Boundary", (int)(tWidth),
-                300, R.drawable.boundary, 0,gameCamera.getTopYPosition(),true);
 
         testEnvironmentBackgroundGameObjects = new ArrayList<GameObject>();
         testEnvironmentCollisionGameObjects = new ArrayList<GameObject>();
@@ -448,10 +401,8 @@ public class InGameActivity extends AppCompatActivity {
                             ,gameCamera.getBottomYPosition()+6,(float)(16* ratio),0)));
         }
 
-
         testEnvironmentCollisionGameObjects.add(rightBoundary);
         testEnvironmentCollisionGameObjects.add(leftBoundary);
-        testEnvironmentCollisionGameObjects.add(topBoundary);
 
         // Forest Environment
         cameraSetUp("Forest");
@@ -486,9 +437,6 @@ public class InGameActivity extends AppCompatActivity {
                 (int)(tWidth), 300, 0, gameCamera.getBottomYPosition(),0,-294)));
         forestEnvironmentCollisionGameObjects.add(rightBoundary);
         forestEnvironmentCollisionGameObjects.add(leftBoundary);
-        //forestEnvironmentCollisionGameObjects.add(topBoundary);
-
-
 
         // Clouds
         for(int i = 0; i < 20; i++) {
@@ -555,11 +503,6 @@ public class InGameActivity extends AppCompatActivity {
                 R.drawable.tree1, tWidth/5 + tWidth/10, gameCamera.getBottomYPosition() + 6, true,
                 new HitBox(InGameActivity.this, true, (int)(7 * ratio4),(int)(39 * ratio4),tWidth/5 + tWidth/10
                         ,gameCamera.getBottomYPosition()+6,(float)(16 * ratio4),0)));
-        // fix this one
-//        forestEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39 * ratio4),(int)(43 * ratio4),
-//                R.drawable.tree1, tWidth/2 - tWidth/27, gameCamera.getBottomYPosition() + 6, true,
-//                new HitBox(InGameActivity.this, true, (int)(7 * ratio4),(int)(39 * ratio4),tWidth/2 - tWidth/27
-//                        ,gameCamera.getBottomYPosition()+6,(float)(16 * ratio4),0)));
         forestEnvironmentCollisionGameObjects.add(new GameObject(InGameActivity.this, "Tree", (int)(39*ratio5),(int)(43*ratio5),
                 R.drawable.tree1, tWidth/2 - tWidth/20, gameCamera.getBottomYPosition() + 6, true,
                 new HitBox(InGameActivity.this, true, (int)(7*ratio5),(int)(39*ratio5),tWidth/2 - tWidth/20
@@ -597,16 +540,12 @@ public class InGameActivity extends AppCompatActivity {
                 new HitBox(InGameActivity.this, true, (int)(7*ratio8),(int)(39*ratio8),tWidth - tWidth/3 - tWidth/25
                         ,gameCamera.getBottomYPosition()+6,(float)(16*ratio8),0)));
 
-        // Mushroom House. Feel free to change :)
         float houseRatio = 1/7F;
         GameObject mushroomHouse = new GameObject(InGameActivity.this, "Mushroom House", (int)(600 * houseRatio),
                 (int)(600 * houseRatio), R.drawable.mushroom_house, tWidth-tWidth/9F, gameCamera.getBottomYPosition() + 6 - (31 * houseRatio), true,
                 new HitBox(InGameActivity.this, true, (int)(140 * houseRatio),(int)(100 * houseRatio),tWidth-tWidth/9F,
                         gameCamera.getBottomYPosition()+6 - (int)(31 * houseRatio), (int)(220 * houseRatio), (int)(31 * houseRatio)));
         forestEnvironmentBackgroundGameObjects.add(mushroomHouse);
-
-
-
 
 
         // House Environment
@@ -633,6 +572,7 @@ public class InGameActivity extends AppCompatActivity {
         houseEnvironmentBackgroundGameObjects.add(new GameObject(this, "Ground", (int)(tWidth),4,
                 R.drawable.house_floortest, 0, gameCamera.getBottomYPosition(), true, new HitBox(this,true,
                 (int)(tWidth), 295, 0, gameCamera.getBottomYPosition(),0,-294)));
+
         houseEnvironmentForegroundGameObjects.add(topBoundaryHouse);
         houseEnvironmentForegroundGameObjects.add(leftBoundaryHouse);
         houseEnvironmentForegroundGameObjects.add(rightBoundaryHouse);
@@ -644,10 +584,10 @@ public class InGameActivity extends AppCompatActivity {
         cauldron.setScaleType(ImageView.ScaleType.FIT_START);
         cauldron.setImageResource(R.drawable.cauldrontop);
 
-
         houseEnvironmentCollisionGameObjects.add(cauldron);
         houseEnvironmentCollisionGameObjects.add(forestDoor);
         houseEnvironmentCollisionGameObjects.add(swampDoor);
+
 
         // Swamp Environment
         cameraSetUp("Swamp");
@@ -707,186 +647,12 @@ public class InGameActivity extends AppCompatActivity {
                         gameCamera.getBottomYPosition()+6 - (int)(31 * houseRatio), (int)(220 * houseRatio), (int)(31 * houseRatio)));
         swampEnvironmentBackgroundGameObjects.add(mushroomHouseSwamp);
 
-        // After populating all ArrayLists, set up the first environment the player will be in (which will be the forest)
+        // After populating all ArrayLists, set up items and then the environment
         initialItemSetUp();
         environmentSetUp(environment);
     }
 
-    // Sets up a brand new chosen in-game environment. Use to change environments
-    private void environmentSetUp(String environment){
-        this.environment = environment;
-        try{
-            backgroundGameLayout.removeAllLayoutObjects();
-            backgroundGameLayout.setBackgroundImage(android.R.color.transparent);
-            collisionGameLayout.removeAllLayoutObjects();
-            foregroundGameLayout.removeAllLayoutObjects();
-
-            backgroundGameLayout = null;
-            collisionGameLayout = null;
-            foregroundGameLayout = null;
-            GameLayout.allLayouts = new ArrayList<GameLayout>();
-        }
-        catch(Exception e){
-            Log.i("EnvironmentSetUp","GameLayouts not created yet");
-        }
-
-        try{
-            itemHandler.removeCallbacksAndMessages(null);
-            eHandler.removeCallbacksAndMessages(null);
-        }
-        catch(Exception e){
-            Log.i("EnvironmentSetUp", "Some handlers not created yet");
-        }
-
-        backgroundGameLayout = new GameLayout(this,"Background", backgroundLayout);
-        backgroundGameLayout.setBackgroundImageView(findViewById(R.id.backgroundImage));
-        collisionGameLayout = new GameLayout(this, "Collision", collisionLayout);
-        foregroundGameLayout = new GameLayout(this, "Foreground",foregroundLayout);
-
-        cameraSetUp(environment);
-
-        if(gameCameraXPosition != -1 && gameCameraYPosition != -1) {
-            gameCamera.setXPosition(gameCameraXPosition);
-            gameCamera.setYPosition(gameCameraYPosition);
-        }
-
-        gameCamera.setFixedPosition(gameCameraFixed);
-
-        // In general: First add Kirby, then add Items, then add the various ArrayLists of GameObjects to appropriate GameLayouts,
-        // then deal with NPC actions.
-
-        if(environment.toLowerCase().equals("test")){
-            backgroundGameLayout.setBackgroundImage(R.drawable.cloudsbackgroundextended);
-            backgroundGameLayout.setLayoutObjects(testEnvironmentBackgroundGameObjects);
-            foregroundGameLayout.setLayoutObjects(testEnvironmentForegroundGameObjects);
-
-
-            collisionGameLayout.removeLayoutObject(kirby);
-
-            kirby.setXPosition(kirbyXPosition);
-            kirby.setYPosition(kirbyYPosition);
-            
-            collisionGameLayout.addLayoutObject(kirby);
-            collisionGameLayout.addLayoutObjects(testEnvironmentCollisionGameObjects);
-
-            npcHandler.postDelayed(new Runnable() {
-
-                private boolean isWalking = false;
-
-                @Override
-                public void run() {
-                    for(int i = 0; i < npcCopyList.size(); i++) {
-                        if (allNPCs.get("Waddle Dee " + String.valueOf(i)).isGrounded()) {
-                            allNPCs.get("Waddle Dee " + String.valueOf(i)).getUdHandler().removeCallbacksAndMessages(null);
-                            allNPCs.get("Waddle Dee " + String.valueOf(i)).stopJump();
-                            allNPCs.get("Waddle Dee " + String.valueOf(i)).getUdHandler()
-                                    .postDelayed(allNPCs.get("Waddle Dee " + String.valueOf(i)).getAllActions().get("Jump"), 0);
-                        }
-
-
-                        if (!isWalking) {
-                            allNPCs.get("Waddle Dee " + String.valueOf(i)).getLrHandler().postDelayed(allNPCs.get("Waddle Dee " + String.valueOf(i))
-                                    .getAllActions().get("Left Walk"), 0);
-                            if(i == npcCopyList.size()-1) {
-                                isWalking = true;
-                            }
-                        }
-                    }
-
-
-                    npcHandler.postDelayed(this, 2000);
-                }
-            },2000);
-
-            kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),200);
-
-            setLightingTemporarily(255,255,255,255,255,255);
-        }
-        else if(environment.toLowerCase().equals("forest")){
-            backgroundGameLayout.setBackgroundImage(R.drawable.cloudsbackgroundextended);
-            backgroundGameLayout.setLayoutObjects(forestEnvironmentBackgroundGameObjects);
-            foregroundGameLayout.setLayoutObjects(forestEnvironmentForegroundGameObjects);
-
-            collisionGameLayout.removeLayoutObject(kirby);
-
-            kirby.setXPosition(kirbyXPosition);
-            kirby.setYPosition(kirbyYPosition);
-            
-            collisionGameLayout.addLayoutObject(kirby);
-            collisionGameLayout.addLayoutObjects(forestEnvironmentCollisionGameObjects);
-
-            if(!isGrounded) {
-                kirby.setGrounded(false);
-                kirby.getUdHandler().removeCallbacksAndMessages(null);
-                kirby.stopFall();
-                kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 200);
-            }
-
-            // Forest Clouds moving
-            Runnable movingClouds = new Runnable() {
-                @Override
-                public void run() {
-                    for(GameObject cloud : forestClouds){
-                        if(cloud.getXPosition() > tWidth){
-                            cloud.setXPosition(-cloud.getObjectWidth());
-                        }
-                        else{
-                            float speed = (float)(Math.random() * (1/90F - 1/70F) + 1/90F);
-                            cloud.setXPosition(cloud.getXPosition() + speed);
-                        }
-                    }
-                    eHandler.postDelayed(this,1);
-                }
-            };
-
-            eHandler.postDelayed(movingClouds,0);
-
-        }
-        else if(environment.toLowerCase().equals("house")){
-            backgroundGameLayout.setBackgroundImage(R.drawable.house_bg_1test);
-            backgroundGameLayout.setLayoutObjects(houseEnvironmentBackgroundGameObjects);
-            foregroundGameLayout.setLayoutObjects(houseEnvironmentForegroundGameObjects);
-
-            collisionGameLayout.removeLayoutObject(kirby);
-
-            kirby.setXPosition(kirbyXPosition);
-            kirby.setYPosition(kirbyYPosition);
-
-            collisionGameLayout.addLayoutObjects(houseEnvironmentCollisionGameObjects);
-            collisionGameLayout.addLayoutObject(kirby);
-
-            if(!isGrounded) {
-                kirby.setGrounded(false);
-                kirby.getUdHandler().removeCallbacksAndMessages(null);
-                kirby.stopFall();
-                kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 200);
-            }
-        }
-        else if(environment.toLowerCase().equals("swamp")){
-            backgroundGameLayout.setBackgroundImage(R.drawable.swampyclouds2);
-            backgroundGameLayout.setLayoutObjects(swampEnvironmentBackgroundGameObjects);
-            foregroundGameLayout.setLayoutObjects(swampEnvironmentForegroundGameObjects);
-
-            collisionGameLayout.removeLayoutObject(kirby);
-
-            kirby.setXPosition(kirbyXPosition);
-            kirby.setYPosition(kirbyYPosition);
-
-            collisionGameLayout.addLayoutObject(kirby);
-            collisionGameLayout.addLayoutObjects(swampEnvironmentCollisionGameObjects);
-
-            if(!isGrounded) {
-                kirby.setGrounded(false);
-                kirby.getUdHandler().removeCallbacksAndMessages(null);
-                kirby.stopFall();
-                kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 200);
-            }
-        }
-
-        itemSetUp(environment);
-
-    }
-
+    // Sets up the previously saved items
     private void initialItemSetUp(){
         Log.i("ItemGeneration","Initial item set up");
         allForestCurrentItems = new ArrayList<Ingredient>();
@@ -962,437 +728,6 @@ public class InGameActivity extends AppCompatActivity {
 
         }
     }
-    
-    private void itemSetUp(String environment){
-        if(environment.toLowerCase().equals("forest")) {
-            for(Ingredient ingredient: allForestCurrentItems) {
-                Runnable fall = ingredient.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
-                    @Override
-                    public void onCollision(GameObject object1, GameObject object2) {
-                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
-                                object1.stopFall();
-
-                                object1.setYPosition(object2.getHitBox().topLeft().y);
-
-                                object1.getHitBox().setYPosition(object1.getYPosition());
-                                object1.setHitBox(object1.getHitBox());
-                                object1.showHitBox();
-                            }
-
-                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
-                        }
-                    }
-                });
-
-                backgroundGameLayout.addLayoutObject(ingredient);
-
-                itemHandler.postDelayed(fall, 5);
-            }
-        }
-        else if(environment.toLowerCase().equals("swamp")) {
-            for(Ingredient ingredient: allSwampCurrentItems) {
-                Runnable fall = ingredient.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
-                    @Override
-                    public void onCollision(GameObject object1, GameObject object2) {
-                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
-                                object1.stopFall();
-
-                                object1.setYPosition(object2.getHitBox().topLeft().y);
-
-                                object1.getHitBox().setYPosition(object1.getYPosition());
-                                object1.setHitBox(object1.getHitBox());
-                                object1.showHitBox();
-                            }
-
-                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
-                        }
-                    }
-                });
-
-                backgroundGameLayout.addLayoutObject(ingredient);
-
-                itemHandler.postDelayed(fall, 5);
-            }
-        }
-    }
-
-    private void newItemSetUp(String environment){
-
-        if(environment.toLowerCase().equals("test")){
-            for(int i = 0; i < 10; i++){
-                double size = Math.random() * 2 + 1;
-
-                Ingredient carrot = new Ingredient(this, "Carrot",(int)(size * 10),(int)(6 * size),
-                        R.drawable.carrot,
-                        (float) (Math.random() * (tWidth - 10)),
-                        (float)(gameCamera.getTopYPosition()) + 70,0,0,0,0);
-
-                collisionGameLayout.addLayoutObject(carrot);
-
-                Runnable carrotFall = carrot.fall(itemHandler, GameObject.GRAVITY/10F, new GameObject.CollisionListener() {
-                    @Override
-                    public void onCollision(GameObject object1, GameObject object2) {
-                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                            if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
-                                object1.stopFall();
-
-                                object1.setYPosition(object2.getHitBox().topLeft().y);
-
-                                object1.getHitBox().setYPosition(object1.getYPosition());
-                                object1.setHitBox(object1.getHitBox());
-                                object1.showHitBox();
-                            }
-
-                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
-                        }
-                    }
-                });
-
-                itemHandler.postDelayed(carrotFall, 0);
-
-                Ingredient mushroom = new Ingredient(this, "Mushroom",(int)(8 * size),(int)(8*size),
-                        R.drawable.mushroom,
-                        (float) (Math.random() * (tWidth - 10)),
-                        (float)(gameCamera.getTopYPosition()) + 70,0,0,0,0);
-
-                collisionGameLayout.addLayoutObject(mushroom);
-
-                Runnable mushroomFall = mushroom.fall(itemHandler, GameObject.GRAVITY/10F, new GameObject.CollisionListener() {
-                    @Override
-                    public void onCollision(GameObject object1, GameObject object2) {
-                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                            if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
-                                object1.stopFall();
-
-                                object1.setYPosition(object2.getHitBox().topLeft().y);
-
-                                object1.getHitBox().setYPosition(object1.getYPosition());
-                                object1.setHitBox(object1.getHitBox());
-                                object1.showHitBox();
-                            }
-
-                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
-                        }
-                    }
-                });
-
-                itemHandler.postDelayed(mushroomFall, 0);
-
-                Ingredient radish = new Ingredient(this, "Radish",(int)(8 * size),(int)(8* size),
-                        R.drawable.radish,
-                        (float) (Math.random() * (tWidth - 10)),
-                        (float)(gameCamera.getTopYPosition()) + 70,0,0,0,0);
-
-                collisionGameLayout.addLayoutObject(radish);
-
-                Runnable radishFall = radish.fall(itemHandler, GameObject.GRAVITY/10F, new GameObject.CollisionListener() {
-                    @Override
-                    public void onCollision(GameObject object1, GameObject object2) {
-                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                            if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
-                                object1.stopFall();
-
-                                object1.setYPosition(object2.getHitBox().topLeft().y);
-
-                                object1.getHitBox().setYPosition(object1.getYPosition());
-                                object1.setHitBox(object1.getHitBox());
-                                object1.showHitBox();
-                            }
-
-                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
-                        }
-                    }
-                });
-
-                itemHandler.postDelayed(radishFall, 0);
-
-                Ingredient tomato = new Ingredient(this, "Tomato",(int)(8 * size),(int)(8* size),
-                        R.drawable.tomato,
-                        (float) (Math.random() * (tWidth - 10)),
-                        (float)(gameCamera.getTopYPosition()) + 70,0,0,0,0);
-
-                collisionGameLayout.addLayoutObject(tomato);
-
-                Runnable tomatoFall = tomato.fall(itemHandler, GameObject.GRAVITY/10F, new GameObject.CollisionListener() {
-                    @Override
-                    public void onCollision(GameObject object1, GameObject object2) {
-                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                            if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
-                                object1.stopFall();
-
-                                object1.setYPosition(object2.getHitBox().topLeft().y);
-
-                                object1.getHitBox().setYPosition(object1.getYPosition());
-                                object1.setHitBox(object1.getHitBox());
-                                object1.showHitBox();
-                            }
-
-                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
-                        }
-                    }
-                });
-
-                itemHandler.postDelayed(tomatoFall, 0);
-            }
-            Log.i("EnvironmentSetUp","Test Items");
-        }
-        else if(environment.toLowerCase().equals("forest")){
-            allForestCurrentItems = new ArrayList<Ingredient>();
-            int totalItemCount = 20;
-            int carrotCount = (int)(Math.random() * totalItemCount) + 1;
-            int mushroomCount = (int)(Math.random() * (totalItemCount - carrotCount));
-            int tomatoCount = totalItemCount-carrotCount-mushroomCount;
-
-            for(int i = 0; i < carrotCount; i++) {
-                Ingredient carrot = new Ingredient(this, "Carrot", 10, 6,
-                        R.drawable.carrot,
-                        (float) (Math.random() * (tWidth-tWidth/5F) + tWidth/9F),
-                        (float) (gameCamera.getTopYPosition()) + 70, 150,242,149,27);
-
-
-                backgroundGameLayout.addLayoutObject(carrot);
-                allForestCurrentItems.add(carrot);
-
-                Runnable carrotFall = carrot.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
-                    @Override
-                    public void onCollision(GameObject object1, GameObject object2) {
-                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
-                                object1.stopFall();
-
-                                object1.setYPosition(object2.getHitBox().topLeft().y);
-
-                                object1.getHitBox().setYPosition(object1.getYPosition());
-                                object1.setHitBox(object1.getHitBox());
-                                object1.showHitBox();
-                            }
-
-                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
-                        }
-                    }
-                });
-
-                itemHandler.postDelayed(carrotFall, 5);
-            }
-
-            for(int i = 0; i < mushroomCount; i++) {
-                Ingredient mushroom = new Ingredient(this, "Mushroom", (int) (8), (int) (8),
-                        R.drawable.mushroom,
-                        (float) (Math.random() * (tWidth-tWidth/5F) + tWidth/9F),
-                        (float) (gameCamera.getTopYPosition()) + 70, 150,201, 87, 48);
-
-                backgroundGameLayout.addLayoutObject(mushroom);
-                allForestCurrentItems.add(mushroom);
-
-                Runnable mushroomFall = mushroom.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
-                    @Override
-                    public void onCollision(GameObject object1, GameObject object2) {
-                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
-                                object1.stopFall();
-
-                                object1.setYPosition(object2.getHitBox().topLeft().y);
-
-                                object1.getHitBox().setYPosition(object1.getYPosition());
-                                object1.setHitBox(object1.getHitBox());
-                                object1.showHitBox();
-                            }
-
-                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
-                        }
-                    }
-                });
-
-                itemHandler.postDelayed(mushroomFall, 5);
-            }
-
-            for(int i = 0; i < tomatoCount; i++) {
-                Ingredient tomato = new Ingredient(this, "Tomato", (int) (8), (int) (8),
-                        R.drawable.tomato,
-                        (float) (Math.random() * (tWidth-tWidth/5F) + tWidth/9F),
-                        (float) (gameCamera.getTopYPosition()) + 70, 150,230, 16, 37);
-
-                backgroundGameLayout.addLayoutObject(tomato);
-                allForestCurrentItems.add(tomato);
-
-                Runnable tomatoFall = tomato.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
-                    @Override
-                    public void onCollision(GameObject object1, GameObject object2) {
-                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
-                                object1.stopFall();
-
-                                object1.setYPosition(object2.getHitBox().topLeft().y);
-
-                                object1.getHitBox().setYPosition(object1.getYPosition());
-                                object1.setHitBox(object1.getHitBox());
-                                object1.showHitBox();
-                            }
-
-                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
-                        }
-                    }
-                });
-
-                itemHandler.postDelayed(tomatoFall, 5);
-            }
-
-            Log.i("EnvironmentSetUp","Forest Items");
-
-        }
-        else if(environment.toLowerCase().equals("house")){
-            Log.i("EnvironmentSetUp","There should be no items...");
-        }
-        else if(environment.toLowerCase().equals("swamp")){
-            int totalItemCount = 15;
-            int radishCount = (int)(Math.random() * totalItemCount) + 1;
-            int plantCount = totalItemCount-radishCount;
-
-            for(int i = 0; i < radishCount; i++) {
-                Ingredient radish = new Ingredient(this, "Radish", 12, 12,
-                        R.drawable.radish, (float) (Math.random() * (tWidth-tWidth/5F) + tWidth/9F),
-                        (float) (gameCamera.getTopYPosition()) + 70, 150,243, 222, 255);
-
-                backgroundGameLayout.addLayoutObject(radish);
-                allSwampCurrentItems.add(radish);
-
-                Runnable radishFall = radish.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
-                    @Override
-                    public void onCollision(GameObject object1, GameObject object2) {
-                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
-                                object1.stopFall();
-
-                                object1.setYPosition(object2.getHitBox().topLeft().y);
-
-                                object1.getHitBox().setYPosition(object1.getYPosition());
-                                object1.setHitBox(object1.getHitBox());
-                                object1.showHitBox();
-                            }
-
-                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
-                        }
-                    }
-                });
-
-                itemHandler.postDelayed(radishFall, 5);
-            }
-
-            for(int i = 0; i < plantCount; i++) {
-                Ingredient plant = new Ingredient(this, "Plant", 10, 10,
-                        R.drawable.plant3,(float) (Math.random() * (tWidth-tWidth/5F) + tWidth/9F),
-                        (float) (gameCamera.getTopYPosition()) + 70, 150,113, 214, 79);
-
-                backgroundGameLayout.addLayoutObject(plant);
-                allSwampCurrentItems.add(plant);
-
-                Runnable plantFall = plant.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
-                    @Override
-                    public void onCollision(GameObject object1, GameObject object2) {
-                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
-                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
-                                object1.stopFall();
-
-                                object1.setYPosition(object2.getHitBox().topLeft().y);
-
-                                object1.getHitBox().setYPosition(object1.getYPosition());
-                                object1.setHitBox(object1.getHitBox());
-                                object1.showHitBox();
-                            }
-
-                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
-                        }
-                    }
-                });
-
-                itemHandler.postDelayed(plantFall, 5);
-            }
-
-            Log.i("EnvironmentSetUp","Swamp Items");
-        }
-        
-    }
-
-    private void removeAllItems(){
-        if(environment.toLowerCase().equals("forest")) {
-            if (allForestCurrentItems != null) {
-                int i = 0;
-                for (Ingredient item : allForestCurrentItems) {
-                    i++;
-                    Log.i("ItemGeneration", String.valueOf(i) + ": " + item.getName());
-                    itemHandler.postDelayed(item.collected(itemHandler), 0);
-                }
-
-                allForestCurrentItems = new ArrayList<Ingredient>();
-            }
-        }
-        else if(environment.toLowerCase().equals("swamp")) {
-            if (allSwampCurrentItems != null) {
-                int i = 0;
-                for (Ingredient item : allSwampCurrentItems) {
-                    i++;
-                    Log.i("ItemGeneration", String.valueOf(i) + ": " + item.getName());
-                    itemHandler.postDelayed(item.collected(itemHandler), 0);
-                }
-
-                allSwampCurrentItems = new ArrayList<Ingredient>();
-            }
-        }
-    }
-
-    // Inventory Saving
-    private void initialInventorySetUp(){
-        userIngredients = new Ingredient[15];
-        ingredientKey = new HashMap<String, Ingredient>();
-        ingredientKey.put("Carrot", new Ingredient(this, "Carrot",0,0,
-                R.drawable.carrot,0,0,150,242,149,27));
-        ingredientKey.put("Mushroom", new Ingredient(this, "Mushroom",0,0,
-                R.drawable.mushroom,0,0,150,201, 87, 48));
-        ingredientKey.put("Radish",new Ingredient(this, "Radish",0,0,
-                R.drawable.radish,0,0,150,243, 222, 255));
-        ingredientKey.put("Tomato",new Ingredient(this, "Tomato",0,0,
-                R.drawable.tomato,0,0,150,230, 16, 37));
-        ingredientKey.put("Plant",new Ingredient(this, "Plant",0,0,
-                R.drawable.plant3,0,0,150,113, 214, 79));
-
-        Button inv = (Button) findViewById(R.id.invButton);
-
-        boolean isFull = true;
-
-        for(int i = 0; i < 15; i++){
-            if(invDrawables[i] != 0) {
-                invImages[i].setImageResource(invDrawables[i]);
-                userIngredients[i] = ingredientKey.get(itemNames[i]);
-            }
-            if(invDrawables[i] == android.R.color.transparent || invDrawables[i] == 0){
-                inv.setBackgroundResource(R.drawable.inventory_icon);
-                isFull = false;
-            }
-        }
-
-        if(isFull){
-            inv.setBackgroundResource(R.drawable.inventory_full);
-        }
-    }
-
-    private void initialSoupSetUp(){
-        userSoups = new ArrayList<Soup>();
-        for(int i = 0; i < soupIngredients.size(); i++){
-            ArrayList<Ingredient> ingredientList = new ArrayList<Ingredient>();
-            int start = 0;
-            for(int j = 0; j < soupIngredients.get(i).length(); j++){
-                if(soupIngredients.get(i).substring(j,j+1).equals("/")){
-                    String ingredientName = soupIngredients.get(i).substring(start,j);
-                    Log.i("SoupMaking",ingredientName);
-                    ingredientList.add(ingredientKey.get(ingredientName));
-                    start = j+1;
-                }
-            }
-            userSoups.add(new Soup(ingredientList, soupRanks[i]));
-        }
-    }
 
     // Sets up all characters
     private void initialCharacterSetUp(){
@@ -1404,9 +739,6 @@ public class InGameActivity extends AppCompatActivity {
         walkSpeed = 1/2F;
         runSpeed = walkSpeed * 2;
         jumpHeight = 15;
-//        walkSpeed = 1;
-//        runSpeed = 2;
-//        jumpHeight = 30;
         highJumpHeight = jumpHeight * 2;
         floatJumpHeight = jumpHeight/2;
 
@@ -1612,7 +944,6 @@ public class InGameActivity extends AppCompatActivity {
                 0));
 
 
-
         // Actions Set Up
         Runnable leftWalk = kirby.walk(kirby.getLrHandler(), R.drawable.kirbywalk,"left", walkSpeed, kirbyWalkHitBoxes,
                 new GameObject.CollisionListener() {
@@ -1695,15 +1026,6 @@ public class InGameActivity extends AppCompatActivity {
                             actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
                         }
 
-//                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
-//                            kirbyPreviousXPos = xPosition;
-//                            kirbyPreviousYPos = yPosition;
-//                        }
-//                        if(Math.abs(xPosition - kirbyPreviousXPos) > walkSpeed  * 10){
-//                            Log.i("MovementLogging", "Left Walk");
-//                            kirbyPreviousXPos = xPosition;
-//                            kirbyPreviousYPos = yPosition;
-//                        }
                     }
                 });
 
@@ -1785,15 +1107,6 @@ public class InGameActivity extends AppCompatActivity {
                             actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
                         }
 
-//                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
-//                            kirbyPreviousXPos = xPosition;
-//                            kirbyPreviousYPos = yPosition;
-//                        }
-//                        if(Math.abs(xPosition - kirbyPreviousXPos) > walkSpeed  * 10){
-//                            Log.i("MovementLogging", "Left Run");
-//                            kirbyPreviousXPos = xPosition;
-//                            kirbyPreviousYPos = yPosition;
-//                        }
                     }
                 });
 
@@ -1876,15 +1189,6 @@ public class InGameActivity extends AppCompatActivity {
                             actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
                         }
 
-//                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
-//                            kirbyPreviousXPos = xPosition;
-//                            kirbyPreviousYPos = yPosition;
-//                        }
-//                        if(Math.abs(xPosition - kirbyPreviousXPos) > walkSpeed  * 10){
-//                            Log.i("MovementLogging", "Right Walk");
-//                            kirbyPreviousXPos = xPosition;
-//                            kirbyPreviousYPos = yPosition;
-//                        }
                     }
                 });
 
@@ -1966,15 +1270,6 @@ public class InGameActivity extends AppCompatActivity {
                             actionButton.setBackgroundResource(android.R.drawable.presence_invisible);
                         }
 
-//                        if(kirbyPreviousXPos == 0.00 || kirbyPreviousYPos == 0.00){
-//                            kirbyPreviousXPos = xPosition;
-//                            kirbyPreviousYPos = yPosition;
-//                        }
-//                        if(Math.abs(xPosition - kirbyPreviousXPos) > walkSpeed  * 10){
-//                            Log.i("MovementLogging", "Right Run");
-//                            kirbyPreviousXPos = xPosition;
-//                            kirbyPreviousYPos = yPosition;
-//                        }
                     }
                 });
 
@@ -2421,8 +1716,7 @@ public class InGameActivity extends AppCompatActivity {
         kirby.getAllActions().put("Dance 8", dance8);
 
 
-
-        // NPC Set Ups
+        // NPC Set Up
         allNPCs = new HashMap<String, Character>();
 
         // Create Waddle Dee + Action Set Up
@@ -2438,7 +1732,7 @@ public class InGameActivity extends AppCompatActivity {
 
         int x = 0;
         for(Character npc : npcCopyList){
-            float ratio = 1;//(float)(Math.random() + .3);
+            float ratio = 1;
             int waddleWidth = (int)(14 * ratio);
             int waddleHeight = (int)(12 * ratio);
 
@@ -2797,69 +2091,611 @@ public class InGameActivity extends AppCompatActivity {
         }
     }
 
-    // Moves SpecialDee
-    private void moveSpecialDee(){
-        switch(forestHintNumber){
-            case 1:
-                allNPCs.get("Waddle Dee 1").fadeOut(backgroundGameLayout, new GameObject.FadeCompletionListener() {
-                    @Override
-                    public void fadeOnComplete() {
-                        allNPCs.get("Waddle Dee 1").setXPosition(tWidth/2 + tWidth/7);
-                        specialDeeDirection = "Left";
-                        allNPCs.get("Waddle Dee 1").faceDirection(specialDeeDirection);
-                        isSpecialDeePresent = false;
-                        isByForestSoupHintWaddleDee = false;
-                    }
-                });
-                break;
+    // Inventory set up after loading data
+    private void initialInventorySetUp(){
+        userIngredients = new Ingredient[15];
+        ingredientKey = new HashMap<String, Ingredient>();
+        ingredientKey.put("Carrot", new Ingredient(this, "Carrot",0,0,
+                R.drawable.carrot,0,0,150,242,149,27));
+        ingredientKey.put("Mushroom", new Ingredient(this, "Mushroom",0,0,
+                R.drawable.mushroom,0,0,150,201, 87, 48));
+        ingredientKey.put("Radish",new Ingredient(this, "Radish",0,0,
+                R.drawable.radish,0,0,150,243, 222, 255));
+        ingredientKey.put("Tomato",new Ingredient(this, "Tomato",0,0,
+                R.drawable.tomato,0,0,150,230, 16, 37));
+        ingredientKey.put("Plant",new Ingredient(this, "Plant",0,0,
+                R.drawable.plant3,0,0,150,113, 214, 79));
 
-            case 2:
-                allNPCs.get("Waddle Dee 1").fadeOut(backgroundGameLayout, new GameObject.FadeCompletionListener() {
-                    @Override
-                    public void fadeOnComplete() {
-                        allNPCs.get("Waddle Dee 1").setXPosition(tWidth/18);
-                        specialDeeDirection = "Right";
-                        allNPCs.get("Waddle Dee 1").faceDirection(specialDeeDirection);
-                        isSpecialDeePresent = false;
-                        isByForestSoupHintWaddleDee = false;
-                    }
-                });
-                break;
+        Button inv = (Button) findViewById(R.id.invButton);
 
-            case 3:
-                allNPCs.get("Waddle Dee 1").fadeOut(backgroundGameLayout, new GameObject.FadeCompletionListener() {
-                    @Override
-                    public void fadeOnComplete() {
-                        allNPCs.get("Waddle Dee 1").setCenterXPosition(tWidth - tWidth/3 - tWidth/25 + (float)(16*8/7F));
-                        allNPCs.get("Waddle Dee 1").setYPosition(gameCamera.getBottomYPosition() + 6 + (int)(39*8/7F));
-                        specialDeeDirection = "Right";
-                        isSpecialDeePresent = false;
-                        isByForestSoupHintWaddleDee = false;
-                    }
-                });
-                break;
+        boolean isFull = true;
 
-            case 4:
-                allNPCs.get("Waddle Dee 1").fadeOut(backgroundGameLayout, new GameObject.FadeCompletionListener() {
-                    @Override
-                    public void fadeOnComplete() {
-                        allNPCs.get("Waddle Dee 1").setXPosition(tWidth/4);
-                        allNPCs.get("Waddle Dee 1").setYPosition(gameCamera.getBottomYPosition() + 6);
-                        specialDeeDirection = "Right";
-                        allNPCs.get("Waddle Dee 1").faceDirection(specialDeeDirection);
-                        isSpecialDeePresent = false;
-                        isByForestSoupHintWaddleDee = false;
-                    }
-                });
-                break;
+        for(int i = 0; i < 15; i++){
+            if(invDrawables[i] != 0) {
+                invImages[i].setImageResource(invDrawables[i]);
+                userIngredients[i] = ingredientKey.get(itemNames[i]);
+            }
+            if(invDrawables[i] == android.R.color.transparent || invDrawables[i] == 0){
+                inv.setBackgroundResource(R.drawable.inventory_icon);
+                isFull = false;
+            }
+        }
 
-            default:
-                break;
+        if(isFull){
+            inv.setBackgroundResource(R.drawable.inventory_full);
         }
     }
 
+    // Recreating saved soups after loading data
+    private void initialSoupSetUp(){
+        userSoups = new ArrayList<Soup>();
+        for(int i = 0; i < soupIngredients.size(); i++){
+            ArrayList<Ingredient> ingredientList = new ArrayList<Ingredient>();
+            int start = 0;
+            for(int j = 0; j < soupIngredients.get(i).length(); j++){
+                if(soupIngredients.get(i).substring(j,j+1).equals("/")){
+                    String ingredientName = soupIngredients.get(i).substring(start,j);
+                    Log.i("SoupMaking",ingredientName);
+                    ingredientList.add(ingredientKey.get(ingredientName));
+                    start = j+1;
+                }
+            }
+            userSoups.add(new Soup(ingredientList, soupRanks[i]));
+        }
+    }
+
+    // SETUPS:
+
+    // Sets up the camera for a chosen environment.
+    private void cameraSetUp(String environment){
+        if(environment.toLowerCase().equals("test")){
+            gameCamera.setScale(fitZoom(3832,359));
+            gameCamera.setLeftXPosition(0);
+        }
+        else if(environment.toLowerCase().equals("forest")){
+            gameCamera.setScale(fitZoom(3832,359));
+            gameCamera.setLeftXPosition(0);
+        }
+        else if(environment.toLowerCase().equals("house")){
+            // temporary camera set up
+            gameCamera.setScale(fitZoom(15000,800));
+            gameCamera.setLeftXPosition((centerX - tWidth * 3440/30000F));
+        }
+        else if(environment.toLowerCase().equals("swamp")){
+            gameCamera.setScale(fitZoom(3832,359));
+            gameCamera.setLeftXPosition(0);
+        }
+    }
+
+    // Sets up a brand new chosen in-game environment. Used to change environments
+    private void environmentSetUp(String environment){
+        this.environment = environment;
+        try{
+            backgroundGameLayout.removeAllLayoutObjects();
+            backgroundGameLayout.setBackgroundImage(android.R.color.transparent);
+            collisionGameLayout.removeAllLayoutObjects();
+            foregroundGameLayout.removeAllLayoutObjects();
+
+            backgroundGameLayout = null;
+            collisionGameLayout = null;
+            foregroundGameLayout = null;
+            GameLayout.allLayouts = new ArrayList<GameLayout>();
+        }
+        catch(Exception e){
+            Log.i("EnvironmentSetUp","GameLayouts not created yet");
+        }
+
+        try{
+            itemHandler.removeCallbacksAndMessages(null);
+            eHandler.removeCallbacksAndMessages(null);
+        }
+        catch(Exception e){
+            Log.i("EnvironmentSetUp", "Some handlers not created yet");
+        }
+
+        backgroundGameLayout = new GameLayout(this,"Background", backgroundLayout);
+        backgroundGameLayout.setBackgroundImageView(findViewById(R.id.backgroundImage));
+        collisionGameLayout = new GameLayout(this, "Collision", collisionLayout);
+        foregroundGameLayout = new GameLayout(this, "Foreground",foregroundLayout);
+
+        cameraSetUp(environment);
+
+        if(gameCameraXPosition != -1 && gameCameraYPosition != -1) {
+            gameCamera.setXPosition(gameCameraXPosition);
+            gameCamera.setYPosition(gameCameraYPosition);
+        }
+
+        gameCamera.setFixedPosition(gameCameraFixed);
+
+        // In general: First set background and foreground GameObjects. Then add Kirby, then set collision GameObjects, then set up items
+
+        if(environment.toLowerCase().equals("test")){
+            backgroundGameLayout.setBackgroundImage(R.drawable.cloudsbackgroundextended);
+            backgroundGameLayout.setLayoutObjects(testEnvironmentBackgroundGameObjects);
+            foregroundGameLayout.setLayoutObjects(testEnvironmentForegroundGameObjects);
+
+
+            collisionGameLayout.removeLayoutObject(kirby);
+
+            kirby.setXPosition(kirbyXPosition);
+            kirby.setYPosition(kirbyYPosition);
+            
+            collisionGameLayout.addLayoutObject(kirby);
+            collisionGameLayout.addLayoutObjects(testEnvironmentCollisionGameObjects);
+
+            npcHandler.postDelayed(new Runnable() {
+
+                private boolean isWalking = false;
+
+                @Override
+                public void run() {
+                    for(int i = 0; i < npcCopyList.size(); i++) {
+                        if (allNPCs.get("Waddle Dee " + String.valueOf(i)).isGrounded()) {
+                            allNPCs.get("Waddle Dee " + String.valueOf(i)).getUdHandler().removeCallbacksAndMessages(null);
+                            allNPCs.get("Waddle Dee " + String.valueOf(i)).stopJump();
+                            allNPCs.get("Waddle Dee " + String.valueOf(i)).getUdHandler()
+                                    .postDelayed(allNPCs.get("Waddle Dee " + String.valueOf(i)).getAllActions().get("Jump"), 0);
+                        }
+
+
+                        if (!isWalking) {
+                            allNPCs.get("Waddle Dee " + String.valueOf(i)).getLrHandler().postDelayed(allNPCs.get("Waddle Dee " + String.valueOf(i))
+                                    .getAllActions().get("Left Walk"), 0);
+                            if(i == npcCopyList.size()-1) {
+                                isWalking = true;
+                            }
+                        }
+                    }
+
+
+                    npcHandler.postDelayed(this, 2000);
+                }
+            },2000);
+
+            kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"),200);
+
+            setLightingTemporarily(255,255,255,255,255,255);
+        }
+        else if(environment.toLowerCase().equals("forest")){
+            backgroundGameLayout.setBackgroundImage(R.drawable.cloudsbackgroundextended);
+            backgroundGameLayout.setLayoutObjects(forestEnvironmentBackgroundGameObjects);
+            foregroundGameLayout.setLayoutObjects(forestEnvironmentForegroundGameObjects);
+
+            collisionGameLayout.removeLayoutObject(kirby);
+
+            kirby.setXPosition(kirbyXPosition);
+            kirby.setYPosition(kirbyYPosition);
+            
+            collisionGameLayout.addLayoutObject(kirby);
+            collisionGameLayout.addLayoutObjects(forestEnvironmentCollisionGameObjects);
+
+            if(!isGrounded) {
+                kirby.setGrounded(false);
+                kirby.getUdHandler().removeCallbacksAndMessages(null);
+                kirby.stopFall();
+                kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 200);
+            }
+
+            // Forest Clouds moving
+            Runnable movingClouds = new Runnable() {
+                @Override
+                public void run() {
+                    for(GameObject cloud : forestClouds){
+                        if(cloud.getXPosition() > tWidth){
+                            cloud.setXPosition(-cloud.getObjectWidth());
+                        }
+                        else{
+                            float speed = (float)(Math.random() * (1/90F - 1/70F) + 1/90F);
+                            cloud.setXPosition(cloud.getXPosition() + speed);
+                        }
+                    }
+                    eHandler.postDelayed(this,1);
+                }
+            };
+
+            eHandler.postDelayed(movingClouds,0);
+
+        }
+        else if(environment.toLowerCase().equals("house")){
+            backgroundGameLayout.setBackgroundImage(R.drawable.house_bg_1test);
+            backgroundGameLayout.setLayoutObjects(houseEnvironmentBackgroundGameObjects);
+            foregroundGameLayout.setLayoutObjects(houseEnvironmentForegroundGameObjects);
+
+            collisionGameLayout.removeLayoutObject(kirby);
+
+            kirby.setXPosition(kirbyXPosition);
+            kirby.setYPosition(kirbyYPosition);
+
+            collisionGameLayout.addLayoutObjects(houseEnvironmentCollisionGameObjects);
+            collisionGameLayout.addLayoutObject(kirby);
+
+            if(!isGrounded) {
+                kirby.setGrounded(false);
+                kirby.getUdHandler().removeCallbacksAndMessages(null);
+                kirby.stopFall();
+                kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 200);
+            }
+        }
+        else if(environment.toLowerCase().equals("swamp")){
+            backgroundGameLayout.setBackgroundImage(R.drawable.swampyclouds2);
+            backgroundGameLayout.setLayoutObjects(swampEnvironmentBackgroundGameObjects);
+            foregroundGameLayout.setLayoutObjects(swampEnvironmentForegroundGameObjects);
+
+            collisionGameLayout.removeLayoutObject(kirby);
+
+            kirby.setXPosition(kirbyXPosition);
+            kirby.setYPosition(kirbyYPosition);
+
+            collisionGameLayout.addLayoutObject(kirby);
+            collisionGameLayout.addLayoutObjects(swampEnvironmentCollisionGameObjects);
+
+            if(!isGrounded) {
+                kirby.setGrounded(false);
+                kirby.getUdHandler().removeCallbacksAndMessages(null);
+                kirby.stopFall();
+                kirby.getUdHandler().postDelayed(kirby.getAllActions().get("Fall"), 200);
+            }
+        }
+
+        itemSetUp(environment);
+
+    }
+
+    // Previously saved items fall from the sky
+    private void itemSetUp(String environment){
+        if(environment.toLowerCase().equals("forest")) {
+            for(Ingredient ingredient: allForestCurrentItems) {
+                Runnable fall = ingredient.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
+                                object1.stopFall();
+
+                                object1.setYPosition(object2.getHitBox().topLeft().y);
+
+                                object1.getHitBox().setYPosition(object1.getYPosition());
+                                object1.setHitBox(object1.getHitBox());
+                                object1.showHitBox();
+                            }
+
+                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                        }
+                    }
+                });
+
+                backgroundGameLayout.addLayoutObject(ingredient);
+
+                itemHandler.postDelayed(fall, 5);
+            }
+        }
+        else if(environment.toLowerCase().equals("swamp")) {
+            for(Ingredient ingredient: allSwampCurrentItems) {
+                Runnable fall = ingredient.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
+                                object1.stopFall();
+
+                                object1.setYPosition(object2.getHitBox().topLeft().y);
+
+                                object1.getHitBox().setYPosition(object1.getYPosition());
+                                object1.setHitBox(object1.getHitBox());
+                                object1.showHitBox();
+                            }
+
+                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                        }
+                    }
+                });
+
+                backgroundGameLayout.addLayoutObject(ingredient);
+
+                itemHandler.postDelayed(fall, 5);
+            }
+        }
+    }
+
+    // Creates and drops new items (items depend on environment)
+    private void newItemSetUp(String environment){
+
+        if(environment.toLowerCase().equals("test")){
+            for(int i = 0; i < 10; i++){
+                double size = Math.random() * 2 + 1;
+
+                Ingredient carrot = new Ingredient(this, "Carrot",(int)(size * 10),(int)(6 * size),
+                        R.drawable.carrot,
+                        (float) (Math.random() * (tWidth - 10)),
+                        (float)(gameCamera.getTopYPosition()) + 70,0,0,0,0);
+
+                collisionGameLayout.addLayoutObject(carrot);
+
+                Runnable carrotFall = carrot.fall(itemHandler, GameObject.GRAVITY/10F, new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                            if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
+                                object1.stopFall();
+
+                                object1.setYPosition(object2.getHitBox().topLeft().y);
+
+                                object1.getHitBox().setYPosition(object1.getYPosition());
+                                object1.setHitBox(object1.getHitBox());
+                                object1.showHitBox();
+                            }
+
+                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                        }
+                    }
+                });
+
+                itemHandler.postDelayed(carrotFall, 0);
+
+                Ingredient mushroom = new Ingredient(this, "Mushroom",(int)(8 * size),(int)(8*size),
+                        R.drawable.mushroom,
+                        (float) (Math.random() * (tWidth - 10)),
+                        (float)(gameCamera.getTopYPosition()) + 70,0,0,0,0);
+
+                collisionGameLayout.addLayoutObject(mushroom);
+
+                Runnable mushroomFall = mushroom.fall(itemHandler, GameObject.GRAVITY/10F, new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                            if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
+                                object1.stopFall();
+
+                                object1.setYPosition(object2.getHitBox().topLeft().y);
+
+                                object1.getHitBox().setYPosition(object1.getYPosition());
+                                object1.setHitBox(object1.getHitBox());
+                                object1.showHitBox();
+                            }
+
+                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                        }
+                    }
+                });
+
+                itemHandler.postDelayed(mushroomFall, 0);
+
+                Ingredient radish = new Ingredient(this, "Radish",(int)(8 * size),(int)(8* size),
+                        R.drawable.radish,
+                        (float) (Math.random() * (tWidth - 10)),
+                        (float)(gameCamera.getTopYPosition()) + 70,0,0,0,0);
+
+                collisionGameLayout.addLayoutObject(radish);
+
+                Runnable radishFall = radish.fall(itemHandler, GameObject.GRAVITY/10F, new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                            if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
+                                object1.stopFall();
+
+                                object1.setYPosition(object2.getHitBox().topLeft().y);
+
+                                object1.getHitBox().setYPosition(object1.getYPosition());
+                                object1.setHitBox(object1.getHitBox());
+                                object1.showHitBox();
+                            }
+
+                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                        }
+                    }
+                });
+
+                itemHandler.postDelayed(radishFall, 0);
+
+                Ingredient tomato = new Ingredient(this, "Tomato",(int)(8 * size),(int)(8* size),
+                        R.drawable.tomato,
+                        (float) (Math.random() * (tWidth - 10)),
+                        (float)(gameCamera.getTopYPosition()) + 70,0,0,0,0);
+
+                collisionGameLayout.addLayoutObject(tomato);
+
+                Runnable tomatoFall = tomato.fall(itemHandler, GameObject.GRAVITY/10F, new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                            if(!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
+                                object1.stopFall();
+
+                                object1.setYPosition(object2.getHitBox().topLeft().y);
+
+                                object1.getHitBox().setYPosition(object1.getYPosition());
+                                object1.setHitBox(object1.getHitBox());
+                                object1.showHitBox();
+                            }
+
+                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                        }
+                    }
+                });
+
+                itemHandler.postDelayed(tomatoFall, 0);
+            }
+            Log.i("EnvironmentSetUp","Test Items");
+        }
+        else if(environment.toLowerCase().equals("forest")){
+            allForestCurrentItems = new ArrayList<Ingredient>();
+            int totalItemCount = 20;
+            int carrotCount = (int)(Math.random() * totalItemCount) + 1;
+            int mushroomCount = (int)(Math.random() * (totalItemCount - carrotCount));
+            int tomatoCount = totalItemCount-carrotCount-mushroomCount;
+
+            for(int i = 0; i < carrotCount; i++) {
+                Ingredient carrot = new Ingredient(this, "Carrot", 10, 6,
+                        R.drawable.carrot,
+                        (float) (Math.random() * (tWidth-tWidth/5F) + tWidth/9F),
+                        (float) (gameCamera.getTopYPosition()) + 70, 150,242,149,27);
+
+
+                backgroundGameLayout.addLayoutObject(carrot);
+                allForestCurrentItems.add(carrot);
+
+                Runnable carrotFall = carrot.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
+                                object1.stopFall();
+
+                                object1.setYPosition(object2.getHitBox().topLeft().y);
+
+                                object1.getHitBox().setYPosition(object1.getYPosition());
+                                object1.setHitBox(object1.getHitBox());
+                                object1.showHitBox();
+                            }
+
+                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                        }
+                    }
+                });
+
+                itemHandler.postDelayed(carrotFall, 5);
+            }
+
+            for(int i = 0; i < mushroomCount; i++) {
+                Ingredient mushroom = new Ingredient(this, "Mushroom", (int) (8), (int) (8),
+                        R.drawable.mushroom,
+                        (float) (Math.random() * (tWidth-tWidth/5F) + tWidth/9F),
+                        (float) (gameCamera.getTopYPosition()) + 70, 150,201, 87, 48);
+
+                backgroundGameLayout.addLayoutObject(mushroom);
+                allForestCurrentItems.add(mushroom);
+
+                Runnable mushroomFall = mushroom.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
+                                object1.stopFall();
+
+                                object1.setYPosition(object2.getHitBox().topLeft().y);
+
+                                object1.getHitBox().setYPosition(object1.getYPosition());
+                                object1.setHitBox(object1.getHitBox());
+                                object1.showHitBox();
+                            }
+
+                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                        }
+                    }
+                });
+
+                itemHandler.postDelayed(mushroomFall, 5);
+            }
+
+            for(int i = 0; i < tomatoCount; i++) {
+                Ingredient tomato = new Ingredient(this, "Tomato", (int) (8), (int) (8),
+                        R.drawable.tomato,
+                        (float) (Math.random() * (tWidth-tWidth/5F) + tWidth/9F),
+                        (float) (gameCamera.getTopYPosition()) + 70, 150,230, 16, 37);
+
+                backgroundGameLayout.addLayoutObject(tomato);
+                allForestCurrentItems.add(tomato);
+
+                Runnable tomatoFall = tomato.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
+                                object1.stopFall();
+
+                                object1.setYPosition(object2.getHitBox().topLeft().y);
+
+                                object1.getHitBox().setYPosition(object1.getYPosition());
+                                object1.setHitBox(object1.getHitBox());
+                                object1.showHitBox();
+                            }
+
+                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                        }
+                    }
+                });
+
+                itemHandler.postDelayed(tomatoFall, 5);
+            }
+
+            Log.i("EnvironmentSetUp","Forest Items");
+
+        }
+        else if(environment.toLowerCase().equals("house")){
+            Log.i("EnvironmentSetUp","There should be no items...");
+        }
+        else if(environment.toLowerCase().equals("swamp")){
+            int totalItemCount = 15;
+            int radishCount = (int)(Math.random() * totalItemCount) + 1;
+            int plantCount = totalItemCount-radishCount;
+
+            for(int i = 0; i < radishCount; i++) {
+                Ingredient radish = new Ingredient(this, "Radish", 12, 12,
+                        R.drawable.radish, (float) (Math.random() * (tWidth-tWidth/5F) + tWidth/9F),
+                        (float) (gameCamera.getTopYPosition()) + 70, 150,243, 222, 255);
+
+                backgroundGameLayout.addLayoutObject(radish);
+                allSwampCurrentItems.add(radish);
+
+                Runnable radishFall = radish.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
+                                object1.stopFall();
+
+                                object1.setYPosition(object2.getHitBox().topLeft().y);
+
+                                object1.getHitBox().setYPosition(object1.getYPosition());
+                                object1.setHitBox(object1.getHitBox());
+                                object1.showHitBox();
+                            }
+
+                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                        }
+                    }
+                });
+
+                itemHandler.postDelayed(radishFall, 5);
+            }
+
+            for(int i = 0; i < plantCount; i++) {
+                Ingredient plant = new Ingredient(this, "Plant", 10, 10,
+                        R.drawable.plant3,(float) (Math.random() * (tWidth-tWidth/5F) + tWidth/9F),
+                        (float) (gameCamera.getTopYPosition()) + 70, 150,113, 214, 79);
+
+                backgroundGameLayout.addLayoutObject(plant);
+                allSwampCurrentItems.add(plant);
+
+                Runnable plantFall = plant.fall(itemHandler, GameObject.GRAVITY, new GameObject.CollisionListener() {
+                    @Override
+                    public void onCollision(GameObject object1, GameObject object2) {
+                        if (GameObject.getCollisionType(object1, object2).contains("top")) {
+                            if (!specialCollisionHandler(object1, object2, GameObject.getCollisionType(object1, object2)) && !object2.isCharacter() && !object2.isIngredient()) {
+                                object1.stopFall();
+
+                                object1.setYPosition(object2.getHitBox().topLeft().y);
+
+                                object1.getHitBox().setYPosition(object1.getYPosition());
+                                object1.setHitBox(object1.getHitBox());
+                                object1.showHitBox();
+                            }
+
+                            Log.i("Collision", object1.getObjectName() + " collided with top of " + object2.getObjectName());
+                        }
+                    }
+                });
+
+                itemHandler.postDelayed(plantFall, 5);
+            }
+
+            Log.i("EnvironmentSetUp","Swamp Items");
+        }
+        
+    }
+
     // Sets up character controls/interactions
-    // Majority of in-game logic resides here
     @SuppressLint("ClickableViewAccessibility")
     private void controllerSetUp(){
 
@@ -2884,20 +2720,11 @@ public class InGameActivity extends AppCompatActivity {
                             cHandler.postDelayed(leftRunCamera,0);
                             kirby.getLrHandler().postDelayed(kirby.getAllActions().get("Left Run"),0);
                             Log.i("MovementCheck", "Running Left");
-//                            if(kirby.isGrounded()){
-//                                playWalkEffect(R.raw.runningongrass, true);
-//                                walkEffectPlayer.setVolume(100, 100);
-//                            }
-
                         }
                         else{
                             cHandler.postDelayed(leftWalkCamera,0);
                             kirby.getLrHandler().postDelayed(kirby.getAllActions().get("Left Walk"),0);
                             Log.i("MovementCheck", "Walking Left");
-//                            if(kirby.isGrounded()){
-//                                playWalkEffect(R.raw.runningongrass, true);
-//                                walkEffectPlayer.setVolume(25, 25);
-//                            }
                         }
 
                         isDown = true;
@@ -2957,20 +2784,11 @@ public class InGameActivity extends AppCompatActivity {
                             cHandler.postDelayed(rightRunCamera,0);
                             kirby.getLrHandler().postDelayed(kirby.getAllActions().get("Right Run"),0);
                             Log.i("MovementCheck", "Running Right");
-//                            if(kirby.isGrounded()){
-//                                playWalkEffect(R.raw.runningongrass, true);
-//                                walkEffectPlayer.setVolume(100, 100);
-//                            }
-
                         }
                         else{
                             cHandler.postDelayed(rightWalkCamera,0);
                             kirby.getLrHandler().postDelayed(kirby.getAllActions().get("Right Walk"),0);
                             Log.i("MovementCheck", "Walking Right");
-//                            if(kirby.isGrounded()){
-//                                playWalkEffect(R.raw.runningongrass, true);
-//                                walkEffectPlayer.setVolume(25, 25);
-//                            }
                         }
 
                         isDown = true;
@@ -3211,11 +3029,16 @@ public class InGameActivity extends AppCompatActivity {
                                 // Hold
                                 if(kirby.isGrounded() && !leftButton.isPressed() && !rightButton.isPressed()) {
                                     isClick = false;
-//                                    kirby.getAHandler().removeCallbacksAndMessages(null);
-//                                    kirby.getAHandler().postDelayed(kirby.getAllActions().get("Dance 1"), 0);
+                                    Button debug = findViewById(R.id.debugButton);
+                                    if(debug.getVisibility() == View.INVISIBLE) {
+                                        debug.setVisibility(View.VISIBLE);
+                                    }
+                                    else{
+                                        debug.setVisibility(View.INVISIBLE);
+                                    }
                                 }
                             }
-                        }, 1000);
+                        }, 10000);
 
                         isDown = true;
                         break;
@@ -3386,6 +3209,7 @@ public class InGameActivity extends AppCompatActivity {
                         }
 
                         isDown = false;
+                        thHandler.removeCallbacksAndMessages(null);
 
                         break;
                 }
@@ -3396,109 +3220,123 @@ public class InGameActivity extends AppCompatActivity {
 
     }
 
-    private boolean specialCollisionHandler(GameObject object1, GameObject object2, String collisionType){
-        if(object2.isIngredient() && object1.isCharacter()){
-            if(!((Ingredient) object2).isCollected()) {
-                if(object1.getObjectName().toLowerCase().equals("kirby")) {
-                    collectIngredient((Ingredient) object2);
-                }
-            }
-            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
-            return true;
+    // INVENTORY/Item/Ingredient Methods:
+
+    public void inventoryPage(View v) {
+        if(layout.getVisibility() == View.INVISIBLE) {
+            layout.setVisibility(View.VISIBLE);
+            removeBttn.setVisibility(View.VISIBLE);
+            removeBttn.setClickable(false);
         }
-        else if(object1.isIngredient() && object2.isCharacter()){
-            if(!((Ingredient) object1).isCollected()) {
-                if(object2.getObjectName().toLowerCase().equals("kirby")) {
-                    collectIngredient((Ingredient) object1);
-                }
-            }
-            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
-            return true;
-        }
-        else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby") && object2.getObjectName().toLowerCase().equals("mushroom house")){
-            if(((Character) object1).isGrounded()) {
-                isCloseToHouse = true;
-                actionButton.setBackgroundResource(R.drawable.door_icon);
-            }
-            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
-            return true;
-        }
-        // Jumping on character is a bit buggy.
-//        else if(object1.isCharacter() && object2.isCharacter() && collisionType.contains("top")) {
-//            ((Character) object1).getUdHandler().removeCallbacksAndMessages(null);
-//            ((Character) object1).stopFall();
-//            ((Character) object1).setYPosition(object2.getHitBox().topLeft().y - ((Character) object1).getHitBox().getYBottom());
-//            ((Character) object1).setObjectResource(((Character) object1).getIdleResource());
-//            ((Character) object1).setHitBox(((Character) object1).getIdleHitBox());
-//            ((Character) object1).showHitBox();
-//
-//            ((Character) object1).stopJump();
-//            if(object1.getObjectName().toLowerCase().equals("kirby")) {
-//                isFloating = false;
-//                startFloatFinished = false;
-//                jumpCount = 0;
-//                ((Character) object1).getUdHandler().postDelayed(((Character) object1).getAllActions().get("High Jump"), 0);
-//            }
-//            else{
-//                ((Character) object1).getUdHandler().postDelayed(((Character) object1).getAllActions().get("Jump"), 0);
-//            }
-//            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
-//            return true;
-//        }
-        else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
-                && object2.equals(allNPCs.get("Waddle Dee 0")) && collisionType.equals("left")){
-            if(((Character) object1).isGrounded()) {
-                isByTutorialWaddleDee = true;
-                actionButton.setBackgroundResource(R.drawable.testtalkicon);
-            }
-            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
-        }
-        else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
-                && object2.equals(allNPCs.get("Waddle Dee 1"))){
-            if(((Character) object1).isGrounded()) {
-                isByForestSoupHintWaddleDee = true;
-                actionButton.setBackgroundResource(R.drawable.testtalkicon);
-            }
-            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
-        }
-        else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
-                && object2.getObjectName().toLowerCase().equals("cauldron")){
-            if(((Character) object1).isGrounded()) {
-                isCloseToCauldron = true;
-                actionButton.setBackgroundResource(R.drawable.testmakesoupicon);
-            }
-            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
-            return true;
-        }
-        else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
-                && object2.getObjectName().toLowerCase().equals("forest door")){
-            if(((Character) object1).isGrounded()) {
-                isCloseToForestDoor = true;
-                actionButton.setBackgroundResource(R.drawable.door_icon);
-            }
-            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
-            return true;
-        }
-        else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
-                && object2.getObjectName().toLowerCase().equals("swamp door")){
-            if(((Character) object1).isGrounded()) {
-                isCloseToSwampDoor = true;
-                actionButton.setBackgroundResource(R.drawable.door_icon);
-            }
-            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
-            return true;
-        }
-        else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
-                && object2.getObjectName().toLowerCase().equals("mushroom house (back)")){
-            if(((Character) object1).isGrounded()) {
-                isCloseToHouseBack = true;
-                actionButton.setBackgroundResource(R.drawable.door_icon);
-            }
-            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
-            return true;
+        else{
+            closeInventory(v);
         }
 
-        return false;
+        selectedIngredients = new ArrayList<Ingredient>();
+        selectedIngredientsIndex = new ArrayList<Integer>();
+        inventoryItemClickCounter = new int[15];
+
+        for (int i = 0; i < invImages.length; i++) {
+            invImages[i] = (ImageView) findViewById(invRes[i]);
+            invImages[i].setImageResource(invDrawables[i]);
+            invImages[i].setVisibility(View.VISIBLE);
+
+            int itemNumber = i;
+            if(userIngredients[itemNumber] != null) {
+                invImages[i].setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // users can remove items
+                        inventoryItemClickCounter[itemNumber]++;
+                        if (inventoryItemClickCounter[itemNumber] % 2 == 1) {
+                            // select item
+                            int numSelected = 0;
+                            for (int i = 0; i < inventoryItemClickCounter.length; i++) {
+                                if (inventoryItemClickCounter[i] % 2 == 1) {
+                                    numSelected++;
+                                }
+                            }
+                            if (numSelected > 0) {
+                                removeBttn.setClickable(true);
+                            }
+
+                            invImages[itemNumber].setImageTintMode(PorterDuff.Mode.SRC_OVER);
+                            invImages[itemNumber].setImageTintList(ColorStateList.valueOf(Color.argb(100, 255, 0, 0)));
+                            selectedIngredients.add(userIngredients[itemNumber]);
+                            selectedIngredientsIndex.add(itemNumber);
+
+                        } else {
+                            // deselect item
+                            int numSelected = 0;
+                            for (int i = 0; i < inventoryItemClickCounter.length; i++) {
+                                if (inventoryItemClickCounter[i] % 2 == 1) {
+                                    numSelected++;
+                                }
+                            }
+                            // hmmmmm
+                            if (numSelected < 1) {
+                                removeBttn.setClickable(false);
+                            }
+
+                            invImages[itemNumber].setImageTintMode(PorterDuff.Mode.OVERLAY);
+                            invImages[itemNumber].setImageTintList(ColorStateList.valueOf(Color.argb(0, 100, 100, 100)));
+                            selectedIngredients.remove(userIngredients[itemNumber]);
+                            selectedIngredientsIndex.remove((Integer) itemNumber);
+                        }
+                    }
+                });
+            }
+            else {
+                invImages[i].setOnClickListener(null);
+            }
+        }
+    }
+
+    public void closeInventory(View v) {
+        layout.setVisibility(View.INVISIBLE);
+        makeBttn.setVisibility(View.INVISIBLE);
+        removeBttn.setVisibility(View.INVISIBLE);
+
+        for (int i = 0; i < invImages.length; i++) {
+            invImages[i].setImageTintMode(PorterDuff.Mode.OVERLAY);
+            invImages[i].setImageTintList(ColorStateList.valueOf(Color.argb(0, 100, 100, 100)));
+        }
+    }
+
+    public void removeItem(View view) {
+        for(int i : selectedIngredientsIndex){
+            removeIngredientFromInventory(i);
+        }
+        selectedIngredients = new ArrayList<Ingredient>();
+        selectedIngredientsIndex = new ArrayList<Integer>();
+    }
+
+    // remove all items from environment
+    private void removeAllItems(){
+        if(environment.toLowerCase().equals("forest")) {
+            if (allForestCurrentItems != null) {
+                int i = 0;
+                for (Ingredient item : allForestCurrentItems) {
+                    i++;
+                    Log.i("ItemGeneration", String.valueOf(i) + ": " + item.getName());
+                    itemHandler.postDelayed(item.collected(itemHandler), 0);
+                }
+
+                allForestCurrentItems = new ArrayList<Ingredient>();
+            }
+        }
+        else if(environment.toLowerCase().equals("swamp")) {
+            if (allSwampCurrentItems != null) {
+                int i = 0;
+                for (Ingredient item : allSwampCurrentItems) {
+                    i++;
+                    Log.i("ItemGeneration", String.valueOf(i) + ": " + item.getName());
+                    itemHandler.postDelayed(item.collected(itemHandler), 0);
+                }
+
+                allSwampCurrentItems = new ArrayList<Ingredient>();
+            }
+        }
     }
 
     private void collectIngredient(Ingredient ingredient){
@@ -3577,314 +3415,8 @@ public class InGameActivity extends AppCompatActivity {
         inv.setBackgroundResource(R.drawable.inventory_icon);
     }
 
-    // This method helps to find the scale for the game camera to zoom to
-    private float fitZoom(float backgroundWidth, float backgroundHeight){
-        return ((float) TitleActivity.HEIGHT/TitleActivity.WIDTH) * (backgroundWidth/backgroundHeight);
-    }
+    // SOUP MAKING METHODS:
 
-    // Debugging method
-    public void viewInfoDebug(View view){
-
-        GameObject.displayHitBoxes = true;
-        for(GameObject object : collisionGameLayout.getLayoutObjects()){
-            object.showHitBox();
-        }
-        for(GameObject object: backgroundGameLayout.getLayoutObjects()){
-            object.showHitBox();
-        }
-        for(GameObject object: foregroundGameLayout.getLayoutObjects()){
-            object.showHitBox();
-        }
-
-
-        try {
-            Log.i("CharacterDebug", "Character: Position: xPosition = " + String.valueOf(kirby.getXPosition()) +
-                    " yPosition = " + String.valueOf(kirby.getYPosition()) + " | Width = " + String.valueOf(kirby.getObjectWidth()) +
-                    " Height = " + String.valueOf(kirby.getObjectHeight()) + " | Attributes: isGrounded = " + String.valueOf(kirby.isGrounded()) +
-                    " isFacingRight = " + String.valueOf(kirby.isFacingRight()) + " | HitBox: xPosition = " + String.valueOf(kirby.getHitBox().getXPosition()) +
-                    " yPosition = " + String.valueOf(kirby.getHitBox().getYPosition())
-                    + " | Animation Running = " + String.valueOf(kirby.getCharacterAnimation().isRunning()));
-        }
-        catch (Exception e){
-        }
-
-        Log.i("CameraDebug", gameCamera.toString());
-        if(zoomed) {
-            gameCamera.setFixedPosition(false);
-            gameCamera.moveTo(centerX, centerY, 100);
-            gameCamera.zoomTo(3/4F, 10);
-            zoomed = false;
-        }
-        else{
-            gameCamera.setFixedPosition(false);
-            gameCamera.zoomTo(fitZoom(3832,359), 50, new Camera.CameraCallBack() {
-                @Override
-                public void onActionComplete(Camera camera) {
-                    try {
-                        gameCamera.moveTo(kirby.getCenterXPosition(), centerY, 10);
-                    }
-                    catch (Exception e){
-                        gameCamera.setLeftXPosition(0);
-                    }
-                }
-            });
-            zoomed = true;
-        }
-
-    }
-
-    // uncomment postDelayed for correct timing of cycle
-    public void dayNightCycle(){
-        Runnable lighting = new Runnable() {
-
-            @Override
-            public void run() {
-
-                if(timeOfDay.toLowerCase().equals("morning")) {
-
-                    if (bA < 45) {
-                        bA++;
-                        oA++;
-                        GameLayout.brightenBackgroundLighting(Color.argb(bA, bR, bG, bB));
-                        GameLayout.brightenObjectLighting(Color.argb(oA, oR, oG, oB));
-                    }
-                    else{
-                        timeOfDay = "Noon";
-                        if(environment.toLowerCase().equals("forest")) {
-                            if (forestHintNumber == 2 || forestHintNumber == 4) {
-                                allNPCs.get("Waddle Dee 1").fadeIn(backgroundGameLayout,
-                                        new GameObject.FadeCompletionListener() {
-                                            @Override
-                                            public void fadeOnComplete() {
-                                                isSpecialDeePresent = true;
-                                            }
-                                        });
-                            }
-                        }
-                    }
-
-                    if(!itemsAreSet) {
-                        removeAllItems();
-                        newItemSetUp(environment);
-                        itemsAreSet = true;
-                    }
-
-                    rHandler.postDelayed(this,3667/4);
-                }
-                else if(timeOfDay.toLowerCase().equals("noon")) {
-                    if (bA > 0) {
-                        bA--;
-                        oA--;
-                        GameLayout.brightenBackgroundLighting(Color.argb(bA, bR, bG, bB));
-                        GameLayout.brightenObjectLighting(Color.argb(oA, oR, oG, oB));
-                    }
-                    else{
-                        timeOfDay = "Sunset";
-                        itemsAreSet = false;
-                        if(!itemsAreSet) {
-                            removeAllItems();
-                            newItemSetUp(environment);
-                            itemsAreSet = true;
-                        }
-                        bA = 255;
-                        bR = 255;
-                        bG = 255;
-                        bB = 255;
-
-                        oA = 255;
-                        oR = 255;
-                        oG = 255;
-                        oB = 255;
-                    }
-
-                    rHandler.postDelayed(this,3667/4);
-                }
-                else if(timeOfDay.toLowerCase().equals("sunset")){
-                    if(toColor(255,80,80,1,40,40,40,1)){
-                        timeOfDay = "Night";
-                        if(environment.toLowerCase().equals("forest")){
-                            if(forestHintNumber == 1) {
-                                allNPCs.get("Waddle Dee 1").fadeIn(backgroundGameLayout,
-                                        new GameObject.FadeCompletionListener() {
-                                    @Override
-                                    public void fadeOnComplete() {
-                                        isSpecialDeePresent = true;
-                                    }
-                                });
-                            }
-                            else if(forestHintNumber == 2) {
-                                allNPCs.get("Waddle Dee 1").fadeOut(backgroundGameLayout,
-                                        new GameObject.FadeCompletionListener() {
-                                            @Override
-                                            public void fadeOnComplete() {
-                                                isSpecialDeePresent = false;
-                                                isByForestSoupHintWaddleDee = false;
-                                            }
-                                        });
-                            }
-                        }
-                    }
-                    rHandler.postDelayed(this,280/4);
-                }
-                else if(timeOfDay.toLowerCase().equals("night")){
-                    if(toColor(100,100,120,1,35,35,35,1)){
-                        timeOfDay = "Sunrise1";
-                        if(environment.toLowerCase().equals("forest")){
-                            if(forestHintNumber == 1) {
-                                allNPCs.get("Waddle Dee 1").fadeOut(backgroundGameLayout,
-                                        new GameObject.FadeCompletionListener() {
-                                            @Override
-                                            public void fadeOnComplete() {
-                                                isSpecialDeePresent = false;
-                                                isByForestSoupHintWaddleDee = false;
-                                            }
-                                        });
-                            }
-                            else if(forestHintNumber == 3) {
-                                allNPCs.get("Waddle Dee 1").fadeIn(backgroundGameLayout,
-                                        new GameObject.FadeCompletionListener() {
-                                            @Override
-                                            public void fadeOnComplete() {
-                                                isSpecialDeePresent = true;
-                                            }
-                                        });
-                            }
-                        }
-                    }
-                    rHandler.postDelayed(this,690/4);
-                }
-                else if(timeOfDay.toLowerCase().equals("sunrise1")){
-                    if(toColor(254,108,184,2,100,100,100,1)){
-                        timeOfDay = "Sunrise2";
-                        if(environment.toLowerCase().equals("forest")) {
-                            if (forestHintNumber == 3) {
-                                allNPCs.get("Waddle Dee 1").fadeOut(backgroundGameLayout,
-                                        new GameObject.FadeCompletionListener() {
-                                            @Override
-                                            public void fadeOnComplete() {
-                                                isSpecialDeePresent = false;
-                                                isByForestSoupHintWaddleDee = false;
-                                            }
-                                        });
-                            }
-                        }
-                    }
-                    rHandler.postDelayed(this,625/4);
-                }
-                else if(timeOfDay.toLowerCase().equals("sunrise2")){
-                    if(toColor(255,255,255,1,255,255,255,1)){
-                        bA = 0;
-                        oA = 0;
-                        bB = 190;
-                        oB = 190;
-                        timeOfDay = "Morning";
-                        itemsAreSet = false;
-                    }
-                    rHandler.postDelayed(this,231/4);
-                }
-                // Testing purposes
-                //rHandler.postDelayed(this,30);
-            }
-
-            // rates must lead to color values being equal to the desired color.
-            private boolean toColor(int br, int bg, int bb, int bRate, int or, int og, int ob, int oRate){
-                if(br==bR && bg == bG && bb==bB && or==oR && og==oG && ob==oB){
-                    return true;
-                }
-
-                if(bR<br){
-                    bR+=bRate;
-                }
-                else if(bR>br){
-                    bR-=bRate;
-                }
-
-                if(bG<bg){
-                    bG+=bRate;
-                }
-                else if(bG>bg){
-                    bG-=bRate;
-                }
-
-                if(bB<bb){
-                    bB+=bRate;
-                }
-                else if(bB>bb){
-                    bB-=bRate;
-                }
-
-                if(oR<or){
-                    oR+=oRate;
-                }
-                else if(oR>or){
-                    oR-=oRate;
-                }
-
-                if(oG<og){
-                    oG+=oRate;
-                }
-                else if(oG>og){
-                    oG-=oRate;
-                }
-
-                if(oB<ob){
-                    oB+=oRate;
-                }
-                else if(oB>ob){
-                    oB-=oRate;
-                }
-
-                if(!negateDayNight) {
-                    GameLayout.darkenBackgroundLighting(Color.argb(255, bR, bG, bB));
-                    GameLayout.darkenObjectLighting(Color.argb(255, oR, oG, oB));
-                }
-                return false;
-            }
-        };
-
-        rHandler.postDelayed(lighting,0);
-    }
-
-    public void negateDayNightCycle(boolean negate){
-        this.negateDayNight = negate;
-    }
-
-    public void setLightingTemporarily(int br, int bg, int bb, int or, int og, int ob){
-        GameLayout.darkenBackgroundLighting(Color.argb(255, br, bg, bb));
-        GameLayout.darkenObjectLighting(Color.argb(255, or, og, ob));
-    }
-
-    // The following code was from https://developer.android.com/training/system-ui/immersive to create a fullscreen (has changed)
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
-            hideSystemUI();
-        }
-    }
-
-    private void hideSystemUI() {
-        // Enables regular immersive mode.
-        // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
-        // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-        View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                        // Set the content to appear under the system bars so that the
-                        // content doesn't resize when the system bars hide and show.
-                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        //| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        // Hide the status bar
-                        // | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
-    }
-    public void settingPage(View view) {
-        Intent intent = new Intent(this, SettingsPage.class);
-        startActivity(intent);
-    }
-
-    // Soup making method
     private void makeSoup(){
         if(isCloseToCauldron) {
             selectedIngredients = new ArrayList<Ingredient>();
@@ -3921,7 +3453,7 @@ public class InGameActivity extends AppCompatActivity {
                                 }
 
                                 invImages[itemNumber].setImageTintMode(PorterDuff.Mode.SRC_OVER);
-                                invImages[itemNumber].setImageTintList(ColorStateList.valueOf(Color.argb(100, 100, 100, 100)));
+                                invImages[itemNumber].setImageTintList(ColorStateList.valueOf(Color.argb(80, 0, 255, 0)));
                                 selectedIngredients.add(userIngredients[itemNumber]);
                                 selectedIngredientsIndex.add(itemNumber);
 
@@ -4004,94 +3536,227 @@ public class InGameActivity extends AppCompatActivity {
         }
     }
 
-    public void inventoryPage(View v) {
-        if(layout.getVisibility() == View.INVISIBLE) {
-            layout.setVisibility(View.VISIBLE);
-            removeBttn.setVisibility(View.VISIBLE);
-            removeBttn.setClickable(false);
-        }
-        else{
-            closeInventory(v);
-        }
+    // DAY NIGHT CYCLE METHODS:
 
-        selectedIngredients = new ArrayList<Ingredient>();
-        selectedIngredientsIndex = new ArrayList<Integer>();
-        inventoryItemClickCounter = new int[15];
+    public void dayNightCycle(){
+        Runnable lighting = new Runnable() {
 
-        for (int i = 0; i < invImages.length; i++) {
-            invImages[i] = (ImageView) findViewById(invRes[i]);
-            invImages[i].setImageResource(invDrawables[i]);
-            invImages[i].setVisibility(View.VISIBLE);
+            @Override
+            public void run() {
 
-            int itemNumber = i;
-            if(userIngredients[itemNumber] != null) {
-                invImages[i].setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // users can remove items
-                        inventoryItemClickCounter[itemNumber]++;
-                        if (inventoryItemClickCounter[itemNumber] % 2 == 1) {
-                            // select item
-                            int numSelected = 0;
-                            for (int i = 0; i < inventoryItemClickCounter.length; i++) {
-                                if (inventoryItemClickCounter[i] % 2 == 1) {
-                                    numSelected++;
-                                }
+                if(timeOfDay.toLowerCase().equals("morning")) {
+
+                    if (bA < 45) {
+                        bA++;
+                        oA++;
+                        GameLayout.brightenBackgroundLighting(Color.argb(bA, bR, bG, bB));
+                        GameLayout.brightenObjectLighting(Color.argb(oA, oR, oG, oB));
+                    }
+                    else{
+                        timeOfDay = "Noon";
+                        if(environment.toLowerCase().equals("forest")) {
+                            if (forestHintNumber == 2 || forestHintNumber == 4) {
+                                allNPCs.get("Waddle Dee 1").fadeIn(backgroundGameLayout,
+                                        new GameObject.FadeCompletionListener() {
+                                            @Override
+                                            public void fadeOnComplete() {
+                                                isSpecialDeePresent = true;
+                                            }
+                                        });
                             }
-                            if (numSelected > 0) {
-                                removeBttn.setClickable(true);
-                            }
-
-                            invImages[itemNumber].setImageTintMode(PorterDuff.Mode.SRC_OVER);
-                            invImages[itemNumber].setImageTintList(ColorStateList.valueOf(Color.argb(100, 100, 100, 100)));
-                            selectedIngredients.add(userIngredients[itemNumber]);
-                            selectedIngredientsIndex.add(itemNumber);
-
-                        } else {
-                            // deselect item
-                            int numSelected = 0;
-                            for (int i = 0; i < inventoryItemClickCounter.length; i++) {
-                                if (inventoryItemClickCounter[i] % 2 == 1) {
-                                    numSelected++;
-                                }
-                            }
-                            // hmmmmm
-                            if (numSelected < 1) {
-                                removeBttn.setClickable(false);
-                            }
-
-                            invImages[itemNumber].setImageTintMode(PorterDuff.Mode.OVERLAY);
-                            invImages[itemNumber].setImageTintList(ColorStateList.valueOf(Color.argb(0, 100, 100, 100)));
-                            selectedIngredients.remove(userIngredients[itemNumber]);
-                            selectedIngredientsIndex.remove((Integer) itemNumber);
                         }
                     }
-                });
+
+                    if(!itemsAreSet) {
+                        removeAllItems();
+                        newItemSetUp(environment);
+                        itemsAreSet = true;
+                    }
+
+                    rHandler.postDelayed(this,3667/4);
+                }
+                else if(timeOfDay.toLowerCase().equals("noon")) {
+                    if (bA > 0) {
+                        bA--;
+                        oA--;
+                        GameLayout.brightenBackgroundLighting(Color.argb(bA, bR, bG, bB));
+                        GameLayout.brightenObjectLighting(Color.argb(oA, oR, oG, oB));
+                    }
+                    else{
+                        timeOfDay = "Sunset";
+                        itemsAreSet = false;
+                        if(!itemsAreSet) {
+                            removeAllItems();
+                            newItemSetUp(environment);
+                            itemsAreSet = true;
+                        }
+                        bA = 255;
+                        bR = 255;
+                        bG = 255;
+                        bB = 255;
+
+                        oA = 255;
+                        oR = 255;
+                        oG = 255;
+                        oB = 255;
+                    }
+
+                    rHandler.postDelayed(this,3667/4);
+                }
+                else if(timeOfDay.toLowerCase().equals("sunset")){
+                    if(toColor(255,80,80,1,40,40,40,1)){
+                        timeOfDay = "Night";
+                        if(environment.toLowerCase().equals("forest")){
+                            if(forestHintNumber == 1) {
+                                allNPCs.get("Waddle Dee 1").fadeIn(backgroundGameLayout,
+                                        new GameObject.FadeCompletionListener() {
+                                            @Override
+                                            public void fadeOnComplete() {
+                                                isSpecialDeePresent = true;
+                                            }
+                                        });
+                            }
+                            else if(forestHintNumber == 2) {
+                                allNPCs.get("Waddle Dee 1").fadeOut(backgroundGameLayout,
+                                        new GameObject.FadeCompletionListener() {
+                                            @Override
+                                            public void fadeOnComplete() {
+                                                isSpecialDeePresent = false;
+                                                isByForestSoupHintWaddleDee = false;
+                                            }
+                                        });
+                            }
+                        }
+                    }
+                    rHandler.postDelayed(this,280/4);
+                }
+                else if(timeOfDay.toLowerCase().equals("night")){
+                    if(toColor(100,100,120,1,35,35,35,1)){
+                        timeOfDay = "Sunrise1";
+                        if(environment.toLowerCase().equals("forest")){
+                            if(forestHintNumber == 1) {
+                                allNPCs.get("Waddle Dee 1").fadeOut(backgroundGameLayout,
+                                        new GameObject.FadeCompletionListener() {
+                                            @Override
+                                            public void fadeOnComplete() {
+                                                isSpecialDeePresent = false;
+                                                isByForestSoupHintWaddleDee = false;
+                                            }
+                                        });
+                            }
+                            else if(forestHintNumber == 3) {
+                                allNPCs.get("Waddle Dee 1").fadeIn(backgroundGameLayout,
+                                        new GameObject.FadeCompletionListener() {
+                                            @Override
+                                            public void fadeOnComplete() {
+                                                isSpecialDeePresent = true;
+                                            }
+                                        });
+                            }
+                        }
+                    }
+                    rHandler.postDelayed(this,690/4);
+                }
+                else if(timeOfDay.toLowerCase().equals("sunrise1")){
+                    if(toColor(254,108,184,2,100,100,100,1)){
+                        timeOfDay = "Sunrise2";
+                    }
+                    rHandler.postDelayed(this,625/4);
+                }
+                else if(timeOfDay.toLowerCase().equals("sunrise2")){
+                    if(toColor(255,255,255,1,255,255,255,1)){
+                        bA = 0;
+                        oA = 0;
+                        bB = 190;
+                        oB = 190;
+                        timeOfDay = "Morning";
+                        itemsAreSet = false;
+                        if(environment.toLowerCase().equals("forest")) {
+                            if (forestHintNumber == 3) {
+                                allNPCs.get("Waddle Dee 1").fadeOut(backgroundGameLayout,
+                                        new GameObject.FadeCompletionListener() {
+                                            @Override
+                                            public void fadeOnComplete() {
+                                                isSpecialDeePresent = false;
+                                                isByForestSoupHintWaddleDee = false;
+                                            }
+                                        });
+                            }
+                        }
+                    }
+                    rHandler.postDelayed(this,231/4);
+                }
             }
-            else {
-                invImages[i].setOnClickListener(null);
+
+            // rates must lead to color values being equal to the desired color.
+            private boolean toColor(int br, int bg, int bb, int bRate, int or, int og, int ob, int oRate){
+                if(br==bR && bg == bG && bb==bB && or==oR && og==oG && ob==oB){
+                    return true;
+                }
+
+                if(bR<br){
+                    bR+=bRate;
+                }
+                else if(bR>br){
+                    bR-=bRate;
+                }
+
+                if(bG<bg){
+                    bG+=bRate;
+                }
+                else if(bG>bg){
+                    bG-=bRate;
+                }
+
+                if(bB<bb){
+                    bB+=bRate;
+                }
+                else if(bB>bb){
+                    bB-=bRate;
+                }
+
+                if(oR<or){
+                    oR+=oRate;
+                }
+                else if(oR>or){
+                    oR-=oRate;
+                }
+
+                if(oG<og){
+                    oG+=oRate;
+                }
+                else if(oG>og){
+                    oG-=oRate;
+                }
+
+                if(oB<ob){
+                    oB+=oRate;
+                }
+                else if(oB>ob){
+                    oB-=oRate;
+                }
+
+                if(!negateDayNight) {
+                    GameLayout.darkenBackgroundLighting(Color.argb(255, bR, bG, bB));
+                    GameLayout.darkenObjectLighting(Color.argb(255, oR, oG, oB));
+                }
+                return false;
             }
-        }
+        };
+
+        rHandler.postDelayed(lighting,0);
     }
 
-    public void removeItem(View view) {
-        for(int i : selectedIngredientsIndex){
-            removeIngredientFromInventory(i);
-        }
-        selectedIngredients = new ArrayList<Ingredient>();
-        selectedIngredientsIndex = new ArrayList<Integer>();
+    public void negateDayNightCycle(boolean negate){
+        this.negateDayNight = negate;
     }
 
-    public void closeInventory(View v) {
-        layout.setVisibility(View.INVISIBLE);
-        makeBttn.setVisibility(View.INVISIBLE);
-        removeBttn.setVisibility(View.INVISIBLE);
-
-        for (int i = 0; i < invImages.length; i++) {
-            invImages[i].setImageTintMode(PorterDuff.Mode.OVERLAY);
-            invImages[i].setImageTintList(ColorStateList.valueOf(Color.argb(0, 100, 100, 100)));
-        }
+    public void setLightingTemporarily(int br, int bg, int bb, int or, int og, int ob){
+        GameLayout.darkenBackgroundLighting(Color.argb(255, br, bg, bb));
+        GameLayout.darkenObjectLighting(Color.argb(255, or, og, ob));
     }
+
+    // AUDIO METHODS:
 
     public void playAudio() {
 
@@ -4146,6 +3811,7 @@ public class InGameActivity extends AppCompatActivity {
 
         Log.i("Sai", "Playing is: " + mediaPlayer.isPlaying());
     }
+
     public void pauseAudio() {
         if (mediaPlayer != null) {
             if (mediaPlayer.isPlaying()) {
@@ -4159,17 +3825,18 @@ public class InGameActivity extends AppCompatActivity {
 
                 // below line is to display a message
                 // when media player is paused.
-                Toast.makeText(this, "Audio has been paused", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Audio has been paused", Toast.LENGTH_SHORT).show();
             } else {
                 // this method is called when media
                 // player is not playing.
-                Toast.makeText(this, "Audio has not played", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Audio has not played", Toast.LENGTH_SHORT).show();
             }
 
         }
         shouldPlay = false;
         Log.i("Sai", "Should Play = " + shouldPlay);
     }
+
     public void randomSong(){
         pauseAudio();
         mediaPlayer = new MediaPlayer();
@@ -4209,6 +3876,224 @@ public class InGameActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void playWalkEffect(int rawSound, boolean shouldLoop){
+        if(SettingsPage.isEffect) {
+            if (walkEffectPlayer == null) {
+                // initializing media player
+                walkEffectPlayer = new MediaPlayer();
+
+                // below line is use to set the audio
+                // stream type for our media player.
+//            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+                // below line is use to set our
+//            // url to our media player.
+//            try {
+//                mediaPlayer.setDataSource(audioUrl);
+//                // below line is use to prepare
+//                // and start our media player.
+//                mediaPlayer.prepareAsync();
+//                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//                    @Override
+//                    public void onPrepared(MediaPlayer mediaPlayer) {
+//                        mediaPlayer.start();
+//                    }
+//                });
+//
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+                if(environment.toLowerCase().equals("house")){
+                    walkEffectPlayer = MediaPlayer.create(this, R.raw.runningonwood);
+                }
+                else{
+                    walkEffectPlayer = MediaPlayer.create(this, R.raw.runningongrass);
+                }
+
+                walkEffectPlayer.start();
+                walkEffectPlayer.setLooping(shouldLoop);
+
+                // below line is use to display a toast message.
+//            Toast.makeText(this, "Audio started playing..", Toast.LENGTH_SHORT).show();
+//            Log.i("Sai", "Playing is: " + walkEffectPlayer.isPlaying());
+            }
+//        else if(walkEffectPlayer != null){
+//            pauseWalkEffect();
+//            walkEffectPlayer = new MediaPlayer();
+//
+//            // below line is use to set the audio
+//            // stream type for our media player.
+////            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//
+//            // below line is use to set our
+////            // url to our media player.
+////            try {
+////                mediaPlayer.setDataSource(audioUrl);
+////                // below line is use to prepare
+////                // and start our media player.
+////                mediaPlayer.prepareAsync();
+////                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+////                    @Override
+////                    public void onPrepared(MediaPlayer mediaPlayer) {
+////                        mediaPlayer.start();
+////                    }
+////                });
+////
+////
+////            } catch (IOException e) {
+////                e.printStackTrace();
+////            }
+//
+//            walkEffectPlayer = MediaPlayer.create(this, rawSound);
+//            walkEffectPlayer.start();
+//            walkEffectPlayer.setLooping(shouldLoop);
+////            while(!isGrounded){
+////                pauseWalkEffect();
+////            }
+//        }
+//            else {
+//                //Toast.makeText(this, "Audio is already playing", Toast.LENGTH_SHORT).show();
+//            }
+        }
+
+//        Log.i("Sai", "Playing is: " + walkEffectPlayer.isPlaying());
+    }
+
+    public void pauseWalkEffect() {
+        if (walkEffectPlayer != null) {
+            if (walkEffectPlayer.isPlaying()) {
+                // pausing the media player if media player
+                // is playing we are calling below line to
+                // stop our media player.
+                walkEffectPlayer.stop();
+                walkEffectPlayer.reset();
+                walkEffectPlayer.release();
+                walkEffectPlayer = null;
+
+                // below line is to display a message
+                // when media player is paused.
+                //Toast.makeText(this, "Audio has been paused", Toast.LENGTH_SHORT).show();
+            } else {
+                // this method is called when media
+                // player is not playing.
+                //Toast.makeText(this, "Audio has not played", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+    }
+
+    public void playJumpEffect(int rawSound, boolean shouldLoop){
+        if(SettingsPage.isEffect) {
+            if (jumpEffectPlayer == null) {
+                // initializing media player
+                jumpEffectPlayer = new MediaPlayer();
+
+                // below line is use to set the audio
+                // stream type for our media player.
+//            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+                // below line is use to set our
+//            // url to our media player.
+//            try {
+//                mediaPlayer.setDataSource(audioUrl);
+//                // below line is use to prepare
+//                // and start our media player.
+//                mediaPlayer.prepareAsync();
+//                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//                    @Override
+//                    public void onPrepared(MediaPlayer mediaPlayer) {
+//                        mediaPlayer.start();
+//                    }
+//                });
+//
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+
+                jumpEffectPlayer = MediaPlayer.create(this, rawSound);
+                jumpEffectPlayer.start();
+                jumpEffectPlayer.setLooping(shouldLoop);
+
+                // below line is use to display a toast message.
+//            Toast.makeText(this, "Audio started playing..", Toast.LENGTH_SHORT).show();
+//            Log.i("Sai", "Playing is: " + walkEffectPlayer.isPlaying());
+            } else if (jumpEffectPlayer != null) {
+                pauseJumpEffect();
+                pauseWalkEffect();
+                jumpEffectPlayer = new MediaPlayer();
+
+                // below line is use to set the audio
+                // stream type for our media player.
+//            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+                // below line is use to set our
+//            // url to our media player.
+//            try {
+//                mediaPlayer.setDataSource(audioUrl);
+//                // below line is use to prepare
+//                // and start our media player.
+//                mediaPlayer.prepareAsync();
+//                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//                    @Override
+//                    public void onPrepared(MediaPlayer mediaPlayer) {
+//                        mediaPlayer.start();
+//                    }
+//                });
+//
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+
+                jumpEffectPlayer = MediaPlayer.create(this, rawSound);
+                jumpEffectPlayer.start();
+                jumpEffectPlayer.setLooping(shouldLoop);
+            } else {
+                //Toast.makeText(this, "Audio is already playing", Toast.LENGTH_SHORT).show();
+            }
+        }
+//        Log.i("Sai", "Playing is: " + walkEffectPlayer.isPlaying());
+    }
+
+    public void pauseJumpEffect() {
+        if (jumpEffectPlayer != null) {
+            if (jumpEffectPlayer.isPlaying()) {
+                // pausing the media player if media player
+                // is playing we are calling below line to
+                // stop our media player.
+                jumpEffectPlayer.stop();
+                jumpEffectPlayer.reset();
+                jumpEffectPlayer.release();
+                jumpEffectPlayer = null;
+
+                // below line is to display a message
+                // when media player is paused.
+                //Toast.makeText(this, "Audio has been paused", Toast.LENGTH_SHORT).show();
+            } else {
+                // this method is called when media
+                // player is not playing.
+                //Toast.makeText(this, "Audio has not played", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+    }
+
+    // CHANGE ACTIVITY METHODS:
+
+    public void catalogPage(View v) {
+        Intent intent = new Intent(this, CatalogPage.class);
+        startActivity(intent);
+    }
+
+    public void settingPage(View view) {
+        Intent intent = new Intent(this, SettingsPage.class);
+        startActivity(intent);
+    }
+
+    // SAVE/LOAD DATA RELATED METHODS:
 
     private void saveData() {
 
@@ -4351,13 +4236,6 @@ public class InGameActivity extends AppCompatActivity {
         json = gson.toJson(allSwampCurrentItemLocations);
         editor.putString(ALL_SWAMP_CURRENT_ITEM_LOCATIONS, json);
 
-
-
-//        gson = new Gson();
-//        json = gson.toJson(new Ingredient(this, "Test", 120, 120,
-//        R.drawable.carrot, 1, 1, 1, 1, 1, 1));
-//        editor.putString(TEST_SAVE, json);
-
         soupIngredients = new ArrayList<String>();
         soupRanks = new int[500];
         int i = 0;
@@ -4376,66 +4254,10 @@ public class InGameActivity extends AppCompatActivity {
         json = gson.toJson(soupIngredients);
         editor.putString(SOUP_INGREDIENTS, json);
 
-        Log.i("SoupCreation", "Ingredients: " + String.valueOf(soupIngredients.size()));
-
         gson = new Gson();
         json = gson.toJson(soupRanks);
         editor.putString(SOUP_RANKS, json);
 
-        Log.i("SoupCreation", "Ranks: " + String.valueOf(soupRanks.length));
-
-
-        // Saving custom objects not working.
-//        json = gson.toJson(backgroundGameLayout);
-//        editor.putString(BACKGROUND_GAME_LAYOUT, json);
-//
-//        gson = new Gson();
-//        json = gson.toJson(collisionGameLayout);
-//        editor.putString(COLLISION_GAME_LAYOUT, json);
-//
-//        gson = new Gson();
-//        json = gson.toJson(foregroundGameLayout);
-//        editor.putString(FOREGROUND_GAME_LAYOUT, json);
-
-//        gson = new Gson();
-//        String json = gson.toJson(gameCamera);
-//        editor.putString(GAME_CAMERA, json);
-
-//        gson = new Gson();
-//        json = gson.toJson(leftWalkCamera);
-//        editor.putString(LEFT_WALK_CAMERA, json);
-//
-//        gson = new Gson();
-//        json = gson.toJson(leftRunCamera);
-//        editor.putString(LEFT_RUN_CAMERA, json);
-//
-//        gson = new Gson();
-//        json = gson.toJson(rightWalkCamera);
-//        editor.putString(RIGHT_WALK_CAMERA, json);
-//
-//        gson = new Gson();
-//        json = gson.toJson(rightRunCamera);
-//        editor.putString(RIGHT_RUN_CAMERA, json);
-
-//        gson = new Gson();
-//        json = gson.toJson(kirby);
-//        editor.putString(KIRBY, json);
-
-//        gson = new Gson();
-//        json = gson.toJson(allNPCs);
-//        editor.putString(ALL_NPCS, json);
-
-//        gson = new Gson();
-//        json = gson.toJson(testEnvironmentBackgroundGameObjects);
-//        editor.putString(TEST_ENVIRONMENT_BACKGROUND_GAME_OBJECTS, json);
-//
-//        gson = new Gson();
-//        json = gson.toJson(testEnvironmentCollisionGameObjects);
-//        editor.putString(TEST_ENVIRONMENT_COLLISION_GAME_OBJECTS, json);
-//
-//        gson = new Gson();
-//        json = gson.toJson(testEnvironmentForegroundGameObjects);
-//        editor.putString(TEST_ENVIRONMENT_FOREGROUND_GAME_OBJECTS, json);
 
         editor.commit();
 
@@ -4570,121 +4392,6 @@ public class InGameActivity extends AppCompatActivity {
             soupRanks = new int[500];
         }
 
-        // Since saving custom objects isn't working. Don't load in custom objects.
-//        Gson gson = new Gson();
-//        String json = sharedPreferences.getString(BACKGROUND_GAME_LAYOUT, "");
-//        if(!json.equals("")){
-//            backgroundGameLayout = gson.fromJson(json, GameLayout.class);
-//            //Log.i("Sai", testObject.toString());
-//        }
-//        else{
-//            backgroundGameLayout = null;
-//        }
-//
-//        gson = new Gson();
-//        json = sharedPreferences.getString(COLLISION_GAME_LAYOUT, "");
-//        if(!json.equals("")){
-//            collisionGameLayout = gson.fromJson(json, GameLayout.class);
-//            //Log.i("Sai", testObject.toString());
-//        }
-//        else{
-//            collisionGameLayout = null;
-//        }
-//
-//        gson = new Gson();
-//        json = sharedPreferences.getString(FOREGROUND_GAME_LAYOUT, "");
-//        if(!json.equals("")){
-//            foregroundGameLayout = gson.fromJson(json, GameLayout.class);
-//            //Log.i("Sai", testObject.toString());
-//        }
-//        else{
-//            foregroundGameLayout = null;
-//        }
-//
-//        gson = new Gson();
-//        json = sharedPreferences.getString(GAME_CAMERA, "");
-//        if(!json.equals("")){
-//            gameCamera = gson.fromJson(json, Camera.class);
-//            //Log.i("Sai", testObject.toString());
-//        }
-//        else{
-//            gameCamera = null;
-//        }
-//
-//        gson = new Gson();
-//        json = sharedPreferences.getString(LEFT_WALK_CAMERA, "");
-//        if(!json.equals("")){
-//            leftWalkCamera = gson.fromJson(json, Runnable.class);
-//            //Log.i("Sai", testObject.toString());
-//        }
-//        else{
-//            leftWalkCamera = null;
-//        }
-//
-//        gson = new Gson();
-//        json = sharedPreferences.getString(LEFT_RUN_CAMERA, "");
-//        if(!json.equals("")){
-//            leftRunCamera = gson.fromJson(json, Runnable.class);
-//            //Log.i("Sai", testObject.toString());
-//        }
-//        else{
-//            leftRunCamera = null;
-//        }
-//
-//        gson = new Gson();
-//        json = sharedPreferences.getString(RIGHT_WALK_CAMERA, "");
-//        if(!json.equals("")){
-//            rightWalkCamera = gson.fromJson(json, Runnable.class);
-//            //Log.i("Sai", testObject.toString());
-//        }
-//        else{
-//            rightWalkCamera = null;
-//        }
-//
-//        gson = new Gson();
-//        json = sharedPreferences.getString(RIGHT_RUN_CAMERA, "");
-//        if(!json.equals("")){
-//            rightRunCamera = gson.fromJson(json, Runnable.class);
-//            //Log.i("Sai", testObject.toString());
-//        }
-//        else{
-//            rightRunCamera = null;
-//        }
-//
-//        gson = new Gson();
-//        json = sharedPreferences.getString(KIRBY, "");
-//        if(!json.equals("")){
-//            kirby = gson.fromJson(json, Character.class);
-//            //Log.i("Sai", testObject.toString());
-//        }
-//        else{
-//            kirby = null;
-//        }
-//
-//        gson = new Gson();
-//        json = sharedPreferences.getString(ALL_NPCS, "");
-//        if(!json.equals("")){
-//            allNPCs = gson.fromJson(json, HashMap.class);
-//            //Log.i("Sai", testObject.toString());
-//        }
-//        else{
-//            allNPCs = null;
-//        }
-//
-//        gson = new Gson();
-//        json = sharedPreferences.getString(TEST_ENVIRONMENT_BACKGROUND_GAME_OBJECTS, "");
-//        if(!json.equals("")){
-//            testEnvironmentBackgroundGameObjects = gson.fromJson(json, ArrayList.class);
-//            //Log.i("Sai", testObject.toString());
-//        }
-//        else{
-//            testEnvironmentBackgroundGameObjects = null;
-//        }
-
-
-
-        //TEST_ENVIRONMENT_COLLISION_GAME_OBJECTS = "testEnvironmentCollisionGameObjects";
-        //TEST_ENVIRONMENT_FOREGROUND_GAME_OBJECTS = "testEnvironmentForegroundGameObjects";
     }
 
     public void updateViews(){
@@ -4771,7 +4478,7 @@ public class InGameActivity extends AppCompatActivity {
         initialEnvironmentSetUp();
         dayNightCycle();
     }
-//
+
     protected void onRestart() {
         super.onRestart();
 //         loadData();
@@ -4789,7 +4496,7 @@ public class InGameActivity extends AppCompatActivity {
 
         Log.i("Sai", "Resume");
     }
-//
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -4811,215 +4518,257 @@ public class InGameActivity extends AppCompatActivity {
         Log.i("Sai", "Pause");
     }
 
+    // FULL SCREEN METHODS:
 
-    public void playWalkEffect(int rawSound, boolean shouldLoop){
-        if(SettingsPage.isEffect) {
-            if (walkEffectPlayer == null) {
-                // initializing media player
-                walkEffectPlayer = new MediaPlayer();
+    // The following code was from https://developer.android.com/training/system-ui/immersive to create a fullscreen (has changed)
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            hideSystemUI();
+        }
+    }
 
-                // below line is use to set the audio
-                // stream type for our media player.
-//            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+    private void hideSystemUI() {
+        // Enables regular immersive mode.
+        // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
+        // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                        // Set the content to appear under the system bars so that the
+                        // content doesn't resize when the system bars hide and show.
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        //| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        // Hide the status bar
+                        // | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
+    }
 
-                // below line is use to set our
-//            // url to our media player.
-//            try {
-//                mediaPlayer.setDataSource(audioUrl);
-//                // below line is use to prepare
-//                // and start our media player.
-//                mediaPlayer.prepareAsync();
-//                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//                    @Override
-//                    public void onPrepared(MediaPlayer mediaPlayer) {
-//                        mediaPlayer.start();
-//                    }
-//                });
-//
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-                if(environment.toLowerCase().equals("house")){
-                    walkEffectPlayer = MediaPlayer.create(this, R.raw.runningonwood);
+    // OTHER METHODS:
+
+    // Moves SpecialDee
+    private void moveSpecialDee(){
+        switch(forestHintNumber){
+            case 1:
+                allNPCs.get("Waddle Dee 1").fadeOut(backgroundGameLayout, new GameObject.FadeCompletionListener() {
+                    @Override
+                    public void fadeOnComplete() {
+                        allNPCs.get("Waddle Dee 1").setXPosition(tWidth/2 + tWidth/7);
+                        specialDeeDirection = "Left";
+                        allNPCs.get("Waddle Dee 1").faceDirection(specialDeeDirection);
+                        isSpecialDeePresent = false;
+                        isByForestSoupHintWaddleDee = false;
+                    }
+                });
+                break;
+
+            case 2:
+                allNPCs.get("Waddle Dee 1").fadeOut(backgroundGameLayout, new GameObject.FadeCompletionListener() {
+                    @Override
+                    public void fadeOnComplete() {
+                        allNPCs.get("Waddle Dee 1").setXPosition(tWidth/18);
+                        specialDeeDirection = "Right";
+                        allNPCs.get("Waddle Dee 1").faceDirection(specialDeeDirection);
+                        isSpecialDeePresent = false;
+                        isByForestSoupHintWaddleDee = false;
+                    }
+                });
+                break;
+
+            case 3:
+                allNPCs.get("Waddle Dee 1").fadeOut(backgroundGameLayout, new GameObject.FadeCompletionListener() {
+                    @Override
+                    public void fadeOnComplete() {
+                        allNPCs.get("Waddle Dee 1").setCenterXPosition(tWidth - tWidth/3 - tWidth/25 + (float)(16*8/7F));
+                        allNPCs.get("Waddle Dee 1").setYPosition(gameCamera.getBottomYPosition() + 6 + (int)(39*8/7F));
+                        specialDeeDirection = "Right";
+                        isSpecialDeePresent = false;
+                        isByForestSoupHintWaddleDee = false;
+                    }
+                });
+                break;
+
+            case 4:
+                allNPCs.get("Waddle Dee 1").fadeOut(backgroundGameLayout, new GameObject.FadeCompletionListener() {
+                    @Override
+                    public void fadeOnComplete() {
+                        allNPCs.get("Waddle Dee 1").setXPosition(tWidth/4);
+                        allNPCs.get("Waddle Dee 1").setYPosition(gameCamera.getBottomYPosition() + 6);
+                        specialDeeDirection = "Right";
+                        allNPCs.get("Waddle Dee 1").faceDirection(specialDeeDirection);
+                        isSpecialDeePresent = false;
+                        isByForestSoupHintWaddleDee = false;
+                    }
+                });
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    // Deals with collisions with GameObjects that don't stop movement
+    private boolean specialCollisionHandler(GameObject object1, GameObject object2, String collisionType){
+        if(object2.isIngredient() && object1.isCharacter()){
+            if(!((Ingredient) object2).isCollected()) {
+                if(object1.getObjectName().toLowerCase().equals("kirby")) {
+                    collectIngredient((Ingredient) object2);
                 }
-                else{
-                    walkEffectPlayer = MediaPlayer.create(this, R.raw.runningongrass);
-                }
-
-                walkEffectPlayer.start();
-                walkEffectPlayer.setLooping(shouldLoop);
-
-                // below line is use to display a toast message.
-//            Toast.makeText(this, "Audio started playing..", Toast.LENGTH_SHORT).show();
-//            Log.i("Sai", "Playing is: " + walkEffectPlayer.isPlaying());
             }
-//        else if(walkEffectPlayer != null){
-//            pauseWalkEffect();
-//            walkEffectPlayer = new MediaPlayer();
+            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
+            return true;
+        }
+        else if(object1.isIngredient() && object2.isCharacter()){
+            if(!((Ingredient) object1).isCollected()) {
+                if(object2.getObjectName().toLowerCase().equals("kirby")) {
+                    collectIngredient((Ingredient) object1);
+                }
+            }
+            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
+            return true;
+        }
+        else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby") && object2.getObjectName().toLowerCase().equals("mushroom house")){
+            if(((Character) object1).isGrounded()) {
+                isCloseToHouse = true;
+                actionButton.setBackgroundResource(R.drawable.door_icon);
+            }
+            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
+            return true;
+        }
+        // Jumping on character is a bit buggy.
+//        else if(object1.isCharacter() && object2.isCharacter() && collisionType.contains("top")) {
+//            ((Character) object1).getUdHandler().removeCallbacksAndMessages(null);
+//            ((Character) object1).stopFall();
+//            ((Character) object1).setYPosition(object2.getHitBox().topLeft().y - ((Character) object1).getHitBox().getYBottom());
+//            ((Character) object1).setObjectResource(((Character) object1).getIdleResource());
+//            ((Character) object1).setHitBox(((Character) object1).getIdleHitBox());
+//            ((Character) object1).showHitBox();
 //
-//            // below line is use to set the audio
-//            // stream type for our media player.
-////            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-//
-//            // below line is use to set our
-////            // url to our media player.
-////            try {
-////                mediaPlayer.setDataSource(audioUrl);
-////                // below line is use to prepare
-////                // and start our media player.
-////                mediaPlayer.prepareAsync();
-////                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-////                    @Override
-////                    public void onPrepared(MediaPlayer mediaPlayer) {
-////                        mediaPlayer.start();
-////                    }
-////                });
-////
-////
-////            } catch (IOException e) {
-////                e.printStackTrace();
-////            }
-//
-//            walkEffectPlayer = MediaPlayer.create(this, rawSound);
-//            walkEffectPlayer.start();
-//            walkEffectPlayer.setLooping(shouldLoop);
-////            while(!isGrounded){
-////                pauseWalkEffect();
-////            }
+//            ((Character) object1).stopJump();
+//            if(object1.getObjectName().toLowerCase().equals("kirby")) {
+//                isFloating = false;
+//                startFloatFinished = false;
+//                jumpCount = 0;
+//                ((Character) object1).getUdHandler().postDelayed(((Character) object1).getAllActions().get("High Jump"), 0);
+//            }
+//            else{
+//                ((Character) object1).getUdHandler().postDelayed(((Character) object1).getAllActions().get("Jump"), 0);
+//            }
+//            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
+//            return true;
 //        }
-            else {
-                //Toast.makeText(this, "Audio is already playing", Toast.LENGTH_SHORT).show();
+        else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
+                && object2.equals(allNPCs.get("Waddle Dee 0")) && collisionType.equals("left")){
+            if(((Character) object1).isGrounded()) {
+                isByTutorialWaddleDee = true;
+                actionButton.setBackgroundResource(R.drawable.testtalkicon);
             }
+            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
+        }
+        else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
+                && object2.equals(allNPCs.get("Waddle Dee 1"))){
+            if(((Character) object1).isGrounded()) {
+                isByForestSoupHintWaddleDee = true;
+                actionButton.setBackgroundResource(R.drawable.testtalkicon);
+            }
+            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
+        }
+        else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
+                && object2.getObjectName().toLowerCase().equals("cauldron")){
+            if(((Character) object1).isGrounded()) {
+                isCloseToCauldron = true;
+                actionButton.setBackgroundResource(R.drawable.testmakesoupicon);
+            }
+            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
+            return true;
+        }
+        else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
+                && object2.getObjectName().toLowerCase().equals("forest door")){
+            if(((Character) object1).isGrounded()) {
+                isCloseToForestDoor = true;
+                actionButton.setBackgroundResource(R.drawable.door_icon);
+            }
+            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
+            return true;
+        }
+        else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
+                && object2.getObjectName().toLowerCase().equals("swamp door")){
+            if(((Character) object1).isGrounded()) {
+                isCloseToSwampDoor = true;
+                actionButton.setBackgroundResource(R.drawable.door_icon);
+            }
+            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
+            return true;
+        }
+        else if(object1.isCharacter() && object1.getObjectName().toLowerCase().equals("kirby")
+                && object2.getObjectName().toLowerCase().equals("mushroom house (back)")){
+            if(((Character) object1).isGrounded()) {
+                isCloseToHouseBack = true;
+                actionButton.setBackgroundResource(R.drawable.door_icon);
+            }
+            Log.i("Collision","Special Collision between " + object1.getObjectName() + " and " + object2.getObjectName());
+            return true;
         }
 
-//        Log.i("Sai", "Playing is: " + walkEffectPlayer.isPlaying());
+        return false;
     }
 
-    public void pauseWalkEffect() {
-        if (walkEffectPlayer != null) {
-            if (walkEffectPlayer.isPlaying()) {
-                // pausing the media player if media player
-                // is playing we are calling below line to
-                // stop our media player.
-                walkEffectPlayer.stop();
-                walkEffectPlayer.reset();
-                walkEffectPlayer.release();
-                walkEffectPlayer = null;
+    // This method helps to find the scale for the game camera to zoom to
+    private float fitZoom(float backgroundWidth, float backgroundHeight){
+        return ((float) TitleActivity.HEIGHT/TitleActivity.WIDTH) * (backgroundWidth/backgroundHeight);
+    }
 
-                // below line is to display a message
-                // when media player is paused.
-                //Toast.makeText(this, "Audio has been paused", Toast.LENGTH_SHORT).show();
-            } else {
-                // this method is called when media
-                // player is not playing.
-                //Toast.makeText(this, "Audio has not played", Toast.LENGTH_SHORT).show();
-            }
+    // Debugging method
+    public void viewInfoDebug(View view){
 
+        GameObject.displayHitBoxes = true;
+        for(GameObject object : collisionGameLayout.getLayoutObjects()){
+            object.showHitBox();
         }
-    }
-
-    public void playJumpEffect(int rawSound, boolean shouldLoop){
-        if(SettingsPage.isEffect) {
-            if (jumpEffectPlayer == null) {
-                // initializing media player
-                jumpEffectPlayer = new MediaPlayer();
-
-                // below line is use to set the audio
-                // stream type for our media player.
-//            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
-                // below line is use to set our
-//            // url to our media player.
-//            try {
-//                mediaPlayer.setDataSource(audioUrl);
-//                // below line is use to prepare
-//                // and start our media player.
-//                mediaPlayer.prepareAsync();
-//                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//                    @Override
-//                    public void onPrepared(MediaPlayer mediaPlayer) {
-//                        mediaPlayer.start();
-//                    }
-//                });
-//
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-
-                jumpEffectPlayer = MediaPlayer.create(this, rawSound);
-                jumpEffectPlayer.start();
-                jumpEffectPlayer.setLooping(shouldLoop);
-
-                // below line is use to display a toast message.
-//            Toast.makeText(this, "Audio started playing..", Toast.LENGTH_SHORT).show();
-//            Log.i("Sai", "Playing is: " + walkEffectPlayer.isPlaying());
-            } else if (jumpEffectPlayer != null) {
-                pauseJumpEffect();
-                pauseWalkEffect();
-                jumpEffectPlayer = new MediaPlayer();
-
-                // below line is use to set the audio
-                // stream type for our media player.
-//            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
-                // below line is use to set our
-//            // url to our media player.
-//            try {
-//                mediaPlayer.setDataSource(audioUrl);
-//                // below line is use to prepare
-//                // and start our media player.
-//                mediaPlayer.prepareAsync();
-//                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//                    @Override
-//                    public void onPrepared(MediaPlayer mediaPlayer) {
-//                        mediaPlayer.start();
-//                    }
-//                });
-//
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-
-                jumpEffectPlayer = MediaPlayer.create(this, rawSound);
-                jumpEffectPlayer.start();
-                jumpEffectPlayer.setLooping(shouldLoop);
-            } else {
-                //Toast.makeText(this, "Audio is already playing", Toast.LENGTH_SHORT).show();
-            }
+        for(GameObject object: backgroundGameLayout.getLayoutObjects()){
+            object.showHitBox();
         }
-//        Log.i("Sai", "Playing is: " + walkEffectPlayer.isPlaying());
-    }
-
-    public void pauseJumpEffect() {
-        if (jumpEffectPlayer != null) {
-            if (jumpEffectPlayer.isPlaying()) {
-                // pausing the media player if media player
-                // is playing we are calling below line to
-                // stop our media player.
-                jumpEffectPlayer.stop();
-                jumpEffectPlayer.reset();
-                jumpEffectPlayer.release();
-                jumpEffectPlayer = null;
-
-                // below line is to display a message
-                // when media player is paused.
-                //Toast.makeText(this, "Audio has been paused", Toast.LENGTH_SHORT).show();
-            } else {
-                // this method is called when media
-                // player is not playing.
-                //Toast.makeText(this, "Audio has not played", Toast.LENGTH_SHORT).show();
-            }
-
+        for(GameObject object: foregroundGameLayout.getLayoutObjects()){
+            object.showHitBox();
         }
-    }
 
-    public void catalogPage(View v) {
-        Intent intent = new Intent(this, CatalogPage.class);
-        startActivity(intent);
-    }
 
+        try {
+            Log.i("CharacterDebug", "Character: Position: xPosition = " + String.valueOf(kirby.getXPosition()) +
+                    " yPosition = " + String.valueOf(kirby.getYPosition()) + " | Width = " + String.valueOf(kirby.getObjectWidth()) +
+                    " Height = " + String.valueOf(kirby.getObjectHeight()) + " | Attributes: isGrounded = " + String.valueOf(kirby.isGrounded()) +
+                    " isFacingRight = " + String.valueOf(kirby.isFacingRight()) + " | HitBox: xPosition = " + String.valueOf(kirby.getHitBox().getXPosition()) +
+                    " yPosition = " + String.valueOf(kirby.getHitBox().getYPosition())
+                    + " | Animation Running = " + String.valueOf(kirby.getCharacterAnimation().isRunning()));
+        }
+        catch (Exception e){
+        }
+
+        Log.i("CameraDebug", gameCamera.toString());
+        if(zoomed) {
+            gameCamera.setFixedPosition(false);
+            gameCamera.moveTo(centerX, centerY, 100);
+            gameCamera.zoomTo(3/4F, 10);
+            zoomed = false;
+        }
+        else{
+            gameCamera.setFixedPosition(false);
+            gameCamera.zoomTo(fitZoom(3832,359), 50, new Camera.CameraCallBack() {
+                @Override
+                public void onActionComplete(Camera camera) {
+                    try {
+                        gameCamera.moveTo(kirby.getCenterXPosition(), centerY, 10);
+                    }
+                    catch (Exception e){
+                        gameCamera.setLeftXPosition(0);
+                    }
+                }
+            });
+            zoomed = true;
+        }
+
+    }
 
 }

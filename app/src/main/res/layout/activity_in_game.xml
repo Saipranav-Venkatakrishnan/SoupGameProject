@@ -192,7 +192,7 @@
             android:id="@+id/inventoryLayout"
             android:layout_width="550dp"
             android:layout_height="300dp"
-            android:background="@color/white"
+            android:background="@drawable/dialogboxbackground"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -205,8 +205,9 @@
                 android:layout_height="60dp"
                 android:layout_marginStart="45dp"
                 android:layout_marginTop="30dp"
+                android:background="@drawable/portraitborder"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/iv11"
@@ -214,6 +215,7 @@
                 android:layout_height="60dp"
                 android:layout_marginStart="45dp"
                 android:layout_marginBottom="30dp"
+                android:background="@drawable/portraitborder"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -222,6 +224,7 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginTop="30dp"
+                android:background="@drawable/portraitborder"
                 app:layout_constraintEnd_toStartOf="@+id/iv3"
                 app:layout_constraintStart_toEndOf="@+id/iv1"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -231,15 +234,17 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginTop="30dp"
+                android:background="@drawable/portraitborder"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/iv4"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginTop="30dp"
+                android:background="@drawable/portraitborder"
                 app:layout_constraintEnd_toStartOf="@+id/iv5"
                 app:layout_constraintStart_toEndOf="@+id/iv3"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -250,6 +255,7 @@
                 android:layout_height="60dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginEnd="45dp"
+                android:background="@drawable/portraitborder"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -258,6 +264,7 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginStart="45dp"
+                android:background="@drawable/portraitborder"
                 app:layout_constraintBottom_toTopOf="@+id/iv11"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv1" />
@@ -266,6 +273,7 @@
                 android:id="@+id/iv7"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:background="@drawable/portraitborder"
                 app:layout_constraintBottom_toTopOf="@+id/iv12"
                 app:layout_constraintEnd_toStartOf="@+id/iv8"
                 app:layout_constraintStart_toEndOf="@+id/iv6"
@@ -275,15 +283,17 @@
                 android:id="@+id/iv8"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:background="@drawable/portraitborder"
                 app:layout_constraintBottom_toTopOf="@+id/iv13"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv3"/>
+                app:layout_constraintTop_toBottomOf="@+id/iv3" />
 
             <ImageView
                 android:id="@+id/iv9"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:background="@drawable/portraitborder"
                 app:layout_constraintBottom_toTopOf="@+id/iv14"
                 app:layout_constraintEnd_toStartOf="@+id/iv10"
                 app:layout_constraintStart_toEndOf="@+id/iv8"
@@ -294,9 +304,10 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginEnd="45dp"
+                android:background="@drawable/portraitborder"
                 app:layout_constraintBottom_toTopOf="@+id/iv15"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv5"/>
+                app:layout_constraintTop_toBottomOf="@+id/iv5" />
 
             <ImageView
                 android:id="@+id/iv15"
@@ -304,35 +315,39 @@
                 android:layout_height="60dp"
                 android:layout_marginEnd="45dp"
                 android:layout_marginBottom="30dp"
+                android:background="@drawable/portraitborder"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <ImageView
                 android:id="@+id/iv14"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginBottom="30dp"
+                android:background="@drawable/portraitborder"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/iv15"
-                app:layout_constraintStart_toEndOf="@+id/iv13"/>
+                app:layout_constraintStart_toEndOf="@+id/iv13" />
 
             <ImageView
                 android:id="@+id/iv12"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginBottom="30dp"
+                android:background="@drawable/portraitborder"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/iv13"
-                app:layout_constraintStart_toEndOf="@+id/iv11"/>
+                app:layout_constraintStart_toEndOf="@+id/iv11" />
 
             <ImageView
                 android:id="@+id/iv13"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginBottom="30dp"
+                android:background="@drawable/portraitborder"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent" />
 
             <ImageButton
                 android:id="@+id/closeInv"
@@ -462,6 +477,21 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/debugButton"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="500dp"
+        android:visibility="invisible"
+        android:onClick="viewInfoDebug"
+        android:text="DEBUG (Developers Only)"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.04000002" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
